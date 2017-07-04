@@ -1,0 +1,42 @@
+<table>
+	<tr>
+		<td>类</td>
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td>描述</td>
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td>继承</td>
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td>属性</td>
+		<td>签名</td>
+		<td>含义</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>函数</td>
+		<td>签名</td>
+		<td>含义</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>不变</td>
+		<td colspan="2"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="2"></td>
+	</tr>
+</table>

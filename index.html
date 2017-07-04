@@ -1,1 +1,423 @@
-<h1>Hello openEHR I/O !</h1> 
+<!DOCTYPE html>
+<html>
+<head>
+<title>index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<ul>
+<li>
+<p>openEHR</p>
+<ul>
+<li>
+<p>Base - <a href="http://www.openehr.org/releases/BASE/latest/docs/index">Base models and languages underpinning other specifications</a></p>
+<p>-openEHR Architecture Overview 基础架构一览 (<a href="BASE-1.0.3/archiveOverview/ArchitectureOverview.html">译文</a>)</p>
+<ul>
+<li>
+<p>Base Types 基础类型</p>
+</li>
+<li>
+<p>ODIN - Object Data Instance Notation 对象数据实例记法</p>
+</li>
+<li>
+<p>BMM - Basic Meta-Model 基本元模型</p>
+</li>
+<li>
+<p>OEL - openEHR Expression</p>
+</li>
+<li>
+<p>ISO_18308 Conformance Statement</p>
+</li>
+</ul>
+</li>
+<li>
+<p>AM - <a href="http://www.openehr.org/releases/AM/latest/docs/index">Archetype Model 原型模型</a></p>
+<ul>
+<li>
+<p>Archetype Technology Overview 原型技术概览(<a href="AM-2.0.6/Overview/Overview.html">译文</a>)</p>
+</li>
+<li>
+<p>ADL2 - Archetype Definition Language 2 原型定义语言(<a href="AM-2.0.6/ADL2/ADL2.html">译文</a>)</p>
+</li>
+<li>
+<p>AOM2 - Archetype Object Model 2 原型对象模型 (<a href="AM-2.0.6/AOM2/AOM2.html">译文</a>)</p>
+</li>
+<li>
+<p>OPT2 - Operational Template 2 操作模板(<a href="AM-2.0.6/OPT2/OPT2.html">译文</a>)</p>
+</li>
+<li>
+<p>Archetype Identify 原型标识(<a href="AM-2.0.6/Identification/Identification.html">译文</a>)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>RM - <a href="http://www.openehr.org/releases/RM/latest/docs/index">Reference Model 参考模型</a></p>
+<ul>
+<li>
+<p>Task Planning IM</p>
+</li>
+<li>
+<p>EHR IM 信息模型(<a href="RM-1.0.3/ehr/ehr.html">译文</a>)</p>
+</li>
+<li>
+<p>Common IM 通用信息模型(<a href="RM-1.0.3/common/common.html">译文</a>)</p>
+</li>
+<li>
+<p>Data Structures IM 数据结构信息模型(<a href="RM-1.0.3/data_structures/data_structures.html">译文</a>)</p>
+</li>
+<li>
+<p>Data Types IM 数据类型信息模型(<a href="RM-1.0.3/data_types/data_types.html">译文</a>)</p>
+</li>
+<li>
+<p>Support IM 支持信息模型(<a href="RM-1.0.3/support/support.html">译文</a>)</p>
+</li>
+<li>
+<p>Integration IM 集成信息模型(<a href="RM-1.0.3/integration/integration.html">译文</a>)</p>
+</li>
+<li>
+<p>EHR Extract IM EHR抽取信息模型(<a href="RM-1.0.3/ehr_extract/ehr_extract.html">译文</a>)</p>
+</li>
+<li>
+<p>Demographic IM 人口统计信息模型(<a href="RM-1.0.3/demographic/demographic.html">译文</a>)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>SM - <a href="http://www.openehr.org/releases/SM/latest/docs/index">Service Model 服务模型</a></p>
+<ul>
+<li>
+<p>EHR REST API</p>
+</li>
+<li>
+<p>EHR Service Model</p>
+</li>
+<li>
+<p>vEHR API</p>
+</li>
+</ul>
+</li>
+<li>
+<p>INTG - <a href="http://www.openehr.org/releases/INTG/latest/docs/index">Integration specifications</a></p>
+<ul>
+<li>
+<p>TDS - Template Data Schema</p>
+</li>
+<li>
+<p>TDO - Template Data Object</p>
+</li>
+</ul>
+</li>
+<li>
+<p>TERM - <a href="http://www.openehr.org/releases/TERM/latest/docs/index">openEHR support terminology</a></p>
+<ul>
+<li>openEHR Terminology</li>
+</ul>
+</li>
+<li>
+<p>QUERY - <a href="http://www.openehr.org/releases/QUERY/latest/docs/index">Query language</a></p>
+<ul>
+<li>AQL - The openEHR Archetype Query Language </li>
+</ul>
+</li>
+<li>
+<p>CDS - <a href="http://www.openehr.org/releases/CDS/latest/docs/index">Clinical Decision Support</a></p>
+<ul>
+<li>GDL - The openEHR Guideline Definition Language</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>资料整理，机器翻译+人工整理，质量一般敬请谅解</p>
+<p>志愿参与翻译和整理的请联系： tlw@winning.com.cn</p>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
