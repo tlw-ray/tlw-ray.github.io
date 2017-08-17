@@ -1,0 +1,4227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>Zookeeper中文站</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="book">
+<div id="header">
+<h1>Zookeeper中文站</h1>
+<span id="author">唐力伟</span><br />
+<div id="toc">
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_前言">1. 前言</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>本书内容主要翻译自Zookeeper官方网站页面。帮助学习者快速掌握有关知识。如果您有任何需要或建议请邮件至Email:tlw_ray@163.com。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_后记">2. 后记</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>目前作品还没有完成，需要再接再厉。感谢您的阅读。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_贡献">3. 贡献</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>唐力伟: 忙个不停的学习者</p></div>
+<div class="paragraph"><p>吴友辉: 重要的小伙伴</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_术语">4. 术语</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>暂时还没有什么术语要解释.</p></div>
+<div class="dlist glossary"><dl>
+<dt>
+词汇术语1
+</dt>
+<dd>
+<p>
+    相应（缩进）定义。
+</p>
+</dd>
+<dt>
+词汇术语2
+</dt>
+<dd>
+<p>
+  相应（缩进）定义。
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<h1 id="_zookeeper">Zookeeper</h1>
+<div class="sect1">
+<h2 id="_zookeeper_一个用于协调分布式应用的开源分布式协调服务">1. Zookeeper: 一个用于协调分布式应用的开源分布式协调服务</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper是一个用于分布式应用的开源分布式协调服务。它提供了简单的原语集合，分布式应用可在这些原语之上构建用于同步、配置维护、分组和命名的高层服务。ZooKeeper的设计使得编程容易，并且使用类似于广泛熟知的文件系统目录树结构的数据模型。它运行在Java环境中，但是有Java和C语言绑定。</p></div>
+<div class="paragraph"><p>分布式协调服务是出了名的难得编写正确，很容易出现竞争条件和死锁之类的错误。ZooKeeper的动机是减轻为分布式应用开发协调服务的负担。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_设计目标">2. 设计目标</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_简单">2.1. 简单</h3>
+<div class="paragraph"><p>ZooKeeper让分布式进程可通过共享的、与标准文件系统类似的分层名字空间相互协调。名字空间由数据寄存器（在ZooKeeper世界中称作znode）构成，这与文件和目录类似。与用于存储设备的典型文件系统不同的是，ZooKeeper在内存中保存数据，这让其可以达到高吞吐量和低延迟。</p></div>
+<div class="paragraph"><p>ZooKeeper的实现很重视高性能、高可用性，以及严格的顺序访问。高性能意味着可将ZooKeeper用于大的分布式系统。可靠性使之可避免单点失败。严格的顺序访问使得客户端可以实现复杂的同步原语。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_自我复制">2.2. 自我复制</h3>
+<div class="paragraph"><p>与它所协调的进程一样，ZooKeeper本身也会试图在一组主机间进行复制，这就是集群。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/zkservice.jpg" alt="images/zkservice.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>组成ZooKeeper服务的各个服务器必须相互知道对方。它们在内存中维护状态和事务日志，还在永久存储中维护快照。只要大部分服务器可用，ZooKeeper服务就是可用的。</p></div>
+<div class="paragraph"><p>客户端连接到单个ZooKeeper服务器。客户端维持一个TCP连接，通过这个连接发送请求、接收响应、获取观察事件，以及发送心跳。如果到服务器的TCP连接断开，客户端会连接到另一个服务器。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_顺序访问">2.3. 顺序访问</h3>
+<div class="paragraph"><p>ZooKeeper为每次更新设置一个反映所有ZooKeeper事务顺序的序号。并发操作可使用序号来实现更高层抽象，如同步原语。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_高速">2.4. 高速</h3>
+<div class="paragraph"><p>在读操作为主的负载下特别快。ZooKeeper应用运行在成千上万台机器中，在读操作比写操作频繁，二者比例约为10:1的情况下，性能最好。</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_数据模型和分层的名字空间">3. 数据模型和分层的名字空间</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper提供的名字空间与标准文件系统非常相似。名字是一个由斜杠/分隔的路径元素序列。ZooKeeper名字空间中的每个节点都由其路径标识。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/zknamespace.jpg" alt="images/zknamespace.jpg" />
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_节点和临时节点">4. 节点和临时节点</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>与标准文件系统不同，ZooKeeper名字空间中的每个节点都可以有关联的数据以及子节点。这就像一个允许文件也是目录的文件系统。（ZooKeeper设计用于存储协调数据：状态信息、配置、位置信息等，所以通常存储在每个节点中的数据很小，在字节到千字节范围内）讨论ZooKeeper数据节点时，我们用术语znode来明确指示。</p></div>
+<div class="paragraph"><p>Znode会维护一个stat结构体，其中包含数据和ACL的版本号与时间戳，以便于进行缓存验证和协调更新。每次修改znode数据时，版本号会增长。客户端获取数据的时候，也同时获取数据的版本。</p></div>
+<div class="paragraph"><p>对znode数据的读写操作是原子的。读取操作获取节点的所有数据，写入操作替换所有数据。节点的访问控制列表（ACL）控制可以进行操作的用户。</p></div>
+<div class="paragraph"><p>ZooKeeper具有临时节点的概念。只要创建节点的会话是活动的，临时节点就存在。一旦会话终止，临时节点会被删除。临时节点对于实现tbd是很有用的。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_条件更新和观察">5. 条件更新和观察</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper支持观察的概念。客户端可以在znode上设置观察。观察将在znode修改时被触发和移除。观察被触发时客户端会收到一个数据包，指示znode已经被修改。如果与ZooKeeper服务之间的连接断开，客户端会收到一个本地通知。这可用于tbd。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_保证">6. 保证</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper非常高效和简单。基于其目标：成为构建如同步这样的更复杂服务的基础，ZooKeeper提供下述保证：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+顺序一致性：客户端的更新将以请求发送的次序被应用。
+</p>
+</li>
+<li>
+<p>
+原子性：更新要么成功，要么失败，没有部分更新。
+</p>
+</li>
+<li>
+<p>
+单一系统镜像：无论连接到哪个服务器，客户端将看到一样的视图。
+</p>
+</li>
+<li>
+<p>
+可靠性：更新操作的结果将是持续的，直到客户端覆盖了更新。
+</p>
+</li>
+<li>
+<p>
+及时性：在某个时间范围内，客户端视图确保是最新的。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>关于这些保证的详细信息，以及如何使用这些保证，请参看tbd。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_简单的api">7. 简单的API</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper的设计目标之一是提供非常简单的编程接口。ZooKeeper仅支持这些操作：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+create：在树中某位置创建一个节点。
+</p>
+</li>
+<li>
+<p>
+delete：删除一个节点。
+</p>
+</li>
+<li>
+<p>
+exists：测试某位置是否存在某节点。
+</p>
+</li>
+<li>
+<p>
+get data：读取节点数据。
+</p>
+</li>
+<li>
+<p>
+set data：向节点写入数据。
+</p>
+</li>
+<li>
+<p>
+get children：获取子节点列表。
+</p>
+</li>
+<li>
+<p>
+sync：等待数据传播。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>关于这些操作的更深入讨论，以及如何使用它们来实现更高层的操作，请参看tbd。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_实现">8. 实现</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>下图显示了ZooKeeper服务的高层组件。除了请求处理器(Request Processor)之外，组成ZooKeeper服务的每个服务器拥有每个组件的自有拷贝。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/zkcomponents.jpg" alt="images/zkcomponents.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>自我复制数据库(replicated database)是一个包含整个数据树的内存数据库。更新会记录到磁盘中以便可以恢复，并且将写操作应用到内存数据库之前会先写入到磁盘。</p></div>
+<div class="paragraph"><p>每个ZooKeeper服务器都为客户服务。客户端连接到一个服务器，提交请求。读请求由每个服务器数据库的本地拷贝进行服务。改变服务状态的请求和写请求由一致性协议处理。</p></div>
+<div class="paragraph"><p>作为一致性协议的一部分，客户端的所有写请求都被转发到单个服务器，也就是领导者。其他ZooKeeper服务器则是跟随者，它们接收来自领导者的建议，对传递的消息达成一致。消息层考虑了替换失败的领导者和跟随者与领导者同步的问题。</p></div>
+<div class="paragraph"><p>ZooKeeper使用定制的原子消息协议。因为消息层是原子的，ZooKeeper可保证本地拷贝不会发散（diverge）。收到写请求时，领导者计算写入操作后系统的状态，将其转换成一个捕获此状态的事务。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_使用">9. 使用</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper的编程接口非常简单。但是，可将其用于实现高层顺序操作，如同步原语、组成员管理、所有者关系管理等。更多信息请参看tbd。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_性能">10. 性能</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper被设计为高性能的。但它真的是高性能的吗？Yahoo研究中心的ZooKeeper开发团队证实了ZooKeeper的高性能，特别是在读操作比写操作多的应用中（见下图），因为写操作涉及在所有服务器间同步状态。（读操作比写操作多是协调服务的典型情况）</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/zkperfRW-3.2.jpg" alt="images/zkperfRW-3.2.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>上图是ZooKeeper 3.2在配置有两个2GHz Xeon处理器和两个SATA 15K RPM驱动器的服务器上运行时的吞吐率图形。一个驱动器配置为ZooKeeper日志专用设备。快照写入到操作系统驱动器。读写操作1KB的数据。“服务器数”指的是ZooKeeper集群的大小，即组成服务的服务器个数。大约30个其他服务器用于模拟客户端。ZooKeeper集群配置为不允许客户端连接到领导者。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>提示：3.2版的读写性能是3.1版的2倍。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Benchmarks也表明ZooKeeper是可靠的。下图（第10节的图）显示了ZooKeeper在各种失败情况下的反应。图中标记的各个事件是：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+跟随者失败和恢复
+</p>
+</li>
+<li>
+<p>
+另一个跟随者失败和恢复
+</p>
+</li>
+<li>
+<p>
+领导者失败
+</p>
+</li>
+<li>
+<p>
+两个跟随者失败和恢复
+</p>
+</li>
+<li>
+<p>
+另一个领导者失败
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_可靠性">11. 可靠性</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>为揭示在有失败注入时系统的行为，我们在一个由7台机器组成的ZooKeeper服务上运行和先前一样的benchmark测试，但是让写操作的百分比固定为30%，这是预期负载比例的保守估计。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/zkperfreliability.jpg" alt="images/zkperfreliability.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>此图有几处值得仔细观察。首先，如果跟随者失败后快速恢复，则ZooKeeper可以维持高吞吐率。但更重要的是，领导者选举算法让系统可以足够快地恢复，以阻止吞吐率有实质性的下降。据我们观察，ZooKeeper选举一个新的领导者的时间小于200ms。第三，一旦跟随者恢复并且开始处理请求，ZooKeeper可以恢复高吞吐率。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_zookeeper工程">12. ZooKeeper工程</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper已经在很多工业应用中成功使用。Yahoo!在Yahoo! Message Broker中使用ZooKeeper作为协调和故障恢复服务。Yahoo! Message Broker是一个高度扩展的发布-订阅系统，管理着成千上万个需要拷贝和数据传递的话题。Yahoo!的很多广告系统也使用ZooKeeper来实现可靠服务。</p></div>
+<div class="paragraph"><p>我们鼓励用户和开发者加入社区，贡献技能。更多信息请看Apache的ZooKeeper工程。</p></div>
+</div>
+</div>
+<h1 id="_zookeeper_入门指南">ZooKeeper 入门指南</h1>
+<div class="sect1">
+<h2 id="_开始_通过zookeeper协调分布式程序">1. 开始:通过zookeeper协调分布式程序</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>这份文档包含了让你快速开始使用zookeeper的帮助信息。文章主要是针对初级想尝试使用zookeeper的开发者，其中包含了一些简单的例子，仅用一台zookeeper服务器，一些命令确认服务器正在运行，一个简单的程序样例。文章最后，为了方便，也有一些内容考虑到一些相对复杂些的例子。列如，以复制模式部署，优化事务日志。但是如果想运用到商业项目中。请参阅ZooKeeper管理员指南</p></div>
+<div class="sect2">
+<h3 id="_先决条件">1.1. 先决条件</h3>
+<div class="paragraph"><p>参考管理手册中的系统需求</p></div>
+</div>
+<div class="sect2">
+<h3 id="_下载">1.2. 下载</h3>
+<div class="paragraph"><p>从Apache的镜像站点下载Zookeeper的稳定发行版。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_单机操作">1.3. 单机操作</h3>
+<div class="paragraph"><p>以单机模式启动zookeeper服务器是简单的。zookeeper服务包含在单个jar文件中，所以安装过程包含了建立配置。</p></div>
+<div class="paragraph"><p>一旦你已经下载Zookeeper的稳定版本，即可解压并进入其根目录。</p></div>
+<div class="paragraph"><p>要启动zookeeper你首先需要一份配置文件。这里是例子，可以创建它在<strong>conf/zoo.cfg</strong>：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>tickTime=2000
+dataDir=/var/lib/zookeeper
+clientPort=2181</code></pre>
+</div></div>
+<div class="paragraph"><p>你可以随意命名这个文件，但是为了描述的清楚我们就叫它 <strong>conf/zoo.cfg</strong>. 设定<strong>dataDir</strong>的值到存在（初始为空）的目录。下面是对每一个字段意义的介绍：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+tickTime
+zookeeper用到的时间单位是毫秒。这个时间好比是zookeeper的心跳时间，是最小会话单元的超时时间范围是这个时间的2倍。
+</p>
+</li>
+<li>
+<p>
+dataDir
+这个目录是存储内存中数据库快照的位置，除非你特别说明，更新该数据库事物的日志也在这个位置。
+</p>
+</li>
+<li>
+<p>
+clientPort
+客户端连接监听端口。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>现在你创建了这个配置文件，就可以启动Zookeeper：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>bin/zkServer.sh start</code></pre>
+</div></div>
+<div class="paragraph"><p>ZooKeeper 的日志记录是通过log4j — 更多关于日志的讲解请看开发者手册。你会看到日志信息根据log4j配置被发送到控制台并且/或者日志文件。</p></div>
+<div class="paragraph"><p>这里介绍的启动zookeeper是以单例模式。这里没有做复制，因此假如zookeeper进程运行失败，服务就会挂掉。单例模式启动对于开发环境来说是良好的，如果想启动Zookeeper在复制模式，请看Running Replicated ZooKeeper.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_管理zookeeper存储">2. 管理ZooKeeper存储</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>对于长时间运行在生产环境的zookeeper服务，存储必须被额外的管理（dataDir and logs），关于这些的更多细节请看maintenance</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_连接到zookeeper">3. 连接到ZooKeeper</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>bin/zkCli.sh -server 127.0.0.1:2181</code></pre>
+</div></div>
+<div class="paragraph"><p>通过这个命令是你能够简单的类似文件操作的方式对Zookeeper进行操作。</p></div>
+<div class="paragraph"><p>一旦你已经联接，可以看到一些类似如下内容：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>Connecting to localhost:2181
+log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+log4j:WARN Please initialize the log4j system properly.
+Welcome to ZooKeeper!
+JLine support is enabled
+[zkshell: 0]</code></pre>
+</div></div>
+<div class="paragraph"><p>如果zookeeper已经运行，你就可以通过下面几种选择进行连接</p></div>
+<div class="paragraph"><p>从shell中运行，键入 help 将获得客户端可以执行的命令列表，如下:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 0] help
+ZooKeeper host:port cmd args
+        get path [watch]
+        ls path [watch]
+        set path data [version]
+        delquota [-n|-b] path
+        quit
+        printwatches on|off
+        create path data acl
+        stat path [watch]
+        listquota path
+        history
+        setAcl path acl
+        getAcl path
+        sync path
+        redo cmdno
+        addauth scheme auth
+        delete path [version]
+        deleteall path
+        setquota -n|-b val path</code></pre>
+</div></div>
+<div class="paragraph"><p>你可以尝试一些简单的命令来了解这个简单的命令行。首先，从了解这个命令列表开始，例如ls，如下 :</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 8] ls /
+[zookeeper]</code></pre>
+</div></div>
+<div class="paragraph"><p>接下来，通过运行create /zk_test my_data来创建一个新的znode。这个会创建一个新的znode并且与字符串数据“my_data” 关联,你可以看到下面的运行结果:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 9] create /zk_test my_data
+Created /zk_test</code></pre>
+</div></div>
+<div class="paragraph"><p>通过运行 ls / 命令会看到展现当前的目录情况:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 11] ls /
+[zookeeper, zk_test]</code></pre>
+</div></div>
+<div class="paragraph"><p>注意，这个zk_test目录已经被创建。</p></div>
+<div class="paragraph"><p>接下来，你可以确认下和这个节点关联的数据通过运行get命令，如下：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 12] get /zk_test
+my_data
+cZxid = 5
+ctime = Fri Jun 05 13:57:06 PDT 2009
+mZxid = 5
+mtime = Fri Jun 05 13:57:06 PDT 2009
+pZxid = 5
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0
+dataLength = 7
+numChildren = 0</code></pre>
+</div></div>
+<div class="paragraph"><p>我们也可以改变和zk_test关联的数据通过set命令，如下：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 14] set /zk_test junk
+cZxid = 5
+ctime = Fri Jun 05 13:57:06 PDT 2009
+mZxid = 6
+mtime = Fri Jun 05 14:01:52 PDT 2009
+pZxid = 5
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0
+dataLength = 4
+numChildren = 0
+[zkshell: 15] get /zk_test
+junk
+cZxid = 5
+ctime = Fri Jun 05 13:57:06 PDT 2009
+mZxid = 6
+mtime = Fri Jun 05 14:01:52 PDT 2009
+pZxid = 5
+cversion = 0
+dataVersion = 1
+aclVersion = 0
+ephemeralOwner = 0
+dataLength = 4
+numChildren = 0</code></pre>
+</div></div>
+<div class="paragraph"><p>(注意我们在设置zk_test的数据后又运行了get 命令，数据的确改变了）。
+最后通过delete 删除zk_test这个节点：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[zkshell: 16] delete /zk_test
+[zkshell: 17] ls /
+[zookeeper]
+[zkshell: 18]</code></pre>
+</div></div>
+<div class="paragraph"><p>获取更多其它内容，请看Programmer’s Guide.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_对zookeeper编程">4. 对ZooKeeper编程</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper具有Java和C的绑定。它们最终是等效的。C的绑定具有两个变体：单线程和多线程。它们仅仅区别在于消息循环如何被实现。更多信息请查阅 Zookeeper编程手册中的编程示例 获得使用不同API的示例代码.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_复制模式运行zookeeper">5. 复制模式运行zookeeper</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>运行zookeeper以单例模式对于评估测试开发是很方便。但是在生产环境你应该以复制模式运行。相同的应用程序中的复制的服务器组被叫做quorum，在复制模式中所有的服务器在quorum中具有相同的配置文件。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="title">注意</div>
+<div class="paragraph"><p>在复制模式，最少需要三台服务器，并且强烈推荐使用奇数个数的服务器。如果您只具备两台服务器，就会陷入当一台服务器失败时，没有足够的机器来产生能够获得多数投票的法定数量。两服务器继承了单服务器固有的弱稳定性，因为会导致两个单点的失败。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>每个zookeeper服务器都有一份同样的配置文件。这个文件和上面介绍单例模式使用的配置文件和类似，只是有一点小小的不同，如下：</p></div>
+<div class="paragraph"><p>tickTime=2000
+dataDir=/var/lib/zookeeper
+clientPort=2181
+initLimit=5
+syncLimit=2
+server.1=zoo1:2888:3888
+server.2=zoo2:2888:3888
+server.3=zoo3:2888:3888</p></div>
+<div class="paragraph"><p>新的实体, <strong>initLimit</strong>是用来定义zookeeper连接到leader的超时时间。实体<strong>syncLimit</strong> 限制一个leader过时时间。
+对于这两种超时时间，你也可以指定用<strong>tickTime</strong>的时间单位计量。例如，initLimit是5 ticks，每个tick是2000毫秒，也就是10秒。</p></div>
+<div class="paragraph"><p>属性server.X 列出了zookeeper服务的组成。当服务器启动的时候，通过寻找在数据目录的myid文件知道是哪台服务器。这个文件含有以ASCII编码的服务器编号。</p></div>
+<div class="paragraph"><p>最后，注意在每个服务器名后的两个端口号： ” 2888” 和”3888”。通过这样形式的端口彼此建立连接。这样的连接是必须的因而才能进行通讯，例如，当按顺序更新数据时。尤其在zookeeper服务器使用该端口连接followers到leader时。当一个新的leader诞生时，followers会通过这个端口号打开TCP协议连接到leader。因为默认leader选举也用tcp协议，我们必须要求另外一个端口用于选举leader。就是属性server的第二个端口号。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>假如你想在一台机器上进行多个zookeeper服务测试，需要指出唯一的集群名localhost和那些leader选举端口(例如2888:3888, 2889:3889, 2890:3890 在下面的例子）。隔离各个dataDir目录和不同的端口号也是必须的。（在这个复制模式运行的例子里，每个运行在单一的机器都有一个配置文件）</p></div>
+<div class="paragraph"><p>请注意，在单个计算机上设置多个服务器不会创建任何冗余。 如果发生了导致机器宕机的事情，所有zookeeper服务器都将脱机。 完全冗余要求每个服务器都有自己的机器。 它必须是一个完全独立的物理服务器。 同一物理主机上的多个虚拟机仍然容易受到该主机的完全故障的影响。</p></div>
+</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_其它优化">6. 其它优化</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>其它的配置参数可以提高性能：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+为了减少延迟和快速更新，具有专一的事务日志目录是很重要的。默认事务日志文件是和数据快照和myid文件放在一起。参数dataLogDir可以指定别的地方来存放事务日志。
+</p>
+</li>
+<li>
+<p>
+[tbd: 什么是其他配置参数？]
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<h1 id="_zookeeper开发者指南">Zookeeper开发者指南</h1>
+<div class="sect1">
+<h2 id="_简介">1. 简介</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>对于想要利用ZooKeeper的协调服务来创建一个分布式应用的开发人员来说，这篇文章提供了指导。包含了一些概念和实际性操作的信息。</p></div>
+<div class="paragraph"><p>这篇文章的前四个章节介绍了各种ZooKeeper的概念，这对理解ZooKeeper是怎么工作的是必须的。没有包含源代码，但是它假设你对分布式处理有关的问题比较熟悉。这四个章节是：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ZooKeeper数据模型
+</p>
+</li>
+<li>
+<p>
+ZooKeeper 会话
+</p>
+</li>
+<li>
+<p>
+ZooKeeper Watches
+</p>
+</li>
+<li>
+<p>
+一致性保证
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>随后的四个章节提供了实际的编程信息，他们是：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+构建块：ZooKeeper操作指南
+</p>
+</li>
+<li>
+<p>
+绑定
+</p>
+</li>
+<li>
+<p>
+程序结构，简单的例子
+</p>
+</li>
+<li>
+<p>
+陷阱：常见问题和故障排查
+</p>
+</li>
+</ul></div>
+<div class="sect2">
+<h3 id="_zookeeper数据模型">1.1. ZooKeeper数据模型</h3>
+<div class="paragraph"><p>ZooKeeper有一个层级命名空间，和一个分布式文件系统非常相似。唯一的不同是每个节点可以有关联的数据，子节点也是。就像有一个文件系统并且允许文件是一个目录。一个规范的、绝对的、斜杠分隔的路径来表示一个节点路径，没有相对路径。任何符合下列约束的的unicode字符可以被使用：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+null字符串（\u0000）不能是一个路径名称。
+</p>
+</li>
+<li>
+<p>
+下列字符不能被使用，因为不能很好的被展示：\u0001 – \u001F 和 \u007F – \u009F。
+</p>
+</li>
+<li>
+<p>
+下列字符是不允许的：\ud800 – uF8FF, \uFFF0 – uFFFF。
+</p>
+</li>
+<li>
+<p>
+“.”字符可以作为另一个名字被使用，但是“.”和“..”不能单独使用来表示一个节点路径，因为ZooKeeper不使用相对路径，下列是无效的：”/a/b/./c”或者 “/a/b/../c”。
+</p>
+</li>
+<li>
+<p>
+“zookeeper”标记被保留。
+</p>
+</li>
+</ul></div>
+<div class="sect3">
+<h4 id="_znodes">1.1.1. ZNodes</h4>
+<div class="paragraph"><p>在ZooKeeper树中的每个节点被称为一个znode。Znodes包含了一个stat数据结构，这个数据结构包括了数据变更的版本号、acl变更。stat数据结构也有时间戳，版本号和时间戳一起来允许ZooKeeper校验缓存和协调更新。每当一个znode的数据改变，版本号就会增加。例如：当一个客户端取得数据，它同样也接受数据的版本。并且，当一个客户端执行一个更新或删除操作，它必须提供数据的版本号。如果客户端提供的的版本号和实际的版本号不匹配，更新操作将会失败。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="title">注意</div>
+<div class="paragraph"><p>在分布式应用应用中，node一词可以用来表示一台主机、一个服务器、集中中的一个、一个客户端进程等等。早ZooKeeper这边文档中，znodes  表示一个数据节点，Servers表示组成ZooKeeper服务中的机器，quorum peers 表示组成集合的机器，客户端表示使用一个ZooKeeper服务的主机或进程。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Znodes是一个程序员访问的主要实体，有许多在这里值得提到特性：</p></div>
+<div class="sect4">
+<h5 id="_watches">Watches</h5>
+<div class="paragraph"><p>客户端可以在znodes上设置监听器，znode的改变触发这个监听器然后清空这个监听器。当一个监听器被触发，ZooKeeper发送给客户端一个通知。更多信息可以查看ZooKeeper Watches章节。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_数据访问">数据访问</h5>
+<div class="paragraph"><p>每个znode的上存储的数据读写都是原子的，读操作取出所有的和这个znode有关的所有数据，写操作替换所有的数据。每个节点有一个访问权限列表（ACL）来限制谁可以做这些事情。</p></div>
+<div class="paragraph"><p>ZooKeeper没有被设计成一个一般的数据库或一个大型对象存储。它管理协调数据，数据可以是配置、状态信息、集合点等的形式。各种各样的数据有一个共同的属性就是他们都很小：以千字节为标准。ZooKeeper客户端和服务器有一个健康检查来确保znodes的数据少于1M，但是数据平均应该更小。操作较大的数据将导致一些操作花费更多的时间，并且会影响一些操作的延迟，因为在网络和存储媒介中移动更多的数据将需要额外的时间。如果需要存储大数据，通常的处理是把数据存储在一个大容量存储系统中，并把存储位置的指针存储到ZooKeeper上。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_临时节点">临时节点</h5>
+<div class="paragraph"><p>ZooKeeper也临时节点的概念。这些znodes存活的时间和创建这个节点的会话有效期是一样的。当会话结束，节点被删除。因为这种临时节点的特性，临时节点不允许有子节点。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_顺序节点_唯一名称">顺序节点——唯一名称</h5>
+<div class="paragraph"><p>当创建一个节点的时候，也可以请求ZooKeeper在路径后面增加一个自增的计数器。对父节点来说，这个计数器是 唯一的。计数器是%010d的格式——是一个十位数，比如：&lt;path&gt;0000000001。</p></div>
+<div class="paragraph"><p>查看Queue Recipe使用这个特性的示例，注意：这个计数器用来存储下一个序列号是一个4字节的数，当增加到2147483647 之后，计数器会溢出。</p></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_zookeeper中的时间">1.1.2. ZooKeeper中的时间</h4>
+<div class="paragraph"><p>ZooKeeper以多种方式跟踪时间：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Zxid：ZooKeeper状态的每次变化都接收一个zxid（ZooKeeper事务id）形式的标记。这个展示了所有的ZooKeeper的变更顺序。每次变更会有一个唯一的zxid，如果zxid1小于zxid2说明zxid1在zxid2之前发生。
+</p>
+</li>
+<li>
+<p>
+Version numbers：节点的每次变化都会引起这个节点版本号之一的一次增加。这三个版本号是：version（一个节点的数据变化次数），cversion（一个节点的子节点变化次数），aversion（一个节点的ACL 变化次数）。
+</p>
+</li>
+<li>
+<p>
+Tricks：当使用多个ZooKeeper服务，服务器使用ticks来确定事件的时间，比如说状态上传、会话超时、连接超时等。这个tick时间仅仅通过最小会话超时时间间接的暴露出来；如果一个客户端请求会话的超时时间小于最小超时时间，服务器将会告诉客户端实际的会话超时时间是最小超时时间。
+</p>
+</li>
+<li>
+<p>
+Real Time：ZooKeeper不使用实时、时钟时间。除了把时间戳放在stat结构中。
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_zookeeper_stat_结构">1.1.3. ZooKeeper Stat 结构</h4>
+<div class="paragraph"><p>每个节点的Stat结构由下列字段组成：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+czxid：该数据节点被创建时的事务id。
+</p>
+</li>
+<li>
+<p>
+mzxid：该节点最后一次被更新时的事务id。
+</p>
+</li>
+<li>
+<p>
+ctime：节点被创建时的时间。
+</p>
+</li>
+<li>
+<p>
+mtime：节点最后一次被更新时的时间。
+</p>
+</li>
+<li>
+<p>
+version：这个节点的数据变化的次数。
+</p>
+</li>
+<li>
+<p>
+cversion：这个节点的子节点 变化次数。
+</p>
+</li>
+<li>
+<p>
+aversion：这个节点的ACL变化次数。
+</p>
+</li>
+<li>
+<p>
+ephemeralOwner：如果这个节点是临时节点，表示创建者的会话id。如果不是临时节点，这个值是0。
+</p>
+</li>
+<li>
+<p>
+dataLength：这个节点的数据长度。
+</p>
+</li>
+<li>
+<p>
+numChildren：这个节点的子节点个数。
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_zookeeper会话">1.1.4. ZooKeeper会话</h4>
+<div class="paragraph"><p>通过使用一种语言绑定来创建服务端的句柄，一个ZooKeeper客户端可以和ZooKeeper服务创建会话。一旦创建，句柄开始在CONNECTING 状态，客户端库尝试连接组成ZooKeeper服务中的其中一个服务器并且切换到CONNECTED状态。在正常的操作期间将会是这两种状态之一。如果一个不可恢复的错误发生了，比如说会话过期或授权失败，或者如果应用显示地关闭了句柄，句柄将会到CLOSED状态。下面的图展示了一个ZooKeeper客户端可能的状态转变。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/state_dia.jpg" alt="images/state_dia.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>为了创建一个客户端会话，应用程序代码必须提供一个连接字符串列表以逗号分隔开，主机：端口号成对出现，每个都相当于一个ZooKeeper服务器（例如：”127.0.0.1:4545″  或 “127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002″）。ZooKeeper客户端将会选择任意一个服务器并尝试连接他。如果连接失败，或如果客户端由于某些原因从服务器断开连接，客户端将会自动尝试列表中的下一个服务器，直到一个连接建立。</p></div>
+<div class="paragraph"><p>*3.2.0新增*：“chroot”后缀可以被加在连接字符串后面，这会运行客户端命令导致所有的路径都和这个跟路径相关。如果使用像下面的示例：”127.0.0.1:4545/app/a或 “127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002/app/a” ，客户端将把”/app/a”作为跟路径，并且所有的路径都与这个根路径相关，比如getting、setting等。”/foo/bar” 将导致操作在”/app/a/foo/bar”（从服务端的观点来看）。这个特性在多租户下面是非常也有用的，ZooKeeper服务的每个用户可以有不同的根路径。这让再使用变得非常简单，因为每个用户都可以编写代码让他的应用好像在”/”根路径下，但实际的位置能在部署时决定。</p></div>
+<div class="paragraph"><p>当一个客户端从ZooKeeper服务得到一个句柄，ZooKeeper创建了一个会话，表现为一个64位的数字，并把 它分配给客户端。如果客户端连接到一个不同的服务端，在连接握手的时候它将发送这个会话id。作为一个安全措施，服务端给会话id创建了一个密码，让服务端能够校验。当客户端建立会话的时候，这个密码随着会话id一起发送给客户端。每当客户端与一个新的服务端恢复会话的时候，密码会随着会话id一起发送过去。</p></div>
+<div class="paragraph"><p>客户端调用创建会话的时候有一个参数是会话超时时间（毫秒），客户端发送一个要求的超时时间，服务端回复一个他能给客户端的超时时间。当前实现要求超时时间至少是2倍的tickTime，最大是20倍的tickTime。ZooKeeper客户端API允许使用一个协商的超时时间。</p></div>
+<div class="paragraph"><p>当一个客户端从ZK服务集群成为分区，它将开始寻找在会话创建时期指定的服务端列表。最终，当客户端和至少一个服务端联通重新建立的时候，会话要么转变成“connected”状态（如果在会话超时时间内恢复连接），要么转变成“expired”状态（如果在超时时间之外恢复连接）。在断开时创建一个新的会话是不可取的。ZK客户端库将处理连接。尤其是客户端内部有方法来处理像“羊群效应”之类的事情。仅仅在你被通知会话过期的时候去创建一个新的会话。</p></div>
+<div class="paragraph"><p>ZooKeeper集群自己管理会话过期，而不是由客户端管理。当ZK客户端和一个集群建立会话，它提供一个“超时时间”。这个值被集群使用来决定客户端的会话是否过期。当集群不能在指定的会话超时时间内从客户端收到信息，过期发生。在会话过期期间，集群将删除由这个会话创建的所有的临时节点，并且立即通知连接的客户端这个改变。此时，会话过期的客户端依然和集群式断开的，它不会收到通知直到它能和集群重新建立连接。这个客户端将保持断开状态直到和集群的TCP连接重新建立，并且在这个时候，过期会话的监听将会收到“会话过期”通知。</p></div>
+<div class="paragraph"><p>对于一个过期的会话，监听器所看到的状态转变：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+“connected”：会话被建立，并且客户端能和集群交流
+</p>
+</li>
+<li>
+<p>
+……客户端从集群被分割
+</p>
+</li>
+<li>
+<p>
+“disconnected”：客户端与集群丢失了联系
+</p>
+</li>
+<li>
+<p>
+……时间流逝，在超时时间之后，集群已经让这个会话过期，而客户端没看到什么，因为它已经从集群断开连接了
+</p>
+</li>
+<li>
+<p>
+……时间流逝，客户端恢复网络和集群联通
+</p>
+</li>
+<li>
+<p>
+“expired”：最后客户端与集群重新连接，然后收到过期的通知
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>ZooKeeper会话建立的另一个参数是默认监听器。当客户端的一些状态改变发生，监听器会收到通知。比如如果客户端丢失与服务端的连接，客户端将会收到通知，或客户端的会话到期等。这个监听器应该考虑初始状态到断开连接。对于一个新的连接，第一给发给监听器的事件就是会话连接事件。</p></div>
+<div class="paragraph"><p>客户端通过发送请求保持会话存活。如果会话在一段时间内空闲将会导致会话超时，客户端将会发送PING请求保持会话存活。这个PING请求不仅仅让ZooKeeper服务端知道客户端是存活的，而且让客户端检查它的和ZooKeeper 服务端的连接也是存活的。PING的时间是足够保守的合理时间，来发现死掉的连接和一个新的服务端重新连接。</p></div>
+<div class="paragraph"><p>一旦成功建立一个到服务端的连接，当客户端发生connectionloss异常 时有两种基本的情况，在执行一个同步或者非同步的操作时：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+应用调用一个操作，但是会话不再存活。
+</p>
+</li>
+<li>
+<p>
+当等待一个操作的时候ZooKeeper客户端从服务端断开连接，比如说：等待一个异步调用。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p><strong>3.2.0新增——SessionMovedException。</strong>有一个内部的异常，通常不会被客户端发现，被称为SessionMovedException。一个已经连接的会话但是重新连接到了一个不同的服务器上接收了一个请求，这个异常就会发生。这个错误的正常原因是一个客户端发送了一个请求到一个服务端，但是网络数据包延迟了，所以客户端超时并连接到了一个新的服务器。当延迟的数据包到达了第一个服务器，这个服务端发现这个会话已经被移除了并且关闭了这个客户端连接。客户端一般不会发现这个错误因为它们不在从老的连接读取数据（老的连接一般被关闭了）。这种事情发生的另一种情况是当两个客户端使用一个保存的会话id和密码来尝试恢复相同的连接时，只有一个客户端能够恢复连接，另一个客户端将会断开。</p></div>
+<div class="paragraph"><p><strong>更新服务器列表。</strong>我们允许一个客户端更新连接字符串通过提供一个新的逗号分隔的主机：端口号列表，每个都是一个服务器。函数调用一个概率负载均衡算法会引起客户端断开与当前主机的连接，来使在新列表中的每个服务器达到与预期一致的数量。万一客户端连接的当前主机不在新的列表中，这个调用会引起连接被删除。另外，这个决定基于是否服务器的数量增加或减少了多少。</p></div>
+<div class="paragraph"><p>比如说，如果之前的连接包含三个主机，现在的连接多了两个主机，连接到每个主机的客户端的40%为了负载均衡将会移动到新的主机上去。这个算法会引起客户端断掉它当前与服务器的连接，这个概览是0.4，并且客户端随机选择两个新主机中的一个连接。</p></div>
+<div class="paragraph"><p>另一个例子，假设我们有5个主机，然后现在更新列表移除两个主机，连接到剩余三台主机的客户端依然保持连接，然而所有连接到已被移除主机的客户端都需要移到剩下三台主机的一台上，并且这种选择是随机的。如果连接断开，客户端进入一个特殊的模式并使用概率算法选择一个新的服务器，而不仅仅只是循环。</p></div>
+<div class="paragraph"><p>在第一个例子中，每个客户端决定断开连接的概览为0.4，但是一旦做了决定，它将会随机的连接到一个新的服务器，仅仅当它不能连接到任何一台新的服务器上时，它将尝试连接旧的服务器。当找到一个服务器或者新列表中所有的服务器都连接失败的时候，客户端回到操作正常模式，选择一个任意的服务器并尝试连接它，如果连接失败，它会继续尝试不同的随机的服务器，并一直循环下去。</p></div>
+</div>
+<div class="sect3">
+<h4 id="_zookeeper监听器">1.1.5. ZooKeeper监听器</h4>
+<div class="paragraph"><p>ZooKeeper中所有的读操作——<strong>getData(), getChildren()</strong>和 <strong>exists()</strong> — 可以选择设置 一个监听器。这是ZooKeeper’s一个监听器的定义：一个监听事件是一次性触发，当一个被设置监听的数据改变时，发送给设置这个监听器的客户端。在这个监听器的定义中，有三个要点：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+一次性触发：当数据改变的时候一个监听事件会被发送给客户端。比如说，如果一个客户端做了getData(“/znode1″, true)操作，然后 /znode1下的数据被改变或者删除了，客户端将得到/znode1的一个监听事件。如果/znode1节点再次发生改变，没有监听事件会被发送除非客户端做了别的设置了一个新的监听器。
+</p>
+</li>
+<li>
+<p>
+发送到客户端：这意味着事件正在发送给客户端的途中，但是在操作成功的返回码到达发起这个变更操作的客户端之前，事件可能还没到达监听的客户端。ZooKeeper提供了一个有序保证：在它第一次看到监听事件之前，它永远不会看到它设置的监听改变。网络延迟或别的因素可能会引起不同的客户端看见监听器和更新操作的返回码，在不同的时间。关键得一点是不同的客户端看见的每件事有一个一致的顺序。
+</p>
+</li>
+<li>
+<p>
+被设置监听的数据：这是指一个节点能变化的不同方式。可以认为ZooKeeper有两个监听器列表：数据监听和子节点监听。getData()和exists()设置数据监听器。 getChildren()设置子节点监听器。二选一，根据返回数据的类型来设置监听器。getData()和exists()返回节点的数据信息，然而getChildren()返回一个子节点列表。因此，setData()会触发数据监听器。一个成功的 create()会触发一个数据监听器。一个delete()会触发数据监听器和子节点监听器。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>在ZooKeeper服务器中，当客户端连接的时候，监听器被保存在本地。这使得监听器轻量级的被设置、保存、分发。当一个客户端连接一个新的服务器，监听器会触发一些会话事件。当从服务器断开连接的时候，不会受到监听器。当一个客户端重新连接，如果需要的话，之前注册的监听器会被注册和触发。有一个监听器可能丢失的情况：如果在断开连接期间，一个节点被创建和删除，一个已存在的节点的监听器还没有创建，将丢失。</p></div>
+<div class="sect4">
+<h5 id="_监听器的语义">监听器的语义</h5>
+<div class="paragraph"><p>我们能在三种调用读取ZooKeeper状态的情况下设置监听器：exists，getData和getChildren，下面的列表是一个监听器触发的事件的详细情况：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+创建事件：exists的调用
+</p>
+</li>
+<li>
+<p>
+删除事件：exists，getData和getChildren的调用
+</p>
+</li>
+<li>
+<p>
+改变事件：exists，getData的调用
+</p>
+</li>
+<li>
+<p>
+子节点事件：getChildren的调用
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect4">
+<h5 id="_移除监听器">移除监听器</h5>
+<div class="paragraph"><p>我们可以调用removeWatches来移除一个注册在节点上的监听器。同样的，一个ZooKeeper客户端在没有服务器连接的情况下能移除本地的监听器，通过设置本地的标记为true。下面是事件的详细列表监听器成功的被移除后触发：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+子节点移除事件：调用getChildren增加的监听器。
+</p>
+</li>
+<li>
+<p>
+数据移除事件：调用exists或getData增加的监听器。
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect4">
+<h5 id="_zookeeper对监听器的保证">ZooKeeper对监听器的保证</h5>
+<div class="paragraph"><p>对于监听器，ZooKeeper有下列的保障：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+监听器和另外的事件，另外的监听器和异步的回复是有序的。ZooKeeper 客户端库确保每件事都有序分发。
+</p>
+</li>
+<li>
+<p>
+一个客户端看到这个节点的新的数据之前，会先看到他监听的节点的一个监听事件。
+</p>
+</li>
+<li>
+<p>
+从ZooKeeper 来的监听事件的顺序对应于ZooKeeper 服务看到的更新的顺序。
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect4">
+<h5 id="_关于监听器要记住的事情">关于监听器要记住的事情</h5>
+<div class="ulist"><ul>
+<li>
+<p>
+监听器是一次触发的，如果你得到了一个监听事件并且想继续得到未来的事件通知，你必须设置一个另外的监听器。
+</p>
+</li>
+<li>
+<p>
+因为监听器是一次触发的，就会在得到事件和发送请求设置新的监听器之间有一个延迟，你不能看到ZooKeeper的节点上每次 改变。准备好处理在得到事件和设置监听器之间节点多次改变的情况（你或许不太关心，但至少要意识这会发生）。
+</p>
+</li>
+<li>
+<p>
+一个监听器对象或一个函数/上下文对，为一个事件只会被触发一次。比如说，如果相同的监听器在一次exists或getData调用中被注册到了相同的文件，并且文件被删除，对于该文件删除的通知，监听器对象只会被调用一次。
+</p>
+</li>
+<li>
+<p>
+当你从服务器断开连接，在恢复连接之前，你不会得到任何监听器。由于这个原因，会话事件会被发送给所有的未处理的监听器。使用会话事件进入一个安全模式：在断开期间，你不会收到事件，所以你的进程在这种模式下应该小心行事。
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_zookeeper使用acls控制访问">1.1.6. ZooKeeper使用ACLs控制访问</h4>
+<div class="paragraph"><p>ZooKeeper使用ACLs来控制访问它的节点（ZooKeeper数据树上的数据节点）。ACL的实现和UNIX文件访问权限非常相似：它使用权限位来允许/拒绝对节点和位适用范围的各种操作。不像标准的UNIX权限，一个ZooKeeper节点没有限制在这三个标准的范围：user （文件拥有者）、group、world 。ZooKeeper没有节点拥有者的概念，取而代之的是，一个ACL指定ids和id相关的权限的集合。</p></div>
+<div class="paragraph"><p>还请注意一个ACL只适用于一个指定的节点，它也不适用于子节点。比如说，如果 /app节点只能被ip：172.16.16.1读取， /app/status是全部可读的，任何人都 可以读取/app/status。ACLs不是递归的。</p></div>
+<div class="paragraph"><p>ZooKeeper支持可插拔式的认证方案。Ids指定使用这个形式scheme:id，scheme是id对应的授权方案，比如说，ip:172.16.16.1是一个主机地址为172.16.16.1的id。</p></div>
+<div class="paragraph"><p>当一个客户端连接ZooKeeper并进行认证，ZooKeeper把符合这个客户端的所有ids联系起来。当客户端尝试存取一个节点的时候，这些ids用来检查一个节点的ACLs。ACLs由成对(scheme:expression, perms)的组成。expression的格式指定了权限，比如说，(ip:19.22.0.0/16, READ)给所有的以19.22开头的IP地址的客户端读的权限。</p></div>
+<div class="sect4">
+<h5 id="_acl权限">ACL权限：</h5>
+<div class="paragraph"><p>Zookeeper支持如下权限:
+* CREATE：可以创建一个子节点
+* READ：可以从一个节点读取数据并展示子节点
+* WRITE：可以设置一个节点的数据
+* DELETE：可以删除一个子节点
+* ADMIN：可以设置权限</p></div>
+<div class="paragraph"><p><em>CREATE</em>和<em>DELETE</em>权限从<em>WRITE</em>权限中脱离是为了更细粒度的权限控制。<em>CREATE</em>和<em>DELETE</em>的场景如下：</p></div>
+<div class="paragraph"><p>希望A能够设置节点的数据，但不能够<em>CREATE</em>或<em>DELETE</em>该节点子节点。</p></div>
+<div class="paragraph"><p>有<em>CREATE</em>没有<em>DELETE</em>：客户端通过在父目录创建节点来生成请求（这个客户端就是处理请求的客户端）。希望所有的客户端都能添加，只有request processor（创建父节点的客户端）能够删除（类似于文件系统的追加<em>APPEND</em>操作）。</p></div>
+<div class="paragraph"><p>有<em>ADMIN</em>权限是因为zk没有文件所有者的概念。在某种意义上，<em>ADMIN</em>权限制定某个实体（entity，个体）为拥有者。zk不支持LOOKUP权限（目录的查询权限位支持LOOKUP操作，即使没有列出目录的权限）。所有的用户隐含都有LOOKUP的权限，这允许用户获取节点状态，仅仅只有这些（有一个问题是，在不存在的节点上执行zoo_exists()，这种操作不允许）。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_内置acl方案">内置ACL方案</h5>
+<div class="paragraph"><p>zk有下面的内置方案：
+* world，有唯一的id，“anyone”，表示任何用户（客户端）
+* auth，不适用任何id，表示任何授权的用户
+* digest，ca，感觉这块的官方文档说的不清楚。
+* ip，使用客户端ip作为id，acl的表达式形式是addr/bits，addr的最高有效位bits个和客户端ip的最高有效位bits个匹配。
+* x509，使用客户端X500 Principal作为ACL ID身份。 ACL表达式是客户端的确切X500主体名称。 使用安全端口时，客户端将自动进行身份验证，并设置其x509方案的身份验证信息。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_可扩充的认证">可扩充的认证</h5>
+<div class="paragraph"><p>zk使用不同的认证方案，运行在不同的环境中。因此他又一个完全可扩充的认证框架。即使内部的认证方案，也使用了可扩充的认证框架。</p></div>
+<div class="paragraph"><p>要理解认证框架如何工作，首先必须理解两个主要的认证操作。框架首先认证客户端。当客户端连接到服务器时就开始认证，包括客户端发送的信息和从客户端收集的信息，并且关联到连接。框架执行的第二个操作是找到ACL中和客户端对应的一个条目。ACL条目是<em>&lt;idspec, permissions&gt;</em>的形式。<em>idspec</em>可能是简单的字符串，直接可以和连接里面的认证信息对比，也可能是一个表达式，和连接里的信息进行计算。认证插件的实现负责匹配。
+下面是认证插件必须实现的接口：</p></div>
+<div class="listingblock">
+<div class="title">Code block</div>
+<div class="content"></div></div>
+<div class="paragraph"><p>第一个方法getScheme返回一个标识该插件的字符串。由于我们支持多种认证方式，认证证书或者idspec必须一直加上scheme:作为前缀。zookeeper服务器使用认证插件返回的scheme判断哪个id适用于该scheme。 当客户端发送与连接关联的认证信息时，handleAuthentication被调用。客户端指定和认证信息相应的模式。zookeeper把信息传给认证插件，认证插件的getScheme匹配scheme。实现handleAuthentication的方法通常在判断信息错误后返回一个error，或者在确认连接后使用cnxn.getAuthInfo().add(new Id(getScheme(), data))</p></div>
+<div class="paragraph"><p>认证插件在设置和ACL中都有涉及。当对某个节点设置ACL时，zookeeper服务器会传那个条目的id给isValid(String id)方法。插件需要判断id的连接来源。例如，ip:172.16.0.0/16是有效id，ip:host.com是无效id。如果新的ACL包括一个"auth"条目，就用isAuthenticated判断该scheme的认证信息是否关联了连接，是否可以被添加到ACL中。一些scheme不会被包含到auth中。例如，如果auth已经指定，客户端的ip地址就不作为id添加到ACL中。 在检查ACL时zookeeper有一个matches(String id, String aclExpr)方法。ACL的条目需要和认证信息相匹配。为了找到和客户端对应的条目，zookeeper服务器寻找每个条目的scheme，如果对某个scheme有那个客户端的认证信息，matches(String id, String aclExpr)会被调用并传入两个值，分别是事先由handleAuthentication 加入连接信息中认证信息的id，和设置到ACL条目id的aclExpr。认证插件用自己的逻辑匹配scheme来判断id是否在aclExpr中。</p></div>
+<div class="paragraph"><p>有两个内置认证插件：ip和digest。附加插件可以使用系统属性添加。在zookeeper启动过程中，会扫描所有以"zookeeper.authProvider"开头的系统属性。并且把那些属性值解释为认证插件的类名。这些属性可以使用-Dzookeeeper.authProvider.X=com.f.MyAuth或在服务器设置文件中添加条目来创建：</p></div>
+<div class="listingblock">
+<div class="title">Config block</div>
+<div class="content"></div></div>
+<div class="paragraph"><p>注意属性的后缀是唯一的。如果出现重复的情况-Dzookeeeper.authProvider.X=com.f.MyAuth -Dzookeeper.authProvider.X=com.f.MyAuth2，只有一个会被使用。同样，所有服务器都必须统一插件定义，否则客户端用插件提供的认证schemes连接服务器时会出错。</p></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_一致性保证">1.1.7. 一致性保证</h4>
+<div class="paragraph"><p>ZooKeeper是一个高性能，可扩展的服务。读和写操作都非常快速。之所以如此，全因为zookeeper有数据一致性的保证：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+顺序一致性 客户端的更新会按照它们发送的次序排序。
+</p>
+</li>
+<li>
+<p>
+原子性 更新的失败或成功，都不会出现半个结果。
+</p>
+</li>
+<li>
+<p>
+单独系统镜像 不管客户端连哪个服务器，它看来都是同一个。
+</p>
+</li>
+<li>
+<p>
+可靠性 一旦更新生效，它就会一直保存到下一次客户端更新。这就有两个推论：
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+如果客户端得到成功的返回值，说明更新生效了。在一些错误情况下（连接错误，超时等）客户端不会知道更新是否生效。虽然我们使失败的几率最小化，但是也只能保证成功的返回值情况。（这就叫Paxos算法的单调性条件）
+</p>
+</li>
+<li>
+<p>
+客户端能看到的更新，即使是渡请求或成功更新，在服务器失败时也不会回滚。
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+时效性 客户端看到的系统状态在某个时间范围内是最新的（几十秒内），任何系统更改都会在该时间范围内被客户端发现。否则客户端会检测到断开服务。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>用这些一致性保证可以在客户端中构造出更高级的程序如 leader election, barriers, queues, read/write revocable locks(无须在zookeeper中附加任何东西)。更多信息Recipes and Solutions</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>zookeeper不存在的一致性保证： 多客户端同一时刻看到的内容相同 zookeeper不可能保证两台客户端在同一时间看到的内容总是一样，由于网络延迟等原因。假设这样一个场景，A和B是两个客户端，A设置节点/a下的 值从0变为1，然后让B读/a，B可能读到旧的数据0。如果想让A和B读到同样的内容，B必须在读之前调用zookeeper接口中的sync()方法。</p></div>
+</td>
+</tr></table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_绑定">1.1.8. 绑定</h4>
+<div class="paragraph"><p>ZooKeeper客户端库以两种方式提供：Java和C。下面几节描述这两种绑定。</p></div>
+<div class="sect4">
+<h5 id="_java_绑定">Java 绑定</h5>
+<div class="paragraph"><p>ZooKeeper的Java绑定由两个包组成：<strong>org.apache.zookeeper</strong>和<strong>org.apache.zookeeper.data</strong>。组成ZooKeeper的其他包由内部使用或者是服务器实现的组成部分。<strong>org.apache.zookeeper.data</strong>由简单地用作容器的类构成。</p></div>
+<div class="paragraph"><p>ZooKeeper Java客户端使用的主要类是<strong>ZooKeeper</strong>类。这个类的两个构造函数的不同仅仅在于可选的会话ID和密码。ZooKeeper支持进程的不同实例间的会话恢复。Java程序可以将会话ID和密码保存到稳态存储中，然后重启、恢复程序先前实例使用的会话。</p></div>
+<div class="paragraph"><p>创建ZooKeeper对象的时候，会同时创建两个线程：一个IO线程和一个事件线程。所有IO在IO线程中发生（使用Java NIO）。所有事件回调则在事件线程中进行。重连到ZooKeeper服务器和维持心跳等会话维持活动在IO线程中进行。同步方法的回应也在IO线程中进行。所有异步方法的回应，以及观察事件则在事件线程中处理。对于这个设计，有一些事情需要注意：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+所有同步调用和观察回调将按次序进行，一次一个。调用者可以进行任何想要的处理，但是在此期间不会处理其他回调。
+</p>
+</li>
+<li>
+<p>
+回调不会阻塞IO线程或者同步调用的处理。
+</p>
+</li>
+<li>
+<p>
+同步调用可能不会以正确的次序返回。比如说，假设客户端进行下述处理：提交一个watch设置为ture的、对节点/a的异步读取，然后在读取操作的完成回调中执行一个对/a的同步读取。（可能是不好的实现，但是是合法的，这只是一个简单的例子）
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>如果在异步读取和同步读取之间，对/a进行了修改，则客户端库将在同步读取返回之前接收到一个事件，表明/a已经被修改。但是因为完成回调阻塞了事件队列，同步读取将在观察事件被处理之前返回/a的新值。</p></div>
+<div class="paragraph"><p>最后，关于关闭的规则很直接：一旦被关闭或者接收到致命事件（SESSION_EXPIRED和AUTH_FAILED），ZooKeeper对象就变成无效的了。关闭后，两个线程被关闭，后续对zookeeper句柄的任何访问都将导致不确定的行为，应该避免。</p></div>
+</div>
+<div class="sect4">
+<h5 id="_c_绑定">C 绑定</h5>
+<div class="paragraph"><p>C绑定有单线程和多线程库。多线程库易于使用，跟Java API非常相似。多线程库将创建用于处理连接维持和回调的IO线程与事件分发线程。通过暴露在多线程库中使用的事件循环，单线程库允许在事件驱动应用中使用ZooKeeper。</p></div>
+<div class="paragraph"><p>有两个共享库：zookeeper_st和zookeeper_mt。前者提供了异步API和回调，可集成到应用程序的事件循环中。这个库存在的目的仅仅是为了支持没有pthread可用，或者pthread不稳定的平台（如FreeBSD 4.x）。在其他场合，应用开发者应该链接zookeeper_mt，它同时支持同步和异步API。</p></div>
+<div class="paragraph"><p>====== 安装</p></div>
+<div class="paragraph"><p>如果从Apache代码仓库检出的代码创建客户端库，执行下面的步骤。如果从apache下载的工程源代码包开始创建，则跳到步骤3。</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+在ZooKeeper顶级目录（&#8230;/trunk）执行ant compile_jute。这将在../trunk/src/c目录中创建"generated"目录。
+</p>
+</li>
+<li>
+<p>
+修改当前目录为../trunk/src/c，执行autoreconf -if，以启动autoconf、automake和libtool。请确认安装了2.59或者更高版本的autoconf。跳到步骤4。
+</p>
+</li>
+<li>
+<p>
+如果从工程源代码包开始创建，解压缩源代码包，cd到zookeeper-x.x.x/src/c目录。
+</p>
+</li>
+<li>
+<p>
+执行./configure &lt;your-options&gt;以生成makefile。对于这一步，configure工具支持下述有用的选项：
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+--enable-debug 启用优化和调试信息。（默认是禁用的）
+</p>
+</li>
+<li>
+<p>
+--without-syncapi 禁止同步API支持，不创建zookeeper_mt库。（默认是启用的）
+</p>
+</li>
+<li>
+<p>
+--disable-static 不创建静态库。（默认是启用的）
+</p>
+</li>
+<li>
+<p>
+--disable-shared 不创建共享库。（默认是启用的）
+</p>
+</li>
+</ul></div>
+</li>
+</ol></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>注意：关于执行configure的一般信息，请看INSTALL文件。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="olist arabic"><ol class="arabic" start="5">
+<li>
+<p>
+执行make或者make install，创建并且安装库。
+</p>
+</li>
+<li>
+<p>
+要生成ZooKeeper API的doxygen文档，可执行doxygen-doc。所有文档将放置到docs子目录中。默认情况下，这个命令只生成HTML。关于其他文档格式的信息，请执行./congiure --help。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>====== 绑定您自己的C客户端</p></div>
+<div class="paragraph"><p>在应用程序中使用ZooKeeper API时，应该记住：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+包含ZooKeeper头文件：#include &lt;zookeeper/zookeeper.h&gt;
+</p>
+</li>
+<li>
+<p>
+如果创建多线程客户端，请使用-DTHREADED编译器标志，以启用库的多线程版本，并且链接到zookeeper_mt库。如果创建单线程客户端，不要使用-DTHREADED，并且链接到zookeeper_st库。
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_常见问题和故障">1.1.9. 常见问题和故障</h4>
+<div class="paragraph"><p>下面是一些常见的陷阱：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+如果你使用watch，你必须监控好已经连接的watch事件。当ZooKeeper客户端断开和服务器的连接，直到重新连接上这段时间你都收不到任何通知。如果你正在监视znode是否存在，那么你在断开连接期间收不到它创建和销毁的通知。
+</p>
+</li>
+<li>
+<p>
+你必须测试ZooKeeper故障的情况。在大多数服务器都可用的情况下，ZooKeeper是可以维持工作的。关键问题是你的客户端程序是否能 察觉到。在实际情况下，客户端与ZooKeeper的连接有可能中断（多数时候是因为Zookeeper故障或网络中断）。Zookeeper的客户端库 关注于如何让你重新连接并且知道发生了什么。但是同时你也必须确保能够恢复你的状态和发送失败的请求。努力在测试库里测出这些问题，而不是在产品里——用 几台服务器组成的zookeeper集群测试这个问题，尝试让它们重启。
+</p>
+</li>
+<li>
+<p>
+客户端维护的服务器列表必须和现有的服务器列表一致。如果客户端的列表是现有服务器列表的子集，还可以在非最佳状态工作，但是如果客户端列表里的服务器不在现有集群里你就悲剧了。
+</p>
+</li>
+<li>
+<p>
+注意存放事务日志的位置。性能评测最重要的部分就是日志，ZooKeeper会在回复响应之前先把日志同步到磁盘上。为了达到最佳性能，首选专用 的磁盘来存日志。把日志放在繁忙的磁盘上会降低效率。如果你只有一个磁盘，就把记录文件放在NFS上然后增加SnapshotCount。这样虽然无法完 全解决问题，但能缓解一些。
+</p>
+</li>
+<li>
+<p>
+正确地设置你java的堆空间大小。这是避免频繁交换的有效措施。无用的访问磁盘会让你的效率大打折扣。记住，在ZooKeeper中，一切都是有序的，如果一个服务器访问了磁盘，所有的服务器都会同步这个操作。
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_zookeeper_java_示例">ZooKeeper Java 示例</h1>
+<div class="sect1">
+<h2 id="_一个简单的监视客户端">1. 一个简单的监视客户端</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>要介绍ZooKeeper Java API，我们在这里开发一个非常简单的观看客户端。 该ZooKeeper客户端通过启动或停止程序来监视ZooKeeper节点的更改并进行响应。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_要求">2. 要求</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>客户端有四个要求: 　　　　</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+这需要作为参数:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+zookpeer的服务地址
+</p>
+</li>
+<li>
+<p>
+znode的名字
+</p>
+</li>
+<li>
+<p>
+将输出写入到一个文件的名称
+</p>
+</li>
+<li>
+<p>
+一个可执行的参数。　　
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+它与znode获取相关的数据并开始执行。　　
+</p>
+</li>
+<li>
+<p>
+如果znode发生变化,重启客户端重新提取内容和可执行文件。　　
+</p>
+</li>
+<li>
+<p>
+如果znode消失,客户端可进行线程销毁。
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_程序设计">3. 程序设计</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>一般来说,zookpeer应用被分解成两个部分,一个保持连接,另负责监控数据。在这个应用程序中,这个类称为<strong>Executor</strong>(执行者)保持zookpeer联系,和另一个类<strong>DataMonitor</strong>(数据监视者)监控树中的数据。此外,Executor包含主线程和包含执行逻辑。它负责小用户交互是什么,以及交互exectuable计划你在作为参数,该示例根据znode状态进行关闭和重新启动。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>回想一下,执行程序的工作是启动和停止我传递的名字。它是zookpeer事件的相应对象。正如你所看到的在上面的代码中,执行者通过引用Zookpeer本的构造函数。它还通过引用DataMonitor DataMonitorListener参数的构造函数。没当程序执行的时候,就实现了这两个接口:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p><strong>Watcher</strong>接口是Zookpeer的Java API中定义的。Zookpeer使用它与容器进行通信。它支持一个方法process()。执行程序在这个例子简单地将这些事件转发到DataMonitor决定如何处理它们。它只是为了说明这一点,按照惯例,遗嘱执行人或一些Executor-like对象“拥有”Zookpeer的连接,(后面详细讨论)。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p><strong>DataMonitorListener</strong>接口不是Zookpeer API的一部分。它是一个自定义的interface,为这个示例应用程序而设计的。DataMonitor对象通信使用它回到它的容器,这也是执行程序对象。DataMonitorListener界面如下所示:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>DataMonitor中定义该接口类和执行程序中实现类。当Executor.exists()调用,执行程序决定是否启动或关闭的要求。　
+　　
+当Executor.closing()调用,执行程序决定是否关闭自己的Zookpeer连接。　　　　
+您可能已经猜到,DataMonitor的对象调用这些方法,以应对变化的Zookpeer状态。　　
+　　
+以下是Executor的DataMonitorListener.exists实现()和DataMonitorListener.closing:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datamonitor类">4. DataMonitor类</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>DataMonitor类是Zookpeer的主要逻辑。它主要是异步和事件驱动的。DataMonitor构造函数:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>调用ZooKeeper.exists()检查znode的存在,设置一个坚挺,和通过引用本身(这)作为完成回调对象。在这个意义上,它开始做事了,因为真正的watch被触发。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>不要将完成回调与手表回调混淆。 当监视操作的异步设置（由ZooKeeper.exists（））在服务器上完成时，ZooKeeper.exists（）完成回调恰好是在DataMonitor对象中实现的StatCallback.processResult（）方法。</p></div>
+<div class="paragraph"><p>另一方面，触发手表会向Executor对象发送一个事件，因为Executor注册为ZooKeeper对象的Watcher。</p></div>
+<div class="paragraph"><p>除此之外，您可能会注意到，DataMonitor也可以将自己注册为此特定观看事件的观察者。 这是ZooKeeper 3.0.0（支持多个观察者）的新功能。 但是在这个例子中，DataMonitor不会注册为Watcher。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>当ZooKeeper.exists()操作在服务器上完成,Zookpeer API回调客户端:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>代码首先检查znode存在的错误代码,致命错误,可恢复错误。如果文件(或znode)存在,它从znode获取数据,如果状态改变,调用执行者的exist()。注意,它没有任何异常处理getData调用,因为watches等待任何可能导致一个错误:如果节点被删除之前调用ZooKeeper.getData(),观察事件的ZooKeeper.exists()触发回调;如果有一个通信错误,当连接返回后一个连接监听事件触发。　　　　</p></div>
+<div class="paragraph"><p>最后,注意DataMonitor过程观察事件:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>如果客户端Zookpeer库可以重建通信通道(SyncConnected事件)会话过期前Zookpeer(过期事件)的所有会话的监听会自动重新建立。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_完整源代码清单">5. 完整源代码清单</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">Executor.java</div>
+<div class="content"></div></div>
+<div class="listingblock">
+<div class="title">DataMonitor.java</div>
+<div class="content"></div></div>
+</div>
+</div>
+<h1 id="_zookeeper编程_基础指南">ZooKeeper编程 - 基础指南</h1>
+<div class="sect1">
+<h2 id="_引言">1. 引言</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>在这个指南中，使用展示了使用ZooKeeper实现的屏障和生产-消费队列。我们分别称这些类为Barrier和Queue。这些例子假定你至少有一个运行的ZooKeeper服务。</p></div>
+<div class="paragraph"><p>两个原语都使用下面的代码片断:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>两个类都扩展了SyncPrimitive。用这种方式，我们的执行步骤和SyncPrimitive的构造函数的所有原语差不多。为了保持例子简单，我们创建一个ZooKeeper对象，在我们每一次实例化barrier对象或queue对象的时候，并且我们声明一个静态的变量引用这个对象。随后的Barrier对象和Queue检查一个ZooKeeper对象是否存在。另外，我们可以有一个创建ZooKeeper的应用并且传递它给Barrier和Queue的构造函数。</p></div>
+<div class="paragraph"><p>我们使用process()方法来处理监视器的通知。在下面的讨论，我们呈现设置监视器的代码。一个监视器是一个内部的数据结构，它能够使ZooKeeper通知节点的改变。例如，如果一个客户端正在 等待其它客户端离开一个屏障，那么它可以给一个特定的节点设置一个监视器并且等待修改。这能表示它等待结束了。一旦你看完例子你就明白这一点。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_屏障">2. 屏障</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>一个屏障是一个原语，它使一组进程可以同步地开始和结束一个计算。这种实现的总体思想是有一个barrier节点作为每一个进程节点的父节点。假如我们这个屏障节点为"/b1"。每一个进程"p"创建一个节点”/b1/p“。一旦有足够的进程已经创建的它们对象的节点，加入的进程可以开始计算。</p></div>
+<div class="paragraph"><p>在这个例子中，每一个进程代表一个Barrier对象，并且它的构造函数有这些参数:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ZooKeeeper服务端的地址(例如"zoo1.foo.com:2181")
+</p>
+</li>
+<li>
+<p>
+ZooKeeper中屏障节点的路径(例如，"/b1")
+</p>
+</li>
+<li>
+<p>
+这组进程的数量
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Barrier的构造函数传递ZooKeeper服务端的地址给父类的构造器。父类创建一个ZooKeeper实例如果没有这个实例。Barrier的构造函数在ZooKeeper上创建一个节点，这个节点是所有进程节点的父节点，并且 我们称它为root(<strong>注意</strong>:它不是ZooKeeper的根"/").
+复制代码</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>为了进入屏障，一个进程调用enter()。一个进程在root下面创建一个节来代表它，用它的主机名来表示节点的名字。它然后等待直到足够的进程进入到屏障。一个进程通过用getChildren()检查root节点的孩子节点数量来实现。并且等待通知一旦它没有足够的孩子节点。为了收到一个通知当root节点改变的时候，一个进程不得不设置 一个监视器，并且通过调用"getChildren()"来实现。在代码中，我们的"getChildren()"方法有两个参数。第一个是那一个节点来读数据的，并且第二个是布尔标识使进程设置 一个监视器，在代码中标识是true.</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>注意enter()抛出KeeperException 和InterruptedException异常，所以应用有责任来捕获和处理这样的异常。</p></div>
+<div class="paragraph"><p>一旦计算结束，一个进程调用leave()来离开这个屏障。首先它删除它对应的节点，然后它得到root节点的孩子。如果至少有一个孩子，那么它就会等待一个通知(注意调用getChildred()的第二个参数是true)，意为着ZooKeeper不得不设置一个监视器在root节点上。一旦收到一个通知，它再次检查是否root节点有任何孩子。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_生产者_消费者队列">3. 生产者-消费者队列</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>一个生产者-消费者队列是一个数据分发结构，一组进程生产并且消费物品。生产者进程创建新的元素并且加入到队列。消费者进程从队列中删除元素，并且处理它们。在这个实现中，元素中简单的数字。队列被一个root节点表示，并且加入一个元素到这个队列，一个生产者进程创建一个新节点，root节点的孩子节点。</p></div>
+<div class="paragraph"><p>下面的代码片断对象对象的构造函数。就像Barrier对象一样，它首先父类的构造函数，SyncPrimitive，来创建一个ZooKeeper对象，如果这个对象不存在。它然后校验队列的root节点是否存在，并且如果不存在就创建一个。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>一个生产者进程调用 "produce()" 来增加元素到队列中，并且传一个数字作为参数。为了增加元素到队列中，这个方法创建一个节点通过"create()”,并且使用SEQUENCE标示来让ZooKeeper增加序列计数器的值到root节点上。用这种方法，我们暴露了队列中元素的总的顺序，因此保证队列中最老的元素是下一个要消费的元素。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>为了消费一个元素，一个消费者进程获取root节点的孩子，读取最小值的节点，并且返回这个元素。注意如果有一个冲突，那么两个竞争进程中的一个将不能删除它的节点并且删除操作将会抛出异常。</p></div>
+<div class="paragraph"><p>调用getChildren()返回一个以字典序列排序的列表。因为字典序列对计算器的值的顺序没有必要，我们需要那一个元素是最小的值。来了决定哪一个有最小计算器值，我们遍历列表，并且删除每一个的前缀"element"。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_完整的源码列表">4. 完整的源码列表</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">SyncPrimitive.Java</div>
+<div class="content"></div></div>
+</div>
+</div>
+<h1 id="_zookeeper食谱与方案">ZooKeeper食谱与方案</h1>
+<div class="sect1">
+<h2 id="_使用zookeeper构造高级别应用的指南">1. 使用ZooKeeper构造高级别应用的指南</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>在这个文章中，你将会发现使用ZooKeeper来实现高级别功能的指南。所有的它们在客户端上被实现而不需要ZooKeeper特别的支持.希望社区将注意到这些约定在客户端库里来方便他们的使用并且促进标准化。</p></div>
+<div class="paragraph"><p>其中一个关于ZooKeeper最有趣的事是尽管ZooKeeper使用异步的通知，你可以使用它构造同步的一致性原语，例如队列和锁。正如你将要看到的一样，这是可能的因为ZooKeeper对更新强加了一个整体的顺序，和暴躁这个顺序的机制。</p></div>
+<div class="paragraph"><p>注意下面的食谱试图实用最挂实践。特别地，他们避免投票，定时器或者任何其它导致产生“羊群效应”的造成突发的事故和限制扩展性。</p></div>
+<div class="paragraph"><p>有很多可以被想到的有用的功能没有包含在这 - 可撤销的读-写优先锁，只有一个例子。并且这里提到的一些构件 - 特别是锁 - 阐明了特定的观点，尽管你可能找到其它构件，例如事件处理或队列，执行相同功能的一个更实用的方法。通常，这部分的例子被设计用来刺激思想。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_关于错误处理的重要注意事项">2. 关于错误处理的重要注意事项</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>当实现这些食谱你必须处理可恢复的异常(参考 FAQ)。特别地，一些食谱利用了顺序的短暂节点。当创建一个顺序的短暂节点时，有一个错误的案例，当create()在服务端成功了但是在返回给客户端这个节点的名字之前服务端挂掉了。当客户端重新连接它的会话仍然是有效的并且，因此，这个节点没有被删除。这个意思是对客户端来说它很难知道这个节点有没有被创建。下面的食谱包含了处理这种情况的方法。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_取出即可用的应用_命名服务_配置_集群管理">3. 取出即可用的应用:命名服务，配置，集群管理</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>命名服务和配置管理是ZooKeeper的两个主要应用。这两上功能被ZooKeeper API直接提供。</p></div>
+<div class="paragraph"><p>另一个被ZooKeeper直接提供的是集群管理。组被表示为了一个节点。组中的成员在组节点下创建短暂的节点。不正常地失败的组中的节点将被自动地删除当ZooKeeper检测到失败。</p></div>
+<div class="sect2">
+<h3 id="_屏障_2">3.1. 屏障</h3>
+<div class="paragraph"><p>分布式的系统使用屏障来一组节点的进程，直到遇到满足的条件的时候所有节点才被允许继续执行。在ZooKeeper中屏障通过指定一个屏障节点来实现。障碍在路上如果屏障节点存在。下面的它的伪代码:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+客户端在屏障节点上调用ZooKeeper API的exists()方法，并且设置 watch 为true.
+</p>
+</li>
+<li>
+<p>
+如果exists()返回false,屏障消失并且客户端继续。
+</p>
+</li>
+<li>
+<p>
+否则，如果exists()返回true,客户端等待屏障节点的事件。
+</p>
+</li>
+<li>
+<p>
+当监听事件被触发，客户端再次调用exists()方法，再次等待直到屏障节点被删除。
+</p>
+</li>
+</ol></div>
+<div class="sect3">
+<h4 id="_双重屏障">3.1.1. 双重屏障</h4>
+<div class="paragraph"><p>两重屏障使客户端同步一个计算的开始和结束。当足够的进程进入到屏障，进程开始他们的计算，并且一旦完成就离开屏障。这个食谱展示了怎么作为屏障使用ZooKeeper节点。</p></div>
+<div class="paragraph"><p>这个食谱中的伪代码用b来表示一个屏障节点。每一个客户端进程 p 在进入的时候注册到屏障节点上并且在离开的时候取消注册。一个节点通过下面的Enter过程来注册到屏障节点上，在继续计算之前它等待直到 x 客户端进程完成注册(这里的x取决于你的系统)。</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">进入</p></td>
+<td align="left" valign="top"><p class="table">离开</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">1. Create a name n = b+“/”+p</p>
+<p class="table"> 2. Set watch: exists(b + ‘‘/ready’’, true)</p>
+<p class="table"> 3. Create child: create( n, EPHEMERAL)</p>
+<p class="table"> 4. L = getChildren(b, false)</p>
+<p class="table"> 5. if fewer children in L than x, wait for watch event</p>
+<p class="table"> 6. else create(b + ‘‘/ready’’, REGULAR)</p></td>
+<td align="left" valign="top"><p class="table">1. L = getChildren(b, false)</p>
+<p class="table">  2. if no children, exit</p>
+<p class="table">  3. if p is only process node in L, delete(n) and exit</p>
+<p class="table">  4. if p is the lowest process node in L, wait on highest process node in L</p>
+<p class="table">  5. else delete(n) if still exists and wait on lowest process node in L</p>
+<p class="table">  6. goto 1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>当进入的时候，所有进程监视一个准备好的节点，并且创建一个短暂节点作为屏障节点的子节点，每一个进程但是最后进入的屏障，并且等待准备的节点出现在第5行。创建第x个节点的进程，也就是最后一个节点。将看到x个节点在孩子列表中。并且创建准备结点。然后唤醒其它进程。注意等待进程只有在退出的时候才唤醒。所以等待是高效的。</p></div>
+<div class="paragraph"><p>在退出的时候。你不能使用一个标示，例如ready,因为你正在等待处理的节点离开。通过使用短暂节点。在进入屏障之后失败的进程不能阻止正确的进程结束。当进程准备离开的时候。它们必须删除进程节点并且等待其它进程做同样的事情。</p></div>
+<div class="paragraph"><p>进程退出当没有进程节点作为b的孩子节点的时候。然而，为了效率，你可以使用最底的进程节点作为准备标示。准备退出的所有其它进程监视最底的退出节点离开。并且最底节点的拥有者监视任一其它节点(为了简单选择最高的)的离开。这意为只一个节点唤醒当一个节点删除的时候除了最后一个节点删除。最后节点删除的时候所有节点被唤醒。</p></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_队列">4. 队列</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>分布式队列是一个普遍的数据结构。为了在ZooKeeper中实现一个分布式队列。首先指定一个znode持有队列。队列节点。分布式的客户端放一些东西进入队列通过用以queue-结尾的路径,序号和为短暂的标示true调用create()。因为序号的标示被设置。新的路径名字的形式为_path-to-queue-node_/queue-X,这里的X是自动增加的数字。一个想要从队列中被删除的节点调用ZooKeeper 的<strong>getChildren( )</strong> 函数。在队列中的节点都设置了监视器。并且开始处理最小数值的节点。客户端不需要发起另一个<strong>getChildren( )</strong>直到消耗到第一次调用<strong>getChildren( )</strong>返回的列表。如果没有孩子在队列节点中。读进程等待一个监视通知来再次检查队列。</p></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>现在有一个队列实现在ZooKeeper食谱目录下。它在发行版本的src/recipes/queue 目录下。</p></div>
+</div></div>
+<div class="sect2">
+<h3 id="_优先队列">4.1. 优先队列</h3>
+<div class="paragraph"><p>为了实现优先队列，你只需要在通用的队列上做两个小的修改。首先，为了增加一个队列，路径名字以"queue-YY"结尾，这里的YY是元素的优先级，而且最小的数有最高的优先级（就像UNIX）。第二，当从队列中删除的时候。客户端使用最新的孩子列表意为着客户端将使先前获取的孩子列表无效如果触发了这个队列节点的监听通知。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_锁">4.2. 锁</h3>
+<div class="paragraph"><p>完全分布式锁是全局同步的。意为着在任何时间的快照中没有两个客户认为它们持有相同的锁。这些可以实现使用ZooKeeper。就像优先队列，先定义一个锁节点。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>现在有一个锁实现在ZooKeeper食谱目录下，它在发行版本的src/recipes/queue 目录下。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>客户端想获取锁需要做下面的事情:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+以参数"<em>locknode</em>/guid-lock-"同时设置sequence和ephemeral标识来调用create()。需要一个guid以防create()丢失。参考下面的注意事项。
+</p>
+</li>
+<li>
+<p>
+在锁节点上调用getChildren()而不设置监视标识(这对避免羊群效应很重要)
+</p>
+</li>
+<li>
+<p>
+如果在步骤1中创建的路径名有最小的顺序数字后缀，客户端拥有这个锁并且客户端退出协议。
+</p>
+</li>
+<li>
+<p>
+客户端调用exists()并在锁目录中的下一个最小序列数字的路径设置监视标识。
+</p>
+</li>
+<li>
+<p>
+如果exists()返回false,跳到第2步。否则等待从前一个步骤中得到路径名的通知在进入步骤2之前。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>解锁协议是非常简单的:将要释放锁的客户端简单地删除他们在步骤1中创建的节点。</p></div>
+<div class="paragraph"><p>这里需要几件事需要注意:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+一个节点的删除将只引起一个客户端唤醒因为每一个节点恰恰被一个客户端监视着。用这种方式你避免了羊群效应。
+</p>
+</li>
+<li>
+<p>
+这里没有投票或超时。
+</p>
+</li>
+<li>
+<p>
+因为你实现锁的方式，很容易看到锁竞争的数量，打断锁，调试锁问题，等等。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>可重新覆盖的错误和GUID</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+如果在调用<strong>create()</strong>的时候出现可重新覆盖的错误，客户端应该调用<strong>getChildren()</strong>并且检查包含用来在路径名的guid的节点。这处理在服务端create()成功但是在返回新节点的名字之前服务端崩溃的情况。
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_共享锁">4.3. 共享锁</h3>
+<div class="paragraph"><p>你可以实现共享锁通过对锁协议做一些小的改变:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">获取读锁</p></td>
+<td align="left" valign="top"><p class="table">获取写锁</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">1. 调用create()来创建一个路径名 "guid-/read-"的为节点。这个在后来的协议中使用锁节点。确保设置了sequence 和 ephemeral标记。</p>
+<p class="table">2. 在节锁节点上调用getChildren()，而不设置监视标识 - 它很重要，它避免羊群效应。</p>
+<p class="table">3. 如果没有一个路径名以"write-"开头的孩子并且有比步骤1创建的节点小的序列号，那么客户端就拥有了锁并且可能退出协议。</p>
+<p class="table">4. 否则，调用监视标识的exists()，在有最小的序列号并且路径名是以"write-"开头的节点上设置。</p>
+<p class="table">5. 如果exists()返回 false,跳到步骤2。</p>
+<p class="table">6. 否则，在跳到步骤2之前等待来自上一个步骤中的路径名的通知。</p></td>
+<td align="left" valign="top"><p class="table">1. 调用create()来创建一个路径名为"guid-/write-"的节点。这是锁节点。确保设置了sequence 和 ephemeral标记。</p>
+<p class="table">2. 在锁节点上调用getChildren( )方法而不设置监视标记 - 它很重要，它避免羊群效应。</p>
+<p class="table">3. 如果没有孩子节点的序列号比步骤1中创建的节点低，那么客户端就获取锁并且客户端退出这个协议。</p>
+<p class="table">4. 调用exists()，在下一个最小的序列号的节点上设置监视标识。</p>
+<p class="table">5. 如果exists() 返回false,跳到步骤2。否则，在跳到步骤2之前等待来自上一个步骤中的路径名的通知。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>注意：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+这个食谱它可能出现羊群效应:当很多组的客户端正在等待读锁，在最小序列号的"write-"节点被删除的时候，这些客户端几乎同时获取到了通知。实际上，这是合法的行为：因为所有这些等待读的客户端应该被释放因为它们拥有锁。羊群效应是指释放一个"羊群"当实际上只有一个或一小部分机器可能处理的时候。
+</p>
+</li>
+<li>
+<p>
+参考note for Locks关于怎么使用guid
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_可撤消的共享锁">4.4. 可撤消的共享锁</h3>
+<div class="paragraph"><p>对共享锁做一些小的修改，通过修改共享锁你可以使用锁可撤销。</p></div>
+<div class="paragraph"><p>在步骤<strong>1</strong>中，同时获取了读和写锁，在调用<strong>create()</strong>后立刻调用<strong>getData()</strong>并设置监视器，如果客户端随后收到在步骤1中创建的节点的通知，它做另一个<strong>getData()</strong>在这个节点上，同时设置监视器并且搜寻字符串“unlock”,这表示客户端必须释放锁。这是因为根据共享锁的协议，你可以要求拥有锁的客户端放弃锁通过在被锁的节点上调用<strong>setData()</strong>，并写“unlock”到这个节点上。</p></div>
+<div class="paragraph"><p>注意这个协议要求锁持有者同意释放锁。这样的同意是很重要的，特别是如果锁持有者需要在释放锁之前做一些处理。当然你可以一直实现带着该死的激光束可撤消的锁通过在你的协议中规定撤消者被允许删除锁节点如果在一段时间过后锁没有被锁持有者删除。</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_两段式提交">5. 两段式提交</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>一个两段式提交协议是一种逻辑，它让所有在分布式系统中的的客户端同意要么提交事务要么取消事务。</p></div>
+<div class="paragraph"><p>在ZooKeeper中，你可以实现一个两段式提交通过用一个协调者创建一个事务节点，比如"/app/Tx"，每一个参与的站点的孩子节点，比如，"/app/Tx/s_i"。当协调者创建孩子节点，它没有设置内容。一旦每一个事务中的一方从协调者收到事务，站点读每一个孩子节点，并且设置一个监视器。每一个站点然后处理查询 和投票“提交”和“取消”通过写它各自的节点。一旦写完成，其它站点被通知，并且一旦所有的站点者投票，他们可以决定是提交 还是取消。注意一个节点可早点决定取消如果一些站点投票取消。</p></div>
+<div class="paragraph"><p>这个实现的一个有趣的地点是只有协调的角色来根据站点组来决做决定，为了创建ZooKeeper节点，为了传播事务到相应的站点。实际上，尽管传播事务事务可以被完成融通ZooKeeper通过写它在事务节点上。</p></div>
+<div class="paragraph"><p>上面论讨的方法有两个缺点。一个是消息的复杂度，它是O(n²)。第二个是通过临时节点检测站点失效的不可能性。为了使用临时节点来检测站点失效，它必须站点创建这个节点。</p></div>
+<div class="paragraph"><p>为了解决第一个问题，只可以只能让协调者被通知事务节点的改变，并且通知节点一旦协调者收到一个决定。注意这个方法是可扩展的，但是它也更慢，因为它要求所有的通信通过协调者。</p></div>
+<div class="paragraph"><p>为了解决第二个问题，你可以使协调者传播事务到站点，并且使每一个站点创建它的临时节点。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_领导者选举">6. 领导者选举</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper做领导者选择的一个简单的方法是当创建代表揭底客户端的节点时使用<strong>SEQUENCE|EPHEMERAL</strong>标记。这个思路是有一个znode,比如 “/election",每一个znode创建一个带着SEQUENCE|EPHEMERAL孩子节点"/election/guid-n_"，有了顺序标记，ZooKeeper自动地附加一个比选择增加的都大的数字到一个"/election"的孩子上面。创建的最小顺序号的节点就是领导者。</p></div>
+<div class="paragraph"><p>这还是全部，监听领导者的失效是很重要的，所以在当前领导者失效的情况下一个新的客户端被选举出来。一个复杂的解决办法是使所有的应用进程监听当前最小的节点，并且检查他们是不是新的领导者当最小的znode消失的时候(注意最小的znode将消失，如果领导者失败，因为这个节点是临时节点)。但是这导致一个羊群效应：一旦当前领导者失败，所有其它里程收到 一个通知，然后执行"/election" 的getChildren的方法 来获取孩子列表。如果客户端的数字是大的，它导致ZooKeeper服务端不得不处理很多次数字操作。为了避免羊群效应，只监听在znodes序列的下一个节点就足够了。如果一个客户端收到它监听的节点消失了，那么它变为新的领导，一旦没有更小的节点的情况下。注意到这避免了羊群效应通过不是所有的客户端监听同一个节点。</p></div>
+<div class="paragraph"><p>这里是它的伪代码：</p></div>
+<div class="paragraph"><p>假设ELECTION是应用的选择的路径。志愿成为一个领导者：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+创建znode z，它的路径是"ELECTION/guid-n_"，并且设置SEQUENCE 和 EPHEMERAL 标识;
+</p>
+</li>
+<li>
+<p>
+让C成为"ELECTION"的孩子，并且i是z的序号;
+</p>
+</li>
+<li>
+<p>
+监听"ELECTION/guid-n_j"的改变，这里的j是最小(官网上说是最大(largest)的应该是错的)的序序号，这样j&lt;i并且 n_j是C中的节点;
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>一旦收到 节点删除的通知：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+假如C是ELECTION的孩子节点
+</p>
+</li>
+<li>
+<p>
+如果z是C中最小的节点，那么执行选举过程;
+</p>
+</li>
+<li>
+<p>
+否则,监听"ELECTION/guid-n_j"的改变，这里的j是最小(官网上说是最大(largest)的应该是错的)的序序号，这样j&lt;i并且 n_j是C中的节点;
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>注意：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+注意一个节点前端没有节点不意为着这个节点的创建者意识到它是当前的领导者。应用可以考虑创建一个单独的znode来通知领导者已经执行了领导选举。
+</p>
+</li>
+<li>
+<p>
+参考 note for Locks关于怎么使用节点中的guid
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<h1 id="_zookeeper管理员指南">ZooKeeper管理员指南</h1>
+<div class="sect1">
+<h2 id="_部署">1. 部署</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>这部分包含了部署ZooKeeper的信息和覆盖这些话题</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+系统要求
+</p>
+</li>
+<li>
+<p>
+集群(多服务)安装
+</p>
+</li>
+<li>
+<p>
+单服务和开发者安装
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>前两部分假定你对在例如数据中心的生产环境安装ZooKeeper有兴趣。最后一部分包含你在一个有限的基础上安装ZooKeeper的情况 - 为了评估，测试，或者开发 - 但是不在生产环境 。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_系统要求">2. 系统要求</h2>
+<div class="sectionbody">
+<div class="paragraph"><div class="title">支持的平台</div><p>ZooKeeper由多个组件组成。 一些组件被广泛支持，其他组件仅在较小的一组平台上受支持。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+客户端是Java客户端库，由应用程序用于连接到ZooKeeper集合。
+</p>
+</li>
+<li>
+<p>
+服务器是在ZooKeeper集合节点上运行的Java服务器。
+</p>
+</li>
+<li>
+<p>
+Native Client是C中实现的客户端，类似于Java客户端，由应用程序用于连接到ZooKeeper系统。
+</p>
+</li>
+<li>
+<p>
+Contrib是指多个可选的附加组件。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>以下矩阵描述了在不同操作系统平台上运行每个组件的承诺级别。</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">操作系统</p></td>
+<td align="left" valign="top"><p class="table">客户端</p></td>
+<td align="left" valign="top"><p class="table">服务器</p></td>
+<td align="left" valign="top"><p class="table">原生客户端</p></td>
+<td align="left" valign="top"><p class="table">控制</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">GNU/Linux</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Solaris</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">FreeBSD</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Windows</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">开发与生产</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Mac OS X</p></td>
+<td align="left" valign="top"><p class="table">仅开发</p></td>
+<td align="left" valign="top"><p class="table">仅开发</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+<td align="left" valign="top"><p class="table">不支持</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>对于未明确提到的矩阵中支持的任何操作系统，组件可能会也可能不起作用。 ZooKeeper社区将修复为其他平台报告的明显错误，但没有完全支持。</p></div>
+<div class="paragraph"><div class="title">软件要求</div><p>ZooKeepr运行在java 发行版本1.6或更高(JDK 6 或更高，FreeBSD支持需要openjdk7)。它作为一个ZooKeeper服务器集成运行。三个ZooKeeper服务端是建议的集群最小了数量，我们也建议他们运行在不同的机器上。在Yahoo!，ZooKeeper通常被布置在专用的RHEL上面。一个双核的处理器，2GM的内在，和80G的硬盘。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_集群_多个服务端_安装">3. 集群(多个服务端)安装</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>为了ZooKeeer服务更可靠，你应该在集群中部署ZooKeeper,只要集群中的大多数运行起来，服务就是可用的。因为ZooKeer需要一个大多数，最好用一个奇数的机器。例如，用四台机器ZooKeeeperk只能处理一个机器故障。如果两台机器失效，剩下的两台不能组成大多数。然而，用五台机器ZooKeeper可能处理2台机器失效。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>就像在入门指南中提到的，最少需要三个服务端对于一个容错集群安装，并且强烈建议你有奇数个服务端。</p></div>
+<div class="paragraph"><p>通常三台服务端对生产环境安装是够的，但是在维护期间为了最大化的可靠性，你可能想要安装五台服务端。对于三台服务端，如果你在其中一台上执行维修，在维修期间其中一台将会是容易失效的。如果你有五台运行的服务，你可以让一台停掉来维修。</p></div>
+<div class="paragraph"><p>并且知道如果其它四台中和一台突然失效也是ok的。</p></div>
+<div class="paragraph"><p>你的冗余考虑应该包含你的环境的所有方面。如果你有三个ZooKeeper服务端，但是他们的网线都插入到同一个网络交换机上面，那么交换机的失败将挂掉你整个集群。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>这里是安装集群中一个服务端的步骤。这些步骤应该在集群中的每一个主机上执行:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+安装Java JDK。你可以使用本地的系统包，或从http://java.sun.com/javase/downloads/index.jsp下载
+</p>
+</li>
+<li>
+<p>
+设置Java 堆大小。这对于避免交换很重要。交换将严重降低ZooKeeper的性能。为了决定正确的。使用压力测试，并且确保引起交换的限制的下面。保守起见 - 对于4G内在的机器，使用最多3G的堆内存。
+</p>
+</li>
+<li>
+<p>
+安装ZooKeeper服务端安装包。它可以从http://ZooKeeper.apache.org/releases.html 下载。
+</p>
+</li>
+<li>
+<p>
+创建配置文件。这个文件可以是任何名字。使用下面的设置作为开始:
+</p>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>你可以找到这些和其它设置的含义在Configuration Parameters部分。</p></div>
+<div class="paragraph"><p>每一个机器是ZooKeeper集群的一部分。他们应该知道集群中的其它机器。你使用server.id=host:port:port这样的形式来达到这样的目的。参数host和port是直观的。你通过创建一个名字为myid的文件来区分每一台机器的服务id,每一服务端一个，它放在服务端的配置文件指定的dataDir的参数的数据目录下。</p></div>
+</li>
+<li>
+<p>
+myid文件包含一个单行文本，它的值是机器的id。所以服务端1的myid将包含文本"1"而没有其它。这个id必须在集群中是唯一的并且是一个1到255之间的值。
+</p>
+</li>
+<li>
+<p>
+如果您的配置文件已设置，您可以启动ZooKeeper服务器：
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><code>$ java -cp ZooKeeper.jar：lib / slf4j-api-1.7.5.jar：lib / slf4j-log4j12-1.7.5.jar：lib / log4j-1.2.17.jar：conf \ org.apache.ZooKeeper。 server.quorum.QuorumPeerMain zoo.cfg</code></pre>
+</div></div>
+<div class="paragraph"><p>QuorumPeerMain启动ZooKeeper服务器，JMX管理bean也被注册，允许通过JMX管理控制台进行管理。 ZooKeeper JMX文档包含有关使用JMX管理ZooKeeper的详细信息。</p></div>
+<div class="paragraph"><p>有关启动服务器实例的示例，请参阅发行版中包含的脚本bin / ZooKeeperServer.sh。</p></div>
+</li>
+<li>
+<p>
+通过连接到主机来测试您的部署：
+</p>
+<div class="paragraph"><p>在Java中，您可以运行以下命令来执行简单的操作：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>$ bin / zkCli.sh -server 127.0.0.1:2181</code></pre>
+</div></div>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_单一服务器和开发者安装">4. 单一服务器和开发者安装</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>如果你为了开发目的安装ZooKeeper。你将可能想安装一个ZooKeeper的服务实例，然后安装Java或c的客户端库在你的开发机器上。</p></div>
+<div class="paragraph"><p>安装一个服务实例的步骤和上面的相似，除了配置文件更简单。你可以找到完整的操作指南在ZooKeeper Getting Started Guide的 Installing and Running ZooKeeper in Single Server Mode部分。</p></div>
+<div class="paragraph"><p>更多关于安装客户端库的信息，参考 ZooKeeper Programmer&#8217;s Guide的 Bindings部分</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_管理">5. 管理</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>这部分包含关于运行和维护ZooKeeper的信息并且包含这些主题：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+设计一个ZooKeeper部署
+</p>
+</li>
+<li>
+<p>
+准备
+</p>
+</li>
+<li>
+<p>
+考虑的事：ZooKeeper的长处和局限性
+</p>
+</li>
+<li>
+<p>
+管理
+</p>
+</li>
+<li>
+<p>
+维护
+</p>
+</li>
+<li>
+<p>
+监督
+</p>
+</li>
+<li>
+<p>
+监测
+</p>
+</li>
+<li>
+<p>
+日志
+</p>
+</li>
+<li>
+<p>
+故障排除
+</p>
+</li>
+<li>
+<p>
+配置参数
+</p>
+</li>
+<li>
+<p>
+ZooKeeper命令
+</p>
+</li>
+<li>
+<p>
+数据文件管理
+</p>
+</li>
+<li>
+<p>
+避免的事
+</p>
+</li>
+<li>
+<p>
+最佳实践
+</p>
+</li>
+</ul></div>
+<div class="sect2">
+<h3 id="_设计一个zookeeper部署">5.1. 设计一个ZooKeeper部署</h3>
+<div class="paragraph"><p>ZooKeeper的可靠性基于两个假设。</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+只有部署中的一小部分将失效。在这里失效是指机器崩溃，或网络的一些问题使一个服务端和其它的隔离开来。
+</p>
+</li>
+<li>
+<p>
+正确地部署机器。正确操作是正确地执行代码，使时间正常地工作，并且使存储和网络组件执行一致。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>下面包含的部分对于ZooKeeper管理员来说是最大限度地认为这些假设是成立的。一些是跨机器的考虑，其它是一些你应该为每一台机器考虑的事情。</p></div>
+<div class="paragraph"><div class="title">跨机器的要求</div><p>为了做ZooKeeper服务活跃，必须有大多数的机器可以彼此通信。为了构建一个可以容忍F台机器失效的部署，你应该部署2×F+1台机器。因此，一个包含三台机器的部署可以处理一个失效，一外包含5台机器的部署可以处理2台失效。注意一个6台机器的部署只能处理2个失效因为3台机器不是大多数。因为这个原因，ZooKeeper部署通常由奇数个机器组成。</p></div>
+<div class="paragraph"><p>为了达到最大可能地容忍失效，你应该试着使机器失效独立地。例如，如果大部分机器用相同的交换机，交换机的失效将引起相互关联的失效并且使服务挂掉。对于使用相同的电源，空调系统也一样。</p></div>
+<div class="paragraph"><div class="title">单机要求</div><p>如果ZooKeeper不得不和其它应用竞争像存储设置，CPU,网络或内在的资源，它的性能将受到显著影响。ZooKeeper具有很强的持久性保证，这意为它使用存储设置来记录改变在负责改变的操作完成之前。你应该意识到这个依赖，并且照顾好它，如果你想保证ZooKeeper的操作不被你的存在设置挂起。这里有一些你可以做的事情来减小这种下降。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ZooKeeper的事务日志必须在一个专门的设备上(一个专门的分区是不够的)ZooKeeper顺序地写日志，没有寻找，共享你的日志设备和其它进程可能引起寻找和竞争，这可能导致几秒的延迟。
+</p>
+</li>
+<li>
+<p>
+不要把ZooKeeepr放到一个引起交换的位置。为了使ZooKeeper运行的及时性，简单地不能允许它交换。因些，确保给ZooKeeper分配最大堆的大小不比真实的内存大。关于这点的更多内容，参考下面的 Things to Avoid。
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_供应">6. 供应</h2>
+<div class="sectionbody">
+</div>
+</div>
+<div class="sect1">
+<h2 id="_需要考虑的事项_zookeeper的优点和局限性">7. 需要考虑的事项：ZooKeeper的优点和局限性</h2>
+<div class="sectionbody">
+</div>
+</div>
+<div class="sect1">
+<h2 id="_管理_2">8. 管理</h2>
+<div class="sectionbody">
+</div>
+</div>
+<div class="sect1">
+<h2 id="_维护">9. 维护</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>对于ZooKeeper的集群的长时间的维护是必要的，然而你必须注意以下事情：</p></div>
+<div class="paragraph"><div class="title">正在进行的数据目录清理</div><p>ZooKeeper的数据目录包含的文件是存储在特定服务集群中的znode的持久化副本。他们是快照和事务日志文件。当对znode做了改变，这些改变被附加到一个事务日志里，有时候，当一个日志增大，当前所有 znode的状态的快照将被 写到文件系统中。这个快照取代所有先前的日志。</p></div>
+<div class="paragraph"><p>ZooKeeper服务端将<strong>不会删除老的快照和日志文件</strong>。当使用默认的配置时(参考下面的自动清除)，这是操作者的责任。每一个服务端环境是不同的因此管理这些文件的要求也不尽相同(例如备份)。</p></div>
+<div class="paragraph"><p>PurgeTxnLo工具实现了一个管理者可以使用的简单的保留策略。API文档包含了调用规则的详细信息(参数，等等)。</p></div>
+<div class="paragraph"><p>在下面的例子最后几个快照和他们相应的日志被保留并且其它的被删除。&lt;count&gt;的值通常应该大于3(尽管不是很必要,这提供了三个备份,在不可能的情况下，最近一个已经被破坏)。这可以在ZooKeeper服务端的机器上运行一个定时任务来每天清除日志。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>自动清除快照和它对应的日志文件在ZooKeeper3.4中被引入并且可以通过下面的参数开启。<strong>autopurge.snapRetainCount</strong> 和<strong>autopurge.purgeInterval</strong>，关于这方面更多信息，请参考下面的Advanced Configuration。</p></div>
+<div class="paragraph"><div class="title">调试日志清除(log4j)</div><p>参考这个文档关于logging的部分。它假设你使用log4j内置的特性设置一个滚动文件附加器。。conf/log4j.properties里的配置例子提供了这样的一个例子。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_监督">10. 监督</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>你将想要一个监督进程来管理你所有的ZooKeeper服务端进程，ZooKeeper服务端被设计成快速失败的。意为着它将关闭(进程退出)如果它遇到一个不能恢复的错误。一个ZooKeeper服务集群是高度可靠的，意为着它当一个服务挂掉的时候，集群作为一个整体还是可以活跃和处理请求。另外，因为集群是"自治愈的"，失效的服务端启动后将自动地加入集群而不任何人为干预。</p></div>
+<div class="paragraph"><p>管理进程如daemontools或SMF（其他监控过程的选项也可以使用，由您自己决定使用哪一个，这仅仅是两个示例），管理您的ZooKeeper服务器可确保如果进程异常退出，将自动重新启动，并将快速重新加入群集。</p></div>
+<div class="paragraph"><p>如果发生OutOfMemoryError，还建议将ZooKeeper服务器进程配置为终止并转储其堆。这通过在Linux和Windows上分别启动具有以下参数的JVM来实现。 ZooKeeper随附的ZooKeeperServer.sh和ZooKeeperServer.cmd脚本设置了这些选项。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_检测">11. 检测</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper服务可以被检测用两种主要的方式；1)通过使用4字母单词的命令 2)JMX参考适当的部分为你的需求。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_日志">12. 日志</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper使用SLF4J版本1.7.5作为其日志记录基础设施。 为了向后兼容，它绑定到LOG4J，但您可以使用LOGBack或您选择的任何其他支持的日志记录框架。</p></div>
+<div class="paragraph"><p>ZooKeeper默认log4j.properties文件驻留在conf目录中。 Log4j要求log4j.properties位于工作目录（运行ZooKeeper的目录）或可从类路径访问。</p></div>
+<div class="paragraph"><p>有关SLF4J的更多信息，请参阅其手册。</p></div>
+<div class="paragraph"><p>有关LOG4J的更多信息，请参阅log4j手册的Log4j默认初始化过程。</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_故障排除">13. 故障排除</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>服务没有起来因为文件损坏</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>一个服务可能不能读它的数据库并且不能启动因为一些ZooKeeper服务的事务日志文件损坏。你将看到一些IOException在载入ZooKeeper数据库的时候。在这样的情况下，确保你集群中所有其它服务端启动起来并且工作。在命令端口使用“stat”命令查看是否他们处于健康状态。在你检测所有其它服务端都起来后，你可以继续并且清理坏掉的服务端的数据库。删除datadir/version-2目录下的所有文件和datalogdir/version-2/。重启服务。</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_配置参数">14. 配置参数</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ZooKeeper的行为由ZooKeeper的配置文件支配。这个文件被设计，所以完全相同的文件可以被ZooKeeper集群中的所有服务端使用，假设他们的硬盘分布是一样的。如果服务端使用不同的配置文件，必须特别小心确保所有的服务端和他们的配置文件想匹配。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>在3.5和最新的,其中一些参数应该被放在动态配置文件中，如果他们放在静态的配置文件中，ZooKeeper将自动地把他们移动到动态配置文件中。参考Dynamic Reconfiguration来获取更多的信息。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><div class="title">最小配置</div><p>这里是在配置文件中必须被定义的最小的配置关键字：</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+clientPort
+</dt>
+<dd>
+<p>
+监听客户端连接的端口;也就是说，客户端试图连接的端口
+</p>
+</dd>
+<dt class="hdlist1">
+secureClientPort
+</dt>
+<dd>
+<p>
+使用SSL侦听安全客户端连接的端口。 <strong>clientPort</strong>指定明文连接的端口，而<strong>secureClientPort</strong>指定SSL连接的端口。 指定两者都启用混合模式，同时省略或者将禁用该模式。
+</p>
+<div class="paragraph"><p>请注意，当用户插入ZooKeeper.serverCnxnFactory，ZooKeeper.clientCnxnSocket作为Netty时，将启用SSL功能。</p></div>
+</dd>
+<dt class="hdlist1">
+dataDir
+</dt>
+<dd>
+<p>
+ZooKeeper将存储内在数据库快照的地方，除非另外指定，也是数据库更新的事务日志的地方。
+</p>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>小心你在那里放你的事务日志。一个专门的事务日志存储设备是一致好性能的关键。把日志放到忙的设置上将严重影响性能。</p></div>
+</td>
+</tr></table>
+</div>
+</dd>
+<dt class="hdlist1">
+tickTime
+</dt>
+<dd>
+<p>
+一个tick的长度，ZooKeeper使用的最基本的时间单位，以毫秒为单位。它被用来管理心跳，超时。例如，最小的会话超时是两个tick.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">高级配置</div><p>这部分的配置是可选的。你可以使用他们进一步地调试ZooKeeper服务端的行为。其中一些可以使用Java系统参数来设置，通常以ZooKeeper.keyword的格式。对于系统参数，当可用时，被标注出来在下面。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+dataLogDir
+</dt>
+<dd>
+<p>
+(不是Java系统参数)
+</p>
+<div class="paragraph"><p>这个选项将指导机器写事务日志到<strong>dataLogDir</strong>而不是<strong>dataDir</strong>。这允许一个专门的日志设备被使用，并且帮助避免在日志和快照之间的冲突。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>有一个专门的日志设备对吞吐量和延迟有一个大的影响。强烈建议指定一个日志设备并且设置dataLogDir来指到这个设备的目录，并且确保dataDir的目录不是在这个设备上。</p></div>
+</td>
+</tr></table>
+</div>
+</dd>
+<dt class="hdlist1">
+globalOutstandingLimit
+</dt>
+<dd>
+<p>
+（Java system property: *ZooKeeper.globalOutstandingLimit*）
+</p>
+<div class="paragraph"><p>客户端可以更快地提交请求比ZooKeeper处理他们，特别是有很多客户端的时候。为了避免因为排队的请求使ZooKeeper内在溢出，ZooKeeper将控制客户端，使在系统中没有多于globalOutstandingLimit 个没有处理的请求。默认的限制是1000。</p></div>
+</dd>
+<dt class="hdlist1">
+preAllocSize
+</dt>
+<dd>
+<p>
+（Java system property: *ZooKeeper.preAllocSize*）
+</p>
+<div class="paragraph"><p>为了避免以preAllocSize千字节的块寻找ZooKeeper分配空间在事务日志文件。默认的块大小是64M。改变这个块大小的原因是减小块大小如果快照被经常拿走。（同时参考snapCount）.</p></div>
+</dd>
+<dt class="hdlist1">
+snapCount
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.snapCount</strong>)
+</p>
+<div class="paragraph"><p>ZooKeeper记录事务到一个事务日志中。在snapCount个事务被写入到一个日志文件中，一个快照被开始一个新的事务日志文件被创建。默认的snapCount 是100000。</p></div>
+</dd>
+</dl></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+maxClientCnxns
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>限制被IP地址标识的一个客户端同时连接的数量。这被用来阻止DoS一类的攻击。包含文件描述符消耗。默认的是60。设置为0就公完全地删除了同时连接的数量限制。</p></div>
+</dd>
+<dt class="hdlist1">
+clientPortAddress
+</dt>
+<dd>
+<p>
+*3.3.0新增内容*：监听客户连接的地址(ipv4,ipv6或者主机名);也就是说，客户端试图连接的地址。这是可选的，默认地我们以这样的方式绑定，任何到<strong>clientPort</strong>的连接将被服务端接受。
+</p>
+</dd>
+<dt class="hdlist1">
+minSessionTimeout
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>3.3.0新增内容，服务端允许的客户端最小的会话超时时间。默认是2倍的tickTime.</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>maxSessionTimeout(No Java system property)</p></div>
+<div class="paragraph"><p>*3.3.0新增内容*：服务端允许的客户端最大的会话超时时间。默认是20倍的<strong>tickTime</strong>.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+fsync.warningthresholdms
+</dt>
+<dd>
+<p>
+(Java system property: <strong>fsync.warningthresholdms</strong>)
+</p>
+<div class="paragraph"><p>*3.3.4新增内容*：当fsync事务日志花费时间超过这个值，将输出一个警告信息到日志文件中。这个被默认是1000毫秒。这个值只能作为系统参数被设置。</p></div>
+</dd>
+<dt class="hdlist1">
+autopurge.snapRetainCount
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>*3.4.0新增内容*：当启用的时候，ZooKeeper自动清除特性保留最近的<strong>autopurge.snapRetainCount</strong>个快照和相应的事务日志并且删除其它的在<strong>dataDir</strong>和<strong>dataLogDir</strong>。默认是3。最小值是3。</p></div>
+</dd>
+<dt class="hdlist1">
+autopurge.purgeInterval
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>*3.4.0新增内容*：清除任务被触发的以小时为间隔的时间。设置一个正数(1以上)来启用自动清除特性。默认是0。</p></div>
+</dd>
+<dt class="hdlist1">
+syncEnabled
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.observer.syncEnabled</strong>)
+</p>
+<div class="paragraph"><p>*3.4.6，3.5.0新增内容*：观察者记录事务并且写快照到磁盘上就像一个参与者。这减小了重启时观察者的恢复时间。设置“false”来关闭这个特性。默认是true.</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">集群选项</div><p>这部分的选项是为集群使用设置的&#8201;&#8212;&#8201;也就是说，部署服务集群。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+electionAlg
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>使用的选举实现。0值对应着原来UDP-based版本。1对应着 快速领导选举的non-authenticated UDP-based的版本。2对应着快速领导选举的authenticated UDP-based的版本。3对应着快速领导选举的TCP-based版本。当前，3是默认的。</p></div>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>0,1,2的领导选举的实现已经过时。在下一个版本我们打算删除它们，那时只有 FastLeaderElection 可用。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+initLimit
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>时间的值，以ticks为单位（参考tickTime）,允许追随者与领导者连接和同步。如果需要增加这个值，如果被ZooKeeper管理的数据量比较大。</p></div>
+</dd>
+<dt class="hdlist1">
+leaderServes
+</dt>
+<dd>
+<p>
+(Java system property: ZooKeeper.<strong>leaderServes</strong>)
+</p>
+<div class="paragraph"><p>领导者接受客户端连接。默认值是“yes”。领导者机器协调更新。为了更高的更新吞吐量同步，领导者可以被设置成不接受接受客户端连接并且集中协调。这个选项的默认值是yes,意为领导者接受客户端连接。</p></div>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>开启领导者选择是强烈建议的，当在你的集群当中有多于三台ZooKeeper的时候。</p></div>
+</td>
+</tr></table>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+server.x=[hostname]:nnnnn[:nnnnn]等等
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>组成ZooKeeper集群的服务端。当服务端启动。它确定它是那一台服务器通过在数据目录中寻找myid文件。这个文件包含服务号，并且它应该和这个配置左边的<strong>server.x</strong>的<strong>x</strong>项匹配。</p></div>
+<div class="paragraph"><p>组成ZooKeeper集群的客户端使用服务列表必须和每一个ZooKeeper服务端拥有的服务列表相匹配。</p></div>
+<div class="paragraph"><p>这里有两个端口号<strong>nnnnn</strong>。第一个追随者用来连接领导者，每二个是为了领导者选举。领导选举的端口只有在electionAlg是1，2，或3的时候才是必须的。如果electionAlg是0，第二个端口不是必须的。如果你想在一台机器上测试 多个服务，那么不同的端口可以被每一个服务端使用。</p></div>
+</dd>
+<dt class="hdlist1">
+syncLimit
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>时间数量，以ticks为单位，允许追随者和ZooKeeper同步，如果追随者和领导者拉开距离太大，它们将被丢掉。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>group.x=nnnnn[:nnnnn]</p></div>
+<div class="paragraph"><p>(No Java system property)</p></div>
+<div class="paragraph"><p>+
+启用分层法定人数结构。“x"是一个组标识符，并且”=“后面的数字和服务器标识符对应。左边的是一个冒号分割的服务标识号。注意组必须不相交的，并且所有组的单位必须是ZooKeeper集群。</p></div>
+<div class="paragraph"><p>+
+你也可以在这里找到例子</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+weight.x=nnnnn
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>和”group“一块使用，在组成法定人数的时候给一个服务端分配一个权重。当投票的时候这个值和服务端的重要程序相对应。有一部分ZooKeeper要求投票例如领导者选择和原子传播协议。默认的一个服务端的权重是1。如果配置了组，而不是权重，那么1的值将分配给所有的服务端。</p></div>
+<div class="paragraph"><p>你可以在这里找到 <a href="https://ZooKeeper.apache.org/doc/trunk/ZooKeeperHierarchicalQuorums.html">例子</a>。</p></div>
+</dd>
+<dt class="hdlist1">
+cnxTimeout
+</dt>
+<dd>
+<p>
+(Java system property: ZooKeeper.cnxTimeout)
+</p>
+<div class="paragraph"><p>设置为领导者选举通知打开连接的超时时间。只在如果你的electionAlg为3的时候才是可用的。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+standaloneEnabled
+</dt>
+<dd>
+<p>
+(No Java system property)
+</p>
+<div class="paragraph"><p>*3.5.0新增内容*：当设置false的时候，一个单独的服务端可以以复制模式启动，一个参与者可以和观察者运行，并且一个集群可以重新配置为一个节点，并且从一个节点启动。这个默认值是true为了向后兼容。它可以被设置通过QuorumPeerConfig的setStandaloneEnabled方法，或通过在服务端的配置文件中增加 "standaloneEnabled=false" 或 "standaloneEnabled=true"。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">认证和授权选项</div><p>这部分的选项可能控制被服务端执行的认证和授权。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+ZooKeeper.DigestAuthenticationProvider.superDigest
+</dt>
+<dd>
+<p>
+(Java system property only: <strong>ZooKeeper.DigestAuthenticationProvider.superDigest</strong>)
+</p>
+<div class="paragraph"><p>默认这个特性是<strong>关闭</strong>的</p></div>
+<div class="paragraph"><p>*3.2中新增内容*：允许ZooKeeper集群管理者访问znode分层结构作为超级用户。特别是被授权为超级用户没有ACL检查。</p></div>
+<div class="paragraph"><p>org.apache.ZooKeeper.server.auth.DigestAuthenticationProvider可以被用来生成superDigest，用一个参数"super:&lt;password&gt;"调用它。提供生成的 "super:&lt;data&gt;"作为系统参数当启动每一个集群中的服务端。</p></div>
+<div class="paragraph"><p>当授权(从ZooKeeper客户端)一个ZooKeeper服务端传递一个"digest"的方案和"super:&lt;password&gt;"的授权数据时。注意digest auth以明文传递authdata给服务端，这应该谨慎使用这个授权方法在localhost(不通过网络)或通过一加密的连接。</p></div>
+</dd>
+<dt class="hdlist1">
+X509AuthenticationProvider.superUser
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.X509AuthenticationProvider.superUser</strong>)
+</p>
+<div class="paragraph"><p>采用SSL支持的方式，可以使ZooKeeper系统管理员以“超级”用户身份访问znode层次结构。 当此参数设置为X500主体名称时，只有具有该主体的经身份验证的客户端将能够绕过ACL检查并具有对所有znode的完全权限。</p></div>
+</dd>
+<dt class="hdlist1">
+ssl.keyStore.location and ssl.keyStore.password
+</dt>
+<dd>
+<p>
+(Java system properties: <strong>ZooKeeper.ssl.keyStore.location and ZooKeeper.ssl.keyStore.password</strong>)
+</p>
+<div class="paragraph"><p>指定包含用于SSL连接的本地凭据的JKS的文件路径以及解锁文件的密码。</p></div>
+</dd>
+<dt class="hdlist1">
+ssl.trustStore.location and ssl.trustStore.password
+</dt>
+<dd>
+<p>
+(Java system properties: <strong>ZooKeeper.ssl.trustStore.location and ZooKeeper.ssl.trustStore.password</strong>)
+</p>
+<div class="paragraph"><p>指定包含要用于SSL连接的远程凭据的JKS的文件路径，以及用于解锁文件的密码。</p></div>
+</dd>
+<dt class="hdlist1">
+ssl.authProvider
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.ssl.authProvider</strong>)
+</p>
+<div class="paragraph"><p>指定用于安全客户端身份验证的<strong>org.apache.ZooKeeper.auth.X509AuthenticationProvider</strong>的子类。 这在不使用JKS的证书密钥基础设施中很有用。 可能需要扩展<strong>javax.net.ssl.X509KeyManager</strong>和<strong>javax.net.ssl.X509TrustManager</strong>以从SSL堆栈获取所需的行为。 要将ZooKeeper服务器配置为使用自定义提供程序进行身份验证，请为自定义AuthenticationProvider选择一个方案名称，并将属性<strong>ZooKeeper.authProvider</strong>。[scheme]设置为自定义实现的完全限定类名称。 这将加载提供程序到ProviderRegistry。 然后设置此属性<strong>ZooKeeper.ssl.authProvider = [scheme]</strong>，该提供程序将用于安全身份验证。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">实验性选项/特性</div><p>被现在认为是实验性的新特性。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+只读模式的服务端
+</dt>
+<dd>
+<p>
+(Java system property: <strong>readonlymode.enabled</strong>)
+</p>
+<div class="paragraph"><p>*3.4.0中新增内容*：设置这个值为true来使服务端支持只读模式(默认是关闭的)。ROM允许请求ROM支持的客户端连接连接到一个服务端即使服务端可能被隔离了从法定人数中。在这个模式下，客户端将仍然读数据从ZooKeeper服务端，但是将不会写数据和看到从其它客户端的改变。更多信息请参考 ZooKeeper-784。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">不安全的选项</div><p>下面的选项可能非常有用，但使用的时候要小心。第一个的风险和这个参考能做什么一块讲解。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+forceSync
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.forceSync</strong>)
+</p>
+<div class="paragraph"><p>在更新完成处理之前要求更新同步到事务日志上。如果这个选项设置为no,ZooKeeper将不要求更新被同步到设备上。</p></div>
+</dd>
+<dt class="hdlist1">
+jute.maxbuffer: 
+</dt>
+<dd>
+<p>
+(Java system property: <strong>jute.maxbuffer</strong>)
+</p>
+<div class="paragraph"><p>这个选项只能被作为Java 系统参数设置。它不是ZooKeeper前缀。它指定了可以被存在在znode中的数据的值。默认是0xfffff,或小于1M.如果这个选项被改变，系统参数必须被设置到所有的服务端和客户端上，否则将会出现问题。这真是一个明智的检查。ZooKeeper被设计成存储以数据大小的顺序存储。</p></div>
+</dd>
+<dt class="hdlist1">
+skipACL
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.skipACL</strong>)
+</p>
+<div class="paragraph"><p>跳过ACL检查。这可以提高吞吐量。但是对数据树打开完全的访问给所有人。</p></div>
+</dd>
+<dt class="hdlist1">
+quorumListenOnAllIPs
+</dt>
+<dd>
+<p>
+当设置成true,ZooKeeper 服务端将在所有可用的ip地址上监听所有的连接，并且不仅是在配置文件中的服务列表。它影响处理ZAB协议和快速领导者选举协议的连接。默认是false。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">禁用数据目录自动创建</div><p><strong>3.5中新增内容</strong>:ZooKeeper服务端的默认行为是在启动的时候如果没有不存在数据目录，将会自动创建数据目录。这可能是不方便的甚至是危险的在一些情况下。考虑这样的情况，在运行的服务端上改变了一个配置，<strong>dataDir</strong>参数意外地改变了。ZooKeeper服务端被重启后它将创建这个不存在的目录并且开始服务 - 用一个空的znode命名空间。这种情况可能导致"脑裂"(例如，数据同时存在新的不合法的目录和原来的合法数据存储)。像这样有一个关闭自动创建的行为选项将是好的。通常对于生产环境这这应该这样做。不幸的是默认的行为不能被改变现在，因此这必须在案例上进行。</p></div>
+<div class="paragraph"><p>当运行<strong>ZooKeeperServer.sh</strong>自动创建可以被关闭通过设置环境变量<strong>ZOO_DATADIR_AUTOCREATE_DISABLE</strong>为1。当直接从类文件运行ZooKeeper服务端这个可以被实现通过设置<strong>ZooKeeper.datadir.autocreate=false</strong>在java 命令行上，例如<strong>-DZooKeeper.datadir.autocreate=false</strong></p></div>
+<div class="paragraph"><p>当这个特性被关闭，ZooKeeper服务端检测到需要的目录不存在，它将生成一个错误并拒绝启动。</p></div>
+<div class="paragraph"><p>一个新的<strong>ZooKeeperServer-initialize.sh</strong>被提供来支持这个新特性。如果自动创建被关闭，用户必须先安装ZooKeeper,然后创建数据目录(潜在的事务日志目录)，然后启动服务。否则，正如在前面提到服务将不会启动。运行<strong>ZooKeeperServer-initialize.sh</strong>将创建需要的目录，并且设置myid文件(可选的命令行参数)。这个脚本可以被使用即使自动创建特性没有被使用，并对用户来说有用当这个在过去是一个问题(安装，包括创建myid文件)。注意这个脚本只确保数据目录存在，它不创建配置文件，但是为了执行需要一个可用的配置文件。</p></div>
+<div class="ulist"><div class="title">性能调试选项</div><ul>
+<li>
+<p>
+3.5.0中的新增内容：**几个子系统已经被重新设计来提高读吞吐量。这包括NIO通信的多线程子系统和请求处理通道(提交处理器)。NIO是默认的客户端/服务端通信 子系统。它的线程模型包括一个接受者线程，1-n个seleector线程和0-m socket I/O工作线程。在请求处理通道，系统可以被配置成一次处理多个读请求同时保证相同的一致性保证(相同的会话，写后读)。提交处理者线程模型包括一个主线程和0-n个工作线程。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>默认值是目的是实现在ZooKeeper机器上最大化的读吞吐量。同时子系统需要足够数量的线程来达到高峰的志吞吐量。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+ZooKeeper.nio.numSelectorThreads
+</dt>
+<dd>
+<p>
+(Java system property only: <strong>ZooKeeper.nio.numSelectorThreads</strong>)
+</p>
+<div class="paragraph"><p><strong>3.5.0新增内容：</strong>NIO selector线程数量。最少需要一个selector线程。建议使用多于一个selector对于大量的客户连接。默认值是sqrt( cpu核心数 / 2 )。</p></div>
+</dd>
+<dt class="hdlist1">
+ZooKeeper.nio.numWorkerThreads
+</dt>
+<dd>
+<p>
+(Java system property only: <strong>ZooKeeper.nio.numWorkerThreads</strong>)
+</p>
+<div class="paragraph"><p><strong>3.5.0新增内容：</strong>NIO 工作者线程数量。如果被配置成0个工作者线程，selector线程直接使用socket I/O。默认值是2倍的cpu核心数。</p></div>
+</dd>
+<dt class="hdlist1">
+ZooKeeper.commitProcessor.numWorkerThreads
+</dt>
+<dd>
+<p>
+(Java system property only: <strong>ZooKeeper.commitProcessor.numWorkerThreads</strong>)
+</p>
+<div class="paragraph"><p><strong>3.5.0新增内容：</strong>提交处理器工作线程的数量。如果配置成0个工作者线程，主线程将直接处理请求。默认值是cpu核心数量。</p></div>
+</dd>
+<dt class="hdlist1">
+znode.container.checkIntervalMs
+</dt>
+<dd>
+<p>
+(Java system property only)
+</p>
+<div class="paragraph"><p><strong>3.6.0中的新增：</strong>每个候选容器节点检查的时间间隔（以毫秒为单位）。 默认值为“60000”。</p></div>
+</dd>
+<dt class="hdlist1">
+znode.container.maxPerMinute
+</dt>
+<dd>
+<p>
+(Java system property only)
+</p>
+<div class="paragraph"><p><strong>3.6.0中的新增功能：</strong>每分钟可删除的最大容器节点数。 这样可以防止在删除容器时放牧 默认值为“10000”。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">使用Netty框架来通信</div><p>Netty是一个基于NIO的客户端/服务端通信框架，它为Java应用简化(和直接使用NIO相比)了很多网络层通信的复杂性。另外Netty框架内置支持加密(SSL)和授权(certificates).这些是可选的特性，并且可以被单独地开启和关闭。</p></div>
+<div class="paragraph"><p>在3.5+版本中，ZooKeeper服务器可以使用Netty而不是NIO（默认选项），方法是将环境变量ZooKeeper.serverCnxnFactory设置为org.apache.ZooKeeper.server.NettyServerCnxnFactory; 对于客户端，将ZooKeeper.clientCnxnSocket设置为org.apache.ZooKeeper.ClientCnxnSocketNetty。</p></div>
+<div class="paragraph"><p>TBD(待定) - netty的调试选项 - 现在没有netty的配置选项但我们应该增加一些。例如netty创建的读工作者线程的最大值。</p></div>
+<div class="paragraph"><p>TBD - 怎么管理加密</p></div>
+<div class="paragraph"><p>TBD - 怎么管理证书</p></div>
+<div class="paragraph"><div class="title">管理服务端配置</div><p><strong>3.5.0新增内容：</strong>下面的选项用来设置 AdminServer</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+admin.enableServer
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.admin.enableServer</strong>)
+</p>
+<div class="paragraph"><p>设置为false来关闭AdminServer。默认是开启的。</p></div>
+</dd>
+<dt class="hdlist1">
+admin.serverAddress
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.admin.serverAddress</strong>)
+</p>
+<div class="paragraph"><p>内置的Jetty服务监听的地址. 默认是 0.0.0.0.</p></div>
+</dd>
+<dt class="hdlist1">
+admin.serverPort
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.admin.serverPort</strong>)
+</p>
+<div class="paragraph"><p>内置的Jetty服务监听的端口。默认是8080。</p></div>
+</dd>
+<dt class="hdlist1">
+admin.idleTimeout
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.admin.idleTimeout</strong>)
+</p>
+<div class="paragraph"><p>设置连接在发送或接收数据之前可以等待的最大空闲时间（以毫秒为单位）。 默认为30000 ms。</p></div>
+</dd>
+<dt class="hdlist1">
+admin.commandURL
+</dt>
+<dd>
+<p>
+(Java system property: <strong>ZooKeeper.admin.commandURL</strong>)
+</p>
+<div class="paragraph"><p>用于列举和发起的和root URL相关的命令的URL。默认是"/commands"。</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><div class="title">四字母的单词</div><p>ZooKeeper响应一组命令。每一个命令由四个字母组成。你在客户端口通过telnet或nc发送命令给ZooKeeper。</p></div>
+<div class="paragraph"><p>三个更有趣的命令：‘stat’给出一些一般信息关于服务端和连接的客户端，"srvr"和"cons"给出更详细的信息关于服务端和客户端。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+conf
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增：</strong>打印服务端配置的详细信息。
+</p>
+</dd>
+<dt class="hdlist1">
+cons
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>列出连接到这个服务端的所有客户端会话信息。包括发送和接收包的数量信息，会话id,操作延迟，最后执行的操作等等。
+</p>
+</dd>
+<dt class="hdlist1">
+crst
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>重置所有连接的会话
+</p>
+</dd>
+<dt class="hdlist1">
+dump
+</dt>
+<dd>
+<p>
+列出未处理的会话和临时节点。这只在领导者上可用。
+</p>
+</dd>
+<dt class="hdlist1">
+envi
+</dt>
+<dd>
+<p>
+打印服务端的详细信息
+</p>
+</dd>
+<dt class="hdlist1">
+ruok
+</dt>
+<dd>
+<p>
+检测如果服务端运行在一个没有错误的状态。服务端将响应imok如果它正在运行。否则它将不会响应。
+</p>
+<div class="paragraph"><p>"imok"的响应不能表示服务端已经加入了法定人数。仅仅是服务进程是活跃的和绑定到了指定的客户端口。使用"stat"来查看关于法定人数和客户端连接的详细信息。</p></div>
+</dd>
+<dt class="hdlist1">
+srst
+</dt>
+<dd>
+<p>
+重置服务端的统计
+</p>
+</dd>
+<dt class="hdlist1">
+srvr
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>列出服务端的详细信息
+</p>
+</dd>
+<dt class="hdlist1">
+stat
+</dt>
+<dd>
+<p>
+列出端和连接的客户端的简明信息
+</p>
+</dd>
+<dt class="hdlist1">
+wchs
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>列出服务端的监视器的简明信息
+</p>
+</dd>
+<dt class="hdlist1">
+wchc
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>列出服务端的监视器的详细信息，以会话分组。这输出一个带着相关监视器的会话列表。注意，根据监视器的数量，这个操作可能很耗时(也就是说影响服务端性能)，小心使用它。
+</p>
+</dd>
+<dt class="hdlist1">
+dirs
+</dt>
+<dd>
+<p>
+<strong>3.5.1新增：</strong>以字节为单位显示快照和日志文件的总大小
+</p>
+</dd>
+<dt class="hdlist1">
+wchp
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>列出服务端关于监视器的详细信息，以路径分组。这输出一个带着相关会话的路径信息。注意，根据监视器的数量，这个操作可能很耗时(也就是说影响服务端性能)，小心使用它。
+</p>
+</dd>
+<dt class="hdlist1">
+mntr
+</dt>
+<dd>
+<p>
+<strong>3.3.0新增: </strong>输入可以被用来监视群集健康状态的变量列表。
+复制代码
+</p>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>输出兼容java属性格式并且内容随着时间可能有变化(加入新关键词)。</p></div>
+<div class="paragraph"><p>注意：一些关键词是平台有关的并且一些关键词只对领导者暴露。</p></div>
+<div class="paragraph"><p>输出包含多行，以下面的格式：</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</dd>
+<dt class="hdlist1">
+isro
+</dt>
+<dd>
+<p>
+<strong>3.4.0中的新功能：</strong>测试服务器是否以只读模式运行。如果处于只读模式，则服务器将以“ro”响应，如果不是只读模式，则将“rw”响应。
+</p>
+</dd>
+<dt class="hdlist1">
+gtmk
+</dt>
+<dd>
+<p>
+获取当前跟踪掩码为十进制格式的64位带符号长整型值。请参阅stmk了解可能的值。
+</p>
+</dd>
+<dt class="hdlist1">
+stmk
+</dt>
+<dd>
+<p>
+设置当前跟踪掩码。跟踪掩码为64位，其中每个位启用或禁用服务器上的特定类别的跟踪记录。必须将Log4J配置为首先启用TRACE级别才能查看跟踪记录消息。跟踪掩码的位对应于以下跟踪日志记录类别。
+</p>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">掩码</p></td>
+<td align="left" valign="top"><p class="table">描述</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000000000</p></td>
+<td align="left" valign="top"><p class="table">未使用，保留供将来使用。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000000010</p></td>
+<td align="left" valign="top"><p class="table">记录客户端请求，不包括ping请求。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000000100</p></td>
+<td align="left" valign="top"><p class="table">未使用，保留供将来使用。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000001000</p></td>
+<td align="left" valign="top"><p class="table">记录客户端ping请求。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000010000</p></td>
+<td align="left" valign="top"><p class="table">记录从当前领导者的仲裁对等体接收到的数据包，不包括ping请求。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0000100000</p></td>
+<td align="left" valign="top"><p class="table">日志添加，删除和验证客户端会话。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0001000000</p></td>
+<td align="left" valign="top"><p class="table">记录将事件发送到客户端会话。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0010000000</p></td>
+<td align="left" valign="top"><p class="table">记录从当前引导者的仲裁对等体接收到的数据包。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b0100000000</p></td>
+<td align="left" valign="top"><p class="table">未使用，保留供将来使用。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">0b1000000000</p></td>
+<td align="left" valign="top"><p class="table">未使用，保留供将来使用。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>64位值中的所有剩余位都未使用，并保留供将来使用。通过计算记录值的按位OR来指定多个跟踪记录类别。默认跟踪掩码为0b0100110010。因此，默认情况下，跟踪日志记录包括客户端请求，从领导和会话接收的数据包。</p></div>
+<div class="paragraph"><p>要设置不同的跟踪掩码，请发送一个包含stmk四字母字的请求，后跟跟踪掩码表示为64位带符号的长整型值。此示例使用Perl包函数构建一个跟踪掩码，该跟踪掩码启用上述所有跟踪日志记录类别，并将其转换为具有大字节顺序的64位带符号长整型值。结果附加到stmk并使用netcat发送到服务器。服务器以十进制格式响应新的跟踪掩码。</p></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>$ perl -e“print&#8217;stmk'，pack（'q&gt;'，0b0011111010）”| nc localhost 2181
+250</p></div>
+</div></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>这里有一个<strong>ruok</strong>的命令例子：</p></div>
+<div class="paragraph"><p>+</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><div class="title">AdminServer</div><p><strong>3.5.0新增内容：</strong>AdminServer是一个内置的Jettry服务，它提供了一个HTTP接口为四字母单词命令。默认的，服务被启动在8080端口，并且命令被发起通过URL "/commands/[command name]",例如，http://localhost:8080/commands/stat。命令响应以JSON的格式返回。不像原来的协议，命令不是限制为四字母的名字，并且命令可以有多个名字。例如"stmk"可以被指定为"set_trace_mask"。为了查看所有可用命令的列表，指向一个浏览器的URL /commands (例如， <a href="http://localhost:8080/commands)。参�">http://localhost:8080/commands)。参�</a>�� AdminServer configuration options关于怎么改变端口和URLS。</p></div>
+<div class="paragraph"><p>AdminServer默认开启，但是可以被关闭通过下面的方法：
+* 设置系统属性ZooKeeper.admin.enableServer为false.
+* 从类路径中移除Jetty.(这个选项是有用的如果你想覆盖ZooKeeper的jetty依赖)。</p></div>
+<div class="paragraph"><p>注意TCP四字母单词接口是仍然可用的如果AdminServer被关闭。</p></div>
+<div class="paragraph"><p>ZooKeeper存储它的数据在数据目录和它的事务日志在事务日志目录里，默认的这两个目录是相同的。服务端可以(应该)被配置成存储事务日志文件到一个单独的目录而不是数据文件目录。吞吐量上升和延迟减小当事务日志放在一个专门的日志设置上。</p></div>
+<div class="paragraph"><div class="title">数据目录</div><p>这个目录有两个文件：</p></div>
+<div class="hdlist"><table>
+<tr>
+<td class="hdlist1">
+myid
+<br />
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+- 包含一个单独的代表服务器id的数字
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+snapshot.&lt;zxid&gt;
+<br />
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+- 保存数据树的快照
+</p>
+</td>
+</tr>
+</table></div>
+<div class="paragraph"><p>每一个ZooKeeper服务端有一个唯一的id。这个id被用在两个地方：myid文件和配置文件中。myid文件标识给定数据目录的服务端。配置文件列出联系信息为每一个被它的服务id标识的服务端。当一个ZooKeeper服务端实例启动的时候，它从myid文件中读它的id，然后使用这个id,从配置文件读取找出它应该监视的端口，</p></div>
+<div class="paragraph"><p>存在数据目录中的snapshot文件是模糊的快照，在这个意义上，在ZooKeeper服务端正在操作快照的时间内，更新也正在发生在数据树上。snapshot文件的后缀是zxid，ZooKeeper的最后提交的事务id。因此snapshot包含对数据树更新的一个字集在snapshot正在处理中的时候。snapshot可能不对应任何真实存在的数据树，因为这个原因我们说它是模糊的快照。仍然ZooKeeper可以恢复使用这个快照因为它使用了更新的幂等特性。通过重新演义事务日志对模糊的快照，ZooKeeer获取系统的状态在日志的最后。</p></div>
+<div class="paragraph"><div class="title">日志目录</div><p>日志目录包含ZooKeeper的事务日志。在任何更新发生之前，ZooKeeper确保代表这个更新的事务被写入到存储上。一个新的日志文件被开始每次一个快照被开始。日志文件的后缀写到日志的第一个zxid。</p></div>
+<div class="paragraph"><div class="title">文件管理</div><p>快照和日志文件格式不会改变在单独的ZooKeeper服务器和不同配置的可复制的ZooKeeper服务器之间。因此，你可以从一个运行的可复制的ZooKeeper服务端把这个文件放到一个单机的ZooKeeper服务端的开发机器上来故障排除。</p></div>
+<div class="paragraph"><p>使用老的日志和快照文件，你可以找到先前的ZooKeeper服务端状态甚至恢复这个状态。 LogFormatter 类允许一个管理者来查看一个日志中的事务。</p></div>
+<div class="paragraph"><p>ZooKeeper服务端创建快照和日志文件，但是从不删除他们。数据和日志文件的保留策略被实现在ZooKeeper服务端之外。服务端自己只需要最新完整的模糊快照和从快照开始的日志文件。参考这个文档的 maintenance部分关于设置保留策略和ZooKeeper存储的更详细信息。</p></div>
+</td>
+</tr></table>
+</div>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">这个文件中存的数据没有被加密。在ZooKeeper中存储敏感数据的情况下，需要采取必要的方法来防止未授权的访问。这些方法是外部的对ZooKeeper来说。它取决于ZooKeeper部署的机器的单独设置。</td>
+</tr></table>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>这里有一些你可以通过正确设置配置文件来避免的普遍的问题：</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+不一致的服务端列表
+</dt>
+<dd>
+<p>
+被客户端使用的服务端列表必须和每一个ZooKeeper服务端拥有的服务端列表相匹配。如果客户端列表是一个真实列表的子集工作能正常进行。但事情将很奇怪如果客户端有一个服务端列表和ZooKeeper集群的不一样。同时在每一个ZooKeeper服务端配置文件中的服务端列表应该彼此一样。
+</p>
+</dd>
+<dt class="hdlist1">
+事务日志的不正确存放
+</dt>
+<dd>
+<p>
+ZooKeeper性能最关键的部分是事务日志。ZooKeeper同步事务日志到存储设置上在它返回一个响应之前。一个专门的事务日志设置是一贯好性能的关键。把日志放到一个繁忙的劥上将严重地影响性能。如果你只有一个存储设备，在NFS上存入追踪文件并且 减小snapshotCount;它不能消除问题，但是能减轻它。
+</p>
+</dd>
+<dt class="hdlist1">
+不正确的Java 堆大小
+</dt>
+<dd>
+<p>
+你应该特别小心，来正确地设置你的Java最大堆大小。特别是你不应试使用ZooKeeper交换到磁盘。磁盘对ZooKeeper来说是致命的。所有事都是有序的，所以如果处理一个请求交换磁盘，所有其它队列中的请求将可能做同样的事。对于磁盘，不要交换。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>在你的估计中保持保守：如果你有一个4G的内在，不要设置Java最大堆大小为6G或4G，例如，你更应该使用一个3G的堆对于一个4G的机器，因为操作系统和缓存也需要内存。最好的和只是建议的行为来估计你的系统需要的堆大小是运行压力测试，然后确保正好在可能引起系统交换的使用限制下面。</p></div>
+<div class="paragraph"><p>为了最好的结果，重视下面ZooKeeper的最佳实践列表：</p></div>
+<div class="paragraph"><p>对于多用户安装参考这个部分详述ZooKeeper"chroot"支持，这非常有用当部署多个应用接口到一个单独的ZooKeeper群集中。</p></div>
+<div class="paragraph"><p>Zookeeper有命名空间和字节配额。你可以使用ZooKeeperMain类来设置配额。Zookeeper打印警告信息如果用户超过分配给他们的配额。这些信息被打印到Zookeeper的日志中。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>或者</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>上面的命令给了你设置配额的选项。</p></div>
+<div class="paragraph"><p>你可以使用setquot来设置一个Zookeeper节点的配额。它有一个设置配额时的选项-n(命名空间)和-b(为字节)。</p></div>
+<div class="paragraph"><p>Zookeeper的配额被存储Zookeeper本身的/zookeeper/quota中。为了禁止其它人改变它的设置，使用ACL来确保只有管理员可以读和写这个文件。</p></div>
+<div class="paragraph"><p>可以使用listquota来列出Zookeeper节点的配额</p></div>
+<div class="paragraph"><p>可以使用delquota来删除Zookeeper节点的配额</p></div>
+<div class="paragraph"><p>ZooKeeper对JMX有额外的支持，允许你查看和管理Zk群集。</p></div>
+<div class="paragraph"><p>这个文档假设你对JMX有基本的了解。参考 Sun JMX Technology来对JMX进行入门。</p></div>
+<div class="paragraph"><p>关于安装一个本地和远端管理的VM实例的详细信息请参考JMX Management Guide 。默认包含的zkServer.sh 只支持本地管理 - 查看连接的文档来开启远程管理的支持(不在本文档的讨论范围之内)。</p></div>
+<div class="paragraph"><p>org.apache.zookeeper.server.quorum.QuorumPeerMai将启动一个可用JMX管理的ZooKeeper服务。这个类在初始化的时候注册适当的MBeans来支持JMX监控和实例管理。参考bin/zkServer.sh关于使用QuorumPeerMai启动ZK的例子。</p></div>
+<div class="paragraph"><p>有几个可用的JMX控制台可以连接到运行的服务端。对于这个例子，我们将使用Sun的jconsole.</p></div>
+<div class="paragraph"><p>Java JDK本身带着一个JMX控制台叫jconsole,这可以被用来连接ZK和查看运行的服务端。一旦你使用QuorumPeerMai启动了ZK，启动jconsole，它通常放在JDK_HOME/bin/jconsole</p></div>
+<div class="paragraph"><p>当通过本地进程连接或使用远程进程连接来显示一个新连接的窗口。</p></div>
+<div class="paragraph"><p>默认地"overview"标签被展示成VM的信息（这是一个了解VM的好方法）。选择"MBeans"标签。</p></div>
+<div class="paragraph"><p>你现在应该可以看到org.apache.ZooKeeperService在左手边。展开这个条目，根据你怎么启动的服务，你将可以监控和管理不现的服务端相关的特性。</p></div>
+<div class="paragraph"><p>同时注意Zk也将会注册log4jMbeans。在左边的同一区域你将会看到"log4j".展示它来通过JMX管理log4j。告别有趣的是可以动态改变日志级别。通过修改附加器(appender)和root阈值。</p></div>
+<div class="paragraph"><p>这个表格详述了加入一个ZK集群的服务端的JMX。这是生产环境典型的案例。</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="10%" />
+<col width="20%" />
+<col width="70%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">MBean</p></td>
+<td align="left" valign="top"><p class="table">MBean对象名称</p></td>
+<td align="left" valign="top"><p class="table">描述</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Quorum</p></td>
+<td align="left" valign="top"><p class="table">ReplicatedServer_id&lt;#&gt;</p></td>
+<td align="left" valign="top"><p class="table">代表法定人数，或者集群 - 所有集群成员的父亲。注意对象名字包括你的JMX连接到的服务端的myid</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">LocalPeer RemotePeer</p></td>
+<td align="left" valign="top"><p class="table">replica.&lt;#&gt;</p></td>
+<td align="left" valign="top"><p class="table">代表一个本地或远程的点(也就是群集的参与者)。注意对象名字包括服务端的myid</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">LeaderElection</p></td>
+<td align="left" valign="top"><p class="table">LeaderElection</p></td>
+<td align="left" valign="top"><p class="table">代表一个正在进行的ZK集群选举。提供了关于选举的信息，例如什么时候开始</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Leader</p></td>
+<td align="left" valign="top"><p class="table">Leader</p></td>
+<td align="left" valign="top"><p class="table">表明父复制品是领导者并且提供属性/操作者为这个服务。注意领导者是ZooKeeperServer的子类，所有它提供所有关于ZooKeeperServer节点的信息。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Follower</p></td>
+<td align="left" valign="top"><p class="table">Follower</p></td>
+<td align="left" valign="top"><p class="table">表明父复制品是一个追随者并且提供属性/操作者为这个服务。注意追随者是ZooKeeperServer的子类，所有它提供所有关于ZooKeeperServer节点的信息。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DataTree</p></td>
+<td align="left" valign="top"><p class="table">InMemoryDataTree</p></td>
+<td align="left" valign="top"><p class="table">关于内存中的节点数据库的统计，和关于数据(例如临时节点数量)的访问操作的详细(更计算密集型)信息InMemoryDataTrees 是ZooKeeperServer节点的子类。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">ServerCnxn</p></td>
+<td align="left" valign="top"><p class="table">&lt;session_id&gt;</p></td>
+<td align="left" valign="top"><p class="table">关于每一个客户端连接的和关于这些连接的操作的统计信息。注意对象名字是连接的会话id的16进制格式</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>这个表述详述了一个单机服务的JMX。通常单机服务只用于开发环境</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="10%" />
+<col width="20%" />
+<col width="70%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">MBean</p></td>
+<td align="left" valign="top"><p class="table">MBean对象名字</p></td>
+<td align="left" valign="top"><p class="table">描述</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">ZooKeeperServer</p></td>
+<td align="left" valign="top"><p class="table">StandaloneServer_port&lt;#&gt;</p></td>
+<td align="left" valign="top"><p class="table">有关于运行中的服务和重置这些属性的统计。注意对象名包括服务端的客户端端口</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DataTree</p></td>
+<td align="left" valign="top"><p class="table">InMemoryDataTree</p></td>
+<td align="left" valign="top"><p class="table">有关于内存中znode数据库和关于这些数据的访问操作的详细统计。</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">ServerCnxn</p></td>
+<td align="left" valign="top"><p class="table">&lt;session_id&gt;</p></td>
+<td align="left" valign="top"><p class="table">关于每一个客户端连接的和关于这些连接的操作的统计信息。注意对象名字是连接的会话id的16进制格式</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>这个文档给出一个关于怎么使用分层次的法定人数的例子。基本思路是很简单的。首先，我们把服务端分组，然后每一组一行。下一步我们分配一个权重为每一个服务端。</p></div>
+<div class="paragraph"><p>下面的例子展示了怎么每组三个服务端，分成三组，并且我们分配每一个服务端一个为1的权重来配置一个系统。</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>weight.1=1
+weight.2=1
+weight.3=1
+weight.4=1
+weight.5=1
+weight.6=1
+weight.7=1
+weight.8=1
+weight.9=1</p></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>当我们运行系统，我们可以形成一个法定人数，一旦我们有一个大多数的非0权重的组。0权重的组被丢掉并且不被考虑当组成法定人数的时候。看这个例子，我们可以形成一个法定人数，一旦我们从每两个不同的组中至少有两个服务端有投票。</p></div>
+<div class="paragraph"><p>尽管ZooKeeper运行地很好通过客户端直接连接来投票集群的成员，这个结构使它很难扩展出很多客户端。问题是当我们加入更多的投票成员时，写性能就会下降。这是因为一个写操作需要(通常)至少集群中一半的节点同意，并且投票的花费可能明显地增加当加入更多的投票者时。</p></div>
+<div class="paragraph"><p>我们已经引入一个新的ZooKeeper节点类型叫作观察者，它能帮助解决这个问题并且进一步地提高ZooKeeper的扩展性。观察者是集群中不投票的成员，只监听投票的结果，而不是同意协议通往他们。除了这一个小的不同点，观察者和追随者的功能几乎一样 - 客户端可以连接到他们并且发送读和写请求给他们。观察者推送这些请求给领导者就像追随者那样，但是他们然后简单地等待投票的结果。因为这个，我们可以想增加多少就可以增加多少观察者的数量而不影响投票的数量。</p></div>
+<div class="paragraph"><p>观察者还有另外一个优点。因为他们不参与投票，他们不是ZooKeeper集群的关键部分。因为他们可以失效，或者和集群失联，而不影响ZooKeeper服务的可用性。对用户来说好处是观察者可以通过不怎么可靠的网络连接相连。事实上，观察者可以被用来从另一个数据中心和ZooKeeper服务对话。观察者的客户端将看到很快地读，因为所有的读是在本地被服务的，并且写导致很小的网线影响因为消息需要的投票者存在的数量更少。</p></div>
+<div class="paragraph"><p>启动一个ZooKeeper集群使用观察者是非常简单的，只需要对你的配置文件做两个改变。首先，在每一个想要成为观察者节点的配置文件中，你必须加入这一行：</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>这一行告诉ZooKeeper这个服务端想要成为观察者。第二，在每一个服务端的配置文件中，你必须在每一个观察者的服务者定义那一行加入:observer。例如:</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>这告诉每一个其它服务端server.1是一个观察者，并且他们应该不要求它来投票。这是所有你需要增加的配置。现在你可以连接上它就好像它是一个普通的追随者。试试。通过运行下面的命令：</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>这里的localhost:2181是观察者的主机名和端口号，正如在每一个配置文件中指定的那样。你应该可以看到一个命令行提示，通过它你可以发起像ls的命令来查询ZooKeeper服务。</p></div>
+<div class="paragraph"><p>下面列出了两个使用安全。事实上，在你想要扩展ZooKeeper集群的客户端数量的地方，或者你想从处理客户端请求的压力隔离关键集群的关键部分。观察者是一个好的选择。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+作为一个数据中心桥梁:在两个数据中心之间组成一个ZooKeeper集群是一个有问题的努力,因为数据中心之间的很高的延迟可能导致假阳性的失效检测和隔离。然而如果如果集群完全运行在一个数据中心，并且第二个数据中心只运行观察者，隔离就不是集群关心的问题。观察者的客户端仍然可以看和发起建议。
+</p>
+</li>
+<li>
+<p>
+作为到一个信息bus的连接 - 一些公司已经表示了使用ZooKeeper作为持续性可靠的消息bus的兴趣。对于这个工作观察者将给出一个自然地整个点：一个插件机制可以被使用来附加到建议的流上一个观察者看作一个发布-订阅系统，而不加载主要的集群。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>在3.5.0发行之前，ZooKeeper的全体成员和所有其它的配置参数是静态加载的在启动的时候并且在运行的时候不可变。操作员诉诸于"滚动重启" - 一个手动密集和改变配置文件容易出错的方法，导致在生产环境数据丢失和不一致。从3.5.0开始，"滚动重启"不再需要！ZooKeeper开始支持自动地配置改变：ZooKeeper服务端的设置，它们的角色（参与者/观察者），所有端口，甚至法定人数系统可以被动态地改变，而不用服务中断和维修数据一致性。重新配置被立刻执行。就像ZooKeeper中的其它操作。很多改变可以通过使用一个重新配置命令完成。动态重新配置功能不限制操作的并发，不要求客户端操作停止在重新配置时，拥有一个非常简单的管理者接口，并且不会对其它客户端操作增加复杂性。</p></div>
+<div class="paragraph"><p>新的客户端特性允许客户端发现配置改变，并且更新存储在它们的ZooKeeper句柄中的连接字符串(服务端列表和它拉的客户端端口)。一个概率算法被使用来平衡新配置的服务端上的客户端。同时保持客户端迁移的程度与集群成员的变化成正比。</p></div>
+<div class="paragraph"><p>这个文档提供了重新配置的管理员手册。对于重新配置的算法，性能测量，还有其它更多的详细描述请参考我们的论文：Shraer, A., Reed, B., Malkhi, D., Junqueira, F. Dynamic Reconfiguration of Primary/Backup Clusters. In USENIX Annual Technical Conference (ATC) (2012), 425-437</p></div>
+<div class="paragraph"><p>链接： <a href="https://www.usenix.org/system/files/conference/atc12/atc12-final74.pdf">paper (pdf)</a>, <a href="https://www.usenix.org/sites/default/files/conference/protected-files/shraer_atc12_slides.pdf">slides (pdf)</a>, <a href="https://www.usenix.org/conference/atc12/technical-sessions/presentation/shraer">video</a>, <a href="http://www.slideshare.net/Hadoop_Summit/dynamic-reconfiguration-of-zookeeper">hadoop summit slides</a>。</p></div>
+<div class="paragraph"><p>服务端的客户端端口是服务端接受客户端连接请求的端口。从3.5.0开始clientPort和clientPortAddress配置参数不应该被使用。相反地，这个信息现在是服务端关键词规范的一部分。它变成下面这样：</p></div>
+<div class="paragraph"><p>server.&lt;positive id&gt; = &lt;address1&gt;:&lt;port1&gt;:&lt;port2&gt;[:role];[&lt;client port address&gt;:]&lt;client port&gt;</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>客户端端口的规范是在分号的右边。客户端端口地址是可选的，如果没有指定它默认是"0.0.0.0"。想往常一样，角色也是可选的，它可以是participant或者observer(默认是participant)。</code></pre>
+</div></div>
+<div class="paragraph"><p>合法的服务端声明：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+server.5 = 125.23.63.23:1234:1235;1236
+</p>
+</li>
+<li>
+<p>
+server.5 = 125.23.63.23:1234:1235:participant;1236
+</p>
+</li>
+<li>
+<p>
+server.5 = 125.23.63.23:1234:1235:observer;1236
+</p>
+</li>
+<li>
+<p>
+server.5 = 125.23.63.23:1234:1235;125.23.63.24:1236
+</p>
+</li>
+<li>
+<p>
+server.5 = 125.23.63.23:1234:1235:participant;125.23.63.23:1236
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>在3.5.0之前，我们可以以单机模式运行ZooKeeper或以分布式模式。他们是不同的实现，并且在运行时切换是不可能的。默认(为了向后兼容)standaloneEnabled被设置成true。使用这个默认值的结果是如果启动一个单独的服务端群集将不会起来，并且如果启动多于一个服务端它将不允许缩小到小于两个参考者。</p></div>
+<div class="paragraph"><p>设置这个标识为false指示系统以分布式运行，即使集群里只有一个参与者。为了实现这样配置文件应该包含：</p></div>
+<div class="paragraph"><p>standaloneEnabled=false</p></div>
+<div class="paragraph"><p>有了这个设置可以启动只包含一个参与者的集群，并且可以动态地增加更多服务端。相似地，它也可以缩小一个群集到只有一个参考者，通过移除服务端。</p></div>
+<div class="paragraph"><p>因为运行在分布式模式允许更多灵活性，我们建议设置这个标识为false。我们期待遗留的单机模式在未来将被标识为过时的。</p></div>
+<div class="paragraph"><p>从3.5.0开始我们开始区分动态配置参数，它可以在运行时被改变，和静态配置参数，当服务端启动的时候从配置文件中读取并且不能改变在运行的时候。现在下面的配置关键词被认识是动态配置的一部分：server, group和 weight。</p></div>
+<div class="paragraph"><p>动态配置参数被存储在服务端一个单独的文件中(我们称它为动态配置文件)。这个文件被连接在静态文件中使用dynamicConfigFile关键词。</p></div>
+</div></div>
+<div class="listingblock">
+<div class="title">zoo_replicated1.cfg</div>
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+</div></div>
+<div class="listingblock">
+<div class="title">zoo_replicated1.cfg.dynamic</div>
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>当我们集成配置改变，静态配置参数保持不变。动态的参数被ZooKeeper推出并且在所有的服务端覆盖动态配置文件。因此，在不同服务端的动态配置文件通常是一样的(他们可以只有瞬间不同当一个重新配置正在处理中，或者如果一个新的配置还没有传播到一些服务端)。一旦被创建，动态的配置文件不应该被手动地修改。改变只能通过下面标出的新的重新配置命令实现。注意改变一个离线的集群的配置可能导致不一致相对于配置文件被存储在ZooKeeper的日志（特殊的配置znode,从日志中填充），并且因此非常地不推荐。</p></div>
+<div class="paragraph"><p>用户可能更倾向于一开始就指定一个配置文件。因此下面的也是合法的：</p></div>
+</div></div>
+<div class="listingblock">
+<div class="title">zoo_replicated1.cfg</div>
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>在每一个服务端的配置文件将被自动地分为自动和静态文件，如果他们不是以这种格式。所以上面的配置文件将被自动地转换为在例子1中的两个文件。注意clientPort和clientPortAddress行(如果指定了)在这个过程中将被自动地移除，如果他们是冗余的(就像上面例子中的一样)。原来 的静态文件被备份(以一个.bak文件)。</p></div>
+<div class="paragraph"><p>我们仍然支持老的配置格式。例如，下面的配置文件是可接受的(但是不建议)</p></div>
+</div></div>
+<div class="listingblock">
+<div class="title">zoo_replicated1.cfg</div>
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>在启动的时候，一个动态的配置文件被创建并且包含先前解释的配置的动态部分。然而在这个例子中，"clientPort=2791"行将保留在server 1的静态配置文件中，因为它不是冗余的 --它没有被指定作为 "server.1=&#8230;"的一部分，使用在Changes to Configuration Format部分讲解的格式。如果一个重新配置被调用来设置server 1的客户端部分，我从静态配置文件中删除"clientPort=2791"。(现在动态文件包含这个信息作为server1规范的一部分)。</p></div>
+<div class="paragraph"><p>升级一个运行中的集群到3.5.0应该被完成只有在升级你的集群到3.4.6之后。注意这只对滚动升级的时候才是必须的（如果你可以完全地关闭系统，你不需要经过3.4.6）。如果你试图滚动升级而不经过3.4.6(例如从3.4.5)，你可能得到下面的错误：</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>在滚动升级期间，每一个服务端轮流被取掉并且以新的3.5.0包重启。在启动3.5.0的包之前，我们强烈建议更新配置文件以便所有的服务端声明"server.x=&#8230;"包含客户端端口（参考Specifying the client port的部分）。正如前面讲解的那样，你可以把配置放在一个的文件中，clientPort/clientPortAddress声明也一样。(尽管如果你指定客户端商品以新的格式，这些声明现在就是冗余的)。</p></div>
+<div class="paragraph"><p>ZooKeeper的Java和C的API暴露了getConfig和reconfig命令来帮助重新配置。两个命令都有一个同步(阻塞)变体和一个异步变体。我们这里演示这些命令使用有Java 命令行界面，但是注意你可以相似地使用C命令行界面或者直接从程序中地调用这个命令就像其它ZooKeeper命令。</p></div>
+<div class="paragraph"><p>动态的配置被存储在一个特别的znodeZooDefs.CONFIG_NODE=/zookeeper/config。新的config命令行界面命令读这个znode(当前它仅仅是一个包装 get /zookeeper/config)。就像普通的读取，为了检索到最新的提交的值，你应该先做一个sync。</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>注意输出的最后一行。这是配置版本号。这个版本号等于创建这个配置的重新配置命令的zxid。第一个被建立的配置版本号等于被第一个成功建立的领导者发出的NEWLEADER消息的zxid。当一个配置被写入到一个动态配置文件，版本号自动地变为文件名的一部分并且静态配置文件被更新带着指向的新的动态配置文件的路径。被保留的早期版本的配置文件是为了备份目的。</p></div>
+<div class="paragraph"><p>在启动期间版本号(如果存在)被从文件名中提取出来。版本号应该永远不被用户手动地修改或系统管理员。它被系统用来确定那一个配置是最新的。手动地修改可能导致数据丢失和不一致性。</p></div>
+<div class="paragraph"><p>就像一个get命令，config命令行命令接受-w标识来在这个znode上设置一个监视器，-s标识用来显示znode的统计。它另外接受一个新的标识 -c ,它只输出版本号和当前配置对应的连接字符串。例如，对于上面的配置，我们可以get:</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>注意当直接使用API，这个命令被称为getConfig。</p></div>
+<div class="paragraph"><p>像任何读命令它返回你的客户端连接的追随者知道的配置，可能有一点过期。可以使用sync命令来多一点保证。例如使用Java API:</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph"><p>注意：在3.5.0中它不真的关心传给sync()的路径，因为所有服务端的状态都被带到和领导者相同的日期。（所以你可以使用一个不同的路径而不是ZooDefs.CONFIG_NODE）然而这可能在未来被改变。</p></div>
+<div class="paragraph"><p>通过reconfig命令来完成配置的修改。有两个重修改的模式：增量和非增量(bulk)。非增加的简单地指定系统新的动态配置。增量的指定当前配置的改变。reconfig命令返回新的配置。</p></div>
+<div class="paragraph"><p>几个例子在：ReconfigTest.java, ReconfigRecoveryTest.java and TestReconfigServer.cc。</p></div>
+<div class="dlist"><div class="title">通常</div><dl>
+<dt class="hdlist1">
+删除服务端： 
+</dt>
+<dd>
+<p>
+任何服务端可以被删除，包括领导者(尽管删除领导者将导致一小会儿的不可胳膊，参考paper中的图6和8)。服务端将不会被自动地关闭。相反，它变成一个"不投票的追随者"。这有点类似于一个观察者因为它的投票不被计算在提交操作的投票的法定人数当中。然而，和非投票的追随者不一样的是，观察者不会真正地看到任何操作提议和不会回应它们。因此一个非投票的追随者具有更大的负面影响对于系统的吞吐量相对于观察者。非投票的追随者模型应该只被用作临时模型。在关闭服务端之前或者增加一个追随者或观察者到集群中。我们不自动地关闭服务端为了两个主要原因。第一个是我们不想所有连接到这个服务端的连接立刻失连，导致大量的连接请求到其它服务端。相反地，如果每一个服务端决定什么时候自主地迁移是更好的。第二个原因是删除一个服务端可能很少是必须的为了把它从“观察者”变为“参考者”(这在Additional comments部分讲解过)。
+</p>
+<div class="paragraph"><p>注意新的配置应该有最小数量的参考者为了被认为是合法的。如果提出的改变将使集群小于2个参考者和单机模式被启用（standaloneEnabled=true，参考The standaloneEnabled flag部分），这个重新配置操作将不会被执行。如果单机模式被禁用(standaloneEnabled=false)那么它是合法的剩下1个或更多个参考者。</p></div>
+</dd>
+<dt class="hdlist1">
+增加服务端： 
+</dt>
+<dd>
+<p>
+在重新配置被调用之前，管理者必须确保从新配置中的参与者的法定人数已经连接上并且和当前的领导者同步过。为了达到这个目的，我们需要连接一个新加入的服务端到领导者在它正式地成为集群的一部分之前。这通过启动正在加入的服务端使用一个初始的服务端列表来完成，它从技术上来说不是一个合法的系统配置，但是(a)包含加入者，和(b)提供出充足的信息给加入者为了它找到和连接上当前的领导者。我们列出更安全地做这个事的一些不用的选项。
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+加入者的初始的配置包含了最后提交的配置服务端和1个或更多个加入者，这里加入者被作为观察者列出。例如如果服务端D和E被同时加入到（A,B,C）并且C正在被删除，D的初始配置将是(A,B,C,D)或者（A，B，C，D，E），这里D和E被作为观察者列出。相似地，E的配置将是(A,B,C,E)或者（A，B，C，D，E），这里D和E被作为观察者列出。注意作为观察者列出的加入者将不会真实地使他们成为观察者 - 它只是防止他们偶然地和其它加入者形成一个法定人数。相反地，他们将连接服务端用当前的配置并且采用最后提交的配置（A,B，C）,这里的加入者不存在。加入者的配置文件被备份起来并且被自动地替换录这发生。在连接到当前的领导者之后，加入者变为非投票的追随者直接系统被重新配置并且他们被加入到集群（作为参考者或才观察者，视情况而定）
+</p>
+</li>
+<li>
+<p>
+每一个加入者的初始配置包含了最后提交的配置服务端和加入者自己，作为参与者被列出。例如，增加一个新的服务端D到一个(A,B,C),管理者可以启动D使用一个包含（A,B,C,D）的初始配置文件。如果D和E同时加入到（A,B,C），D的初始配置将会是（A,B,C,D）和E的初始配置将会是（A,B,C,E）。相似地，如果同时D被加入和C被删除，D的初始配置将会是(A, B, C, D)。永远不要列出超过1个作为参与者的加入者在初始配置中(参考下面的警告)
+</p>
+</li>
+<li>
+<p>
+作为观察者或参考者列出加入者，所有的当前服务端不列出也是可以的，只要当前的领导者在列表中。例如，当增加D我们可以启动D使用一个只包含(A，D)的配置文件如果A是当前的领导者。然而这是更脆弱的因为如果A在D正式加入群集之前失效，D不知道任何其它的服务端并且因此管理员将不得不干预并且重启D用另一个服务端列表。
+</p>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+</td>
+<td class="content">
+<div class="paragraph"><p>永远不要在相同的初始配置中指定多于一个作为参考者加入的服务端。当前，正在加入的服务端不知道他们正在加入一个存在的集群;如果多个加入者被作为参考者列出，他们可能形成一个独立的法定人数创建一个脑裂的情况例如独立于你的主集群中处理操作。作为观察者列表多个加入者是OK的。</p></div>
+</td>
+</tr></table>
+</div>
+</li>
+</ol></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>最后，注意一旦连接到一个领导者，加入者接受最后提前的配置，在这里它是不在的(加入者的初始配置被备份在被重写之前)。如果加入者在这个状态重启，它将不能启动因为它是不存在它的配置文件中的。为了启动它，你将不得不再次指定一个配置文件。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+修改服务端参数: 
+</dt>
+<dd>
+<p>
+你可以修改服务端的任何端口，或者它的角色(参与者/观察者)通过加入它到集群中使用不同的参数。这可以以增量和非增量的重新配置模式一实现。不必要删除服务端然后再加回来。只需要指定新的参数就好像服务端还没有在系统中。服务端将检测到配置改变并且执行必要的调整。参考Incremental mode部分的例子和Additional comments部分这个规则的一个例外。
+</p>
+<div class="paragraph"><p>也可以通过集群改变法定人数系统（例如，实时地改变多数法定人数系统为分层法定人数系统）。然而这只能使用非增加地重新配置模式。通常增量的重新配置只和多数法定人数系统一起工作。非增加重新配置可以和分层和多数法定人数系统工作。</p></div>
+</dd>
+<dt class="hdlist1">
+性能影响： 
+</dt>
+<dd>
+<p>
+当删除一个追随者的时候没有特别地性能影响，因为它不能自动地关闭（删除的影响是这个服务端的投票不再被计算在内）。当增加一个服务端，没有领导者改变和没有可观察性能中断。更详细的内容和曲线图请参考paper中的Figures6，7，8。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>更严重的中断将会发生当领导者改变以下面的案例发生:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+领导者从集群中被删除。
+</p>
+</li>
+<li>
+<p>
+领导者的角色从参与者被改变为观察者
+</p>
+</li>
+<li>
+<p>
+被领导者用来发送事务的端口被修改。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>在这种情况下执行一个领导者传递，老的领导者提名一个新的领导者。导致的不可用通常比当一个领导者崩溃进的时间少因为检测领导者失效不是必须的，并且选举一个新的领导者通常可以被避免在传递的过程中（参考 paper中的Figures6 和8）</p></div>
+<div class="paragraph"><p>当服务端的客户端端口被修改，它不丢弃正在存在的客户端连接。到这个服务端的新连接将不得不使用新的客户端商品。</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+过程保证： 
+</dt>
+<dd>
+<p>
+取决于reconfig操作的调用，老配置的法定人数要求是可用的并且对ZooKeeper的连接可以取得进展。一旦reconfig被调用，老的和新的配置的法定人数必须是可用的。最后的事务发生一旦（a）新的配置被启用。并且（b）在新的配置被启用之前所有操作被提交。一旦a和b发生，只有新配置的法定人数是需要的。然而请注意a和b对客户端来说都是不可见的。特别地，当一个重新配置操作提交，它只意为一个激活消息被领导者发送出去。它不绝对意为它新配置的法定人数获取这个消息(为了激活它是需要的)或者b已经发生。如果你想确保a和b都已经发生（例如，为了知道关闭被删除的老的服务端是安全的），你可以简单地调用一个更新（set-data,或者其它法定人数操作，但是不能是sync）并且等待它提交。另一种方法来实现这是引进另一个轮的重新配置协议（为了简单和兼容Zab，我们决定避免这种方式）。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>增量模式.</p></div>
+<div class="paragraph"><p>增量模式允许增加和删除当前配置的服务端。多个改变被允许。例如：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>&gt; reconfig -remove 3 -add server.5=125.23.63.23:1234:1235;1236</code></pre>
+</div></div>
+<div class="paragraph"><p>增加和删除选项都有一个逗号分割的参数列表（没有空格）：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>&gt; reconfig -remove 3,4 -add server.5=localhost:2111:2112;2113,  6=localhost:2114:2115:observer;2116</code></pre>
+</div></div>
+<div class="paragraph"><p>服务端声明的格式和在Specifying the client port部分描述的一模一样，并且包含客户端端口。注意这里代替"server.5",你可以仅仅用"5="。在上面的例子中，如果server 5已经存在系统中，但是有不同的端口或者不是一个观察者，它被更新并且一旦配置提交变为一个观察者并且使用新端口启动。这是一个简单的方式把参与者变为观察者和返过来。或者改变他们端口中的任何一个，而不用重启服务端。</p></div>
+<div class="paragraph"><p>ZooKeeper支持两种法定人数系统 - 简单的多数系统（领导者提交操作在收到多数投票的确认信息后）和一个更复杂的分层系统，不同的服务端的投票有不同的权重并且服务端被分为投票组。当前，增量重新配置只被允许如果最后提议的配置被使用多数法定人数系统的领导者知道（否则抛出BadArgumentsException）。</p></div>
+<div class="paragraph"><p>增量模式 - 使用Java API的例子：</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>也有一个异步的API，这个API接受逗号分隔的字符串而不是List&lt;String&gt;。参考src/java/main/org/apache/zookeeper/ZooKeeper.java。</p></div>
+<div class="paragraph"><div class="title">非增量模式</div><p>第种重新配置的模式是非增量，客户端提供一个完整的新的动态系统配置规范。新的配置可以从一个文件中给出或从一个文件中读取：</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>&gt; reconfig -file newconfig.cfg ///newconfig.cfg 是动态配置文件 参考Dynamic configuration file</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>&gt; reconfig -members server.1=125.23.63.23:2780:2783:participant;2791,server.2=125.23.63.24:2781:2784:participant;2792,server.3=125.23.63.25:2782:2785:participant;2793</code></pre>
+</div></div>
+<div class="paragraph"><p>新配置可能使用一个不同的法定人数系统。例如，你可以指定一个分层法定人数系统即使当前的集群使用多数法定人数系统。</p></div>
+<div class="paragraph"><p>非增量模式 - 使用Java API 的例子：</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>同时也有一个异步API,这个API接受逗号分隔的包含List&lt;String&gt;的新成员的字符串。参考src/java/main/org/apache/zookeeper/ZooKeeper.java。</p></div>
+<div class="paragraph"><div class="title">条件reconfig</div><p>有时候(特别是非增量模式)一个新提出的配置取决于客户端depends on what the client "believes" to be the current configuration，并且应该只应用这个配置。特别地，reconfig成功只有领导者的最后的配置文件有指定的版本号。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>&gt; reconfig -file &lt;filename&gt; -v &lt;version&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>在前面列出的Java例子，除了-1，你可以指定一个配置版本来给这个重新配置加条件。</p></div>
+<div class="paragraph"><p>错误条件除了普通的ZooKeeper错误条件，重新配置可以因为下面的原因而失败：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+另一个reconfig现在正在进行(ReconfigInProgress)
+</p>
+</li>
+<li>
+<p>
+提出的改变将使集群小于2个参与者，在单机模式启用的情况下，或者如果单机模式被禁用那么它是合法的保留1或多个参与者（BadArgumentsException）
+</p>
+</li>
+<li>
+<p>
+新配置没有法定人数被连接和更新和领导者当重新配置开始处理（NewConfigNoQuorum）
+</p>
+</li>
+<li>
+<p>
+-v x被指定，但是最新的配置版本号y不是x(BadVersionException)
+</p>
+</li>
+<li>
+<p>
+一个增量的重新配置被请求但是领导者最新的配置使用一个不多数系统不同的法定人数系统（BadArgumentsException）
+</p>
+</li>
+<li>
+<p>
+语法错误（BadArgumentsException）
+</p>
+</li>
+<li>
+<p>
+I/O异常当从一个文件中读取配置（BadArgumentsException）
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>他们的大部分被说明在测试用例ReconfigFailureCases.java中。</p></div>
+<div class="paragraph"><div class="title">附言</div><p><strong>Liveness:</strong>为了更好的理解增量和非增量之间的不同，假设客户端C1增加服务端D到系统中，同时一个不同的客户端C2增加服务端E。对于非增量模式，每一个客户端将首先调用config来找出当前的配置，然后在本地创建一个新的服务端列表通过增加他们自己建议的服务端。新配置然后可以被提交使用有非增量的reconfig命令。在两个重新配置都完成之后，只有E或D中的一个将被加入（不是两个），取决于那一个客户端的请第二个到达领导者，覆盖了先前的配置。其它的客户端可以重复这个过程只到它的改变生效。这个方法保证全系统的进展（也就是说，客户端中的一样），但是不能确保每一个客户端成功。为了对C2更多控制可以请求只执行重新配置在当前配置没还有改变的情况下。正如在Conditional reconfig中讲解的那样。用这种方式它可以避免盲目地覆盖C1的配置文件，如果C1的配置先到达领导者。</p></div>
+<div class="paragraph"><p>对于增加重新配置，两个改变将生效因为他们简单地被应用被领导者一个接一个应用到当前的配置，不管它是什么（假如第二个reconfig请求到达领导者在第一个reconfig请求发送一个提交消息&#8201;&#8212;&#8201;现在领导者将将拒绝提议一个重新配置如果另一个已经正在悬而未决）。因为这两个客户都保证取得进展，这个方法保证更强的liveness。在实践中，多个并发的重新配置可能是罕见的。非增量的重新配置是当前唯一的方式来动态地改变多数系统。增量的配置是当前唯一被允许的对于多数法定人数系统。</p></div>
+<div class="paragraph"><p><strong>改变一个观察者为一个追随者：</strong>显然地，改变一个参与投票的服务端为一个观察者可能失败如果错误(2)发生。也就是说，如果小于参与者的最小被允许的数量。然而，转变一个观察者为一个参与者有时可能会失败因为一个更微妙的原因：假如，例如当前的配置是（A,B,C,D）,这里A是领导者，B和C是追随者并且D是一个一观察者。另外，假如B已经崩溃。如果一个重新配置被提交，这个配置使D变为一个追随者，它将会失败因为错误（3）因为在这个配置中，新配置中的多数投票者(任何3个投票者)，必须被连接和更新和领导者。一个观察者无法确认在重新配置过程中发送的历史前缀，因此，它不指望这3个所需的服务器并且重新配置将会被取消。如果发生这种情况，一个客户端可以达到相同的任务通过两个reconfig命令：首先调用reconfig命令来从配置中删除D然后调用第二个命令来把它增加回来作为参考者（追随者）。在中间状态D是一个不投票的追随者并且可以可以响应在第二个reconfig命令执行其中的状态转换。</p></div>
+<div class="paragraph"><p>当一个ZooKeeper集群被启动，如果每一个客户端使用相同的连接字符串（服务端列表），客户端将随机地选择一个服务端来连接，使每个服务器的客户端连接的预期数量相同。我们实现一个方法来保证这个特性当通过重新配置服务端列表改变。参考paper中的4和5.1部分。</p></div>
+<div class="paragraph"><p>为了使这个方法起作用，所有客户端必须订阅配置改变（通过在/zookeeper/config上设置一个监视器，直接地或通过getConfigAPI命令）。当监视器被触发，客户端应该读取新的配置通过调用sync和getConfig,并且如果配置确实是新的，调用updateServerList API命令。为了避免大量的客户端同时迁移，最好每一个客户端睡觉一个随机的时间在调用updateServerList之前。</p></div>
+<div class="paragraph"><p>一些例子可以被找到在：StaticHostProviderTest.java 和TestReconfig.cc</p></div>
+<div class="paragraph"><p>例子（这不是食谱，而是为了讲解总体思路的一个简化的例子）：</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>这个文档包含关于ZK内部工作的信息。目前为止，它讨论了这些主题：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+原子广播
+</p>
+</li>
+<li>
+<p>
+日志
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>ZK的核心是一个原子的通信系统，它使所有的服务端保持同步。</p></div>
+<div class="paragraph"><p>通过使用ZooKeeper的通讯系统提供具体保证如下：</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<em>可靠传递</em>
+</dt>
+<dd>
+<p>
+如果一个消息，m，被一个服务端传递，它将最终被所有的服务端传递。
+</p>
+</dd>
+<dt class="hdlist1">
+<em>总序</em>
+</dt>
+<dd>
+<p>
+如果一个消息被一个服务端在消息b之前传递，a将被所有的服务端在b之前被传递。如果a和b是被传递的消息，要么a在b之前被传递，要么b在a之前被传递。
+</p>
+</dd>
+<dt class="hdlist1">
+<em>因果顺序</em>
+</dt>
+<dd>
+<p>
+如果一个消息b在被一个b的发送者已经传递a之后被发送，a必须被排在b前面。如果一个发送者发送c在发送b之后，c必须排在b之后。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>ZK的通信系统也需要是高效的，可靠的，和容易实现和维护。我们大量使用通信，所以我们需要这个系统每秒可以处理成千上万的请求。尽管我们可以要求到少k+1个正确的服务端发送新消息，我们必须能够从例如停电的相关的失败中恢复出来。当我们实现这个系统我们很少的时间和很少的工程资源，所以我们需要一个对工程师来说可用的协议并且很容易实现。我们发现我们的协议满足所有的目标。</p></div>
+<div class="paragraph"><p>我们的协议假设我们可以构造在服务端之间点到点的FIFO通道。同时类似的服务端通常认为消息传递可能丢失或重排序消息，我们的FIFO通道的假设是很实用的假定我们使用TCP来通信。特别地我们依赖TCP如下的属性：</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<em>有序的传递</em>
+</dt>
+<dd>
+<p>
+数据以它被发送的顺序传递并且一个消息m被传递只有在m之前发送的所有消息已经被传递之后。（这个推论是如果消息m丢失所有在m之后的消息将被丢失）。
+</p>
+</dd>
+<dt class="hdlist1">
+<em>在关闭之后没有消息</em>
+</dt>
+<dd>
+<p>
+一旦一个FIFO通道被关闭，从它那里就没有消息被接受。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>FLP证明共识不能够实现在异步的分布式系统，如果失败是可能的。为了确保我们实现共识在失败出现的时候我们使用超时。然而，我们依赖时间为了生存而不是为了共识。所以，如果超时停止工作（时钟故障的例子）通信系统可能挂起，但是它将不会违反这个保证。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>当我们描述ZK消息协议，我们将会讨论数据包，提议，和消息：</code></pre>
+</div></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+_数据包_
+</dt>
+<dd>
+<p>
+通过FIFO通道发送的字节序列
+</p>
+</dd>
+<dt class="hdlist1">
+<em>提议</em>
+</dt>
+<dd>
+<p>
+协议单位。提议通过在ZK服务端的法定人数之间交换数据包来达成一致。大部分提议包含消息，然而NEW_LEADER提议是一个提议的样例它不对应一个消息。
+</p>
+</dd>
+<dt class="hdlist1">
+<em>消息</em>
+</dt>
+<dd>
+<p>
+将要原子传播到所有ZK服务端的的字节序列。消息放入一个提议当中并且在被传递之前同意。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>如上所述，ZK确保一个消息的总顺序，并且它也确保提议的总顺序。ZK暴露总顺序使用一个ZK事务id(zxid)。所有提议将被标识一个zxid当它被提出并且确切地反应总顺序。提议被发送到所有ZK服务端并且当他们的法定人数确认了这一提议将被提交。如果一个提议包含一个消息，这个消息将被传递当提议被提交的时候。确认意为着服务端已经记录这个提议到永久存储。Our quorums have the requirement that any pair of quorum must have at least one server in common(意思就是法定人数有多数可用，至少是n/2+1个法定人数)。我们确保这个通过要求所有法定人数有（n/2+1)个，这里的n是组成ZK服务的服务端数量。</p></div>
+<div class="paragraph"><p>zxid有两部分：时期和计数器。在我们的实现中zxid是一个64位的数字。我们使用高32位来表示时期，低32位来表示计数器。因为它有两部分表示zxid，两部分都是数字并且作为一对整数（时期，计数器）。时期数字代表领导者改变。每当一个新的领导人上台，它将有它自己的时期数字。我们有一个简单的逻辑来给每一个提议分配一个唯一的zxid：领导者简单地增加zxid来为每一个提议获取一个唯一的zxid。领导者激活将确保只有一个领导者使用一个给定的时期，所以我们简单的逻辑确保每一个提议将有一个唯一的id。</p></div>
+<div class="paragraph"><p>ZK通信包含两阶段：</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<em>领导者激活</em>
+</dt>
+<dd>
+<p>
+在这个阶段一个领导者建立这个系统的正在状态并且准备开始提出建议。
+</p>
+</dd>
+<dt class="hdlist1">
+<em>消息传递</em>
+</dt>
+<dd>
+<p>
+在这个阶段一个领导者接受提议的消息并且协调消息传递。
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>ZK是一个整体协议。我们不关注个别的提议，而是把提议的流作为一个整体。我们严格的顺序性使我们能够有效地做到这一点并且大大地简化了我们的协议。领导者激活体现了这个整体概念。一个领导者变得活跃只当一个追随者(领导者也算是一个追随者，你可以总是投票给自己)已经和领导者同步过，他们拥有相同的状态。这个状态包含所有领导者相信已经被提交的提议和追随领导者的提议，也就是NEW_LEADER提议。（希望你也正在思考，真的领导者相信已经被提议的提议包括所有真的已经被提交的提议？答案是是的。下面，我们弄清楚为什么）。</p></div>
+<div class="paragraph"><p>领导者渡海包括领导者选举。我们现在在ZK中有两个领导者选举逻辑：LeaderElection和FastLeaderElection(AuthFastLeaderElection 是一个FastLeaderElection的变种，它使用UDP和允许 服务端执行简单形式的谁来避免IP欺骗)。ZK通信不关心选举领导者的具体方法只要以下拥有：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+领导看到所有追随者的最高zxid
+</p>
+</li>
+<li>
+<p>
+服务端法定人数致力于追随领导者
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>在这两个要求中只有第一个，在追随者中的最大zxid需要保持正确的操作。第二个要求，追随者的法定人数，只需要保持高概率。我们正要重新检测第二个要求，所以如果在领导者选择之间或在领导者选举之后发生一次失败并且法定人数丢失，我们将恢复通过取消领导者激活并且运行另一个选举。</p></div>
+<div class="paragraph"><p>在领导者选举之后一个服务端将被分配为领导者并且开始等待追随者连接。剩余的服务端将试图连接到领导者。领导者将同步追随者通过发送任何他们丢失的，或者如果一个追随者错误太多提议，它将发送一个完整的快照给追随者。</p></div>
+<div class="paragraph"><p>有一种情况一个追随者的提议，U,没有被领导者看到。提议有序地被看到，所以人民提议U将有一个比领导者看到的zxid更高的zxid。追随者必须在领导者到达之后到来，否则追随者将被选举成领导者因为它已经看到一个更高的zxid。因为提交的提议必须被服务端的法定人数看到，并且选举了领导者的服务端的法定人数没有看到U,你的提议没有被提交，所有他们将被丢弃。当追随者连接到领导者，领导者将告诉追随者丢掉U。</p></div>
+<div class="paragraph"><p>一个新的领导者通过获取时期（epoch）建立一个为了新的提议开始使用的zxid。也就是他已经看到的最高的zxid并且设置下一个使用的zxid为(e+1,0),在领导者和追随者同步之后，它将发出一个NEW_LEADER提议。一旦NEW_LEADER提议已经被提交，领导者将激活并且开始接收和发起提议。</p></div>
+<div class="paragraph"><p>它们听起来都很复杂，但是这里是领导者激活过程中的操作的基本规则：</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+追随者将响应NEW_LEADER提议工它已经和领导者同步之后。
+</p>
+</li>
+<li>
+<p>
+追随者将只响应来自一个服务端带着给定的zxid的NEW_LEADER提议。
+</p>
+</li>
+<li>
+<p>
+新的领导者将提交NEW_LEADER提议当追随者的法定人数已经响应它。
+</p>
+</li>
+<li>
+<p>
+当NEW_LEADER提议被提交之后追随者将提交任何它从领导者收到的状态
+</p>
+</li>
+<li>
+<p>
+新的领导将不会接受新提议直到NEW_LEADER提议已经被提交。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>如果领导者选举错误地终止，我们不会有任何问题因为NEW_LEADER提议将不会被提交因为领导者没有法定人数。当这个发生时，领导者和任何任何剩余的追随者将超时并且重新开始领导者选举。</p></div>
+<div class="paragraph"><p>领导者激活所有的沉重的起重（Leader Activation does all the heavy lifting）。一旦领导者被选举它可以开始发起提议。只要它是领导者就没有其它其它领导可以出现，因为没有其它领导者将可以有追随者的法定人数。如果一个新的领导者确实出现，它意为着这个领导者已经失去了法定人数，并且新的领导者将清理任何遗留的混乱在他的领导者激活的过程中。</p></div>
+<div class="paragraph"><p>ZK的消息操作和一个典型的两段式提交相似。</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/2pc.jpg" alt="images/2pc.jpg" />
+</div>
+</div>
+<div class="paragraph"><p>所有的通信通道是FIFO，所以所有事被有序地完成。特别地可以观察到如下的操作约束。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+领导者发送提议到所有的追随者使用相同的顺序。甚至，这个序列按照请求被接受的顺序。因为我们使用FIFO通道这意为着追随者也是有序地收到提议
+</p>
+</li>
+<li>
+<p>
+追随者处理消息以他们收到的顺序。这意为着消息将被有序地回应并且领导者有序地从追随者收到回应，因为FIFO通信。这也意为着如果消息$m$已经被写入到一个持久的存储里面，所有在$m$之前被发起的消息也已经被写入到持久存储里面。
+</p>
+</li>
+<li>
+<p>
+领导者将发起一个COMMIT给所有的追随者一旦追随者的法定人数 已经回应了一个消息。因为消息被有序地回应，COMMIT将被领导者将以追随者收到的顺序发出。
+</p>
+</li>
+<li>
+<p>
+COMMIT被有序地处理。追随者传递一个提议消息当提议已经被提交的时候。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>所以到些为止。为什么它工作?特别地，为什么被新的领导者相信的一组提议总是包含任何已经被真正提交的提议？首先，所有提议有一个唯一的zxid，所以不像其它提议，我们永远不担心两个不同的值被提议带着相同的zxid;追随者（领导者也是一个追随者）有序地看到和记录提议;提议被有序地提议;一个时间有一个活跃的领导者追随者只追随一个领导者在一个时间;一个新的领导者已经看到所有被提交的提议从先前的纪元(epoch)开始因为它已经 看到服务端的法定人数中最高的zxid;任何被新的领导者在先前的纪元(epoch)看到的没被提交的提议将被提交被这个领导者在它变活跃之前。</p></div>
+<div class="paragraph"><p>这不就是Multi-Paxos么？不是的，Multi-Paxos要求 假设只有一个协调者。我们不依赖这样的保证。相反地我们使用领导者激活来从领导者改变在恢复或者老的领导者相信它仍然活跃。</p></div>
+<div class="paragraph"><p>这是不是Paxos？你的消息传递阶段看起来像一个Paxos的2阶段？事实上，对我们来说消息传递看起来像一个不需要处理取消的2阶段提交。消息传递有整个提议顺序性的要求，在这个意义上说它和这两者都不同。如果我们不维护所有数据包严格的FIFO顺序，这一切都崩溃了。同时，我们的领导者激活阶段也和他们两个不同。告别地，我们的纪元的使用允许我们跳过没有提交提议的块并且不用担心对于一个zxid会有重复的提议。</p></div>
+<div class="paragraph"><p>原子传播和领导者选举使用法定人数的概念来保证系统的一致性视图。默认地，ZK使用多数法定人数，这意为着每一个在这些协议中发生的投票需要一个大多数来投票。一个例子是承认一个领导者的建议：领导者可以提交一旦它从服务端的法定人数收到一个确认。</p></div>
+<div class="paragraph"><p>如果我们提取这一性质，我们真的需要使用大多数，我们实现这一点，我们只需要保证一组使用的进程通过投票来检测一个操作（也就是说，确认一个领导者提议）。使用大多数保证这样一个属性。然而有砣不同与大多数的的方法来构建法定人数。例如，我们可以分配权重给服务端的投票，来说明一些服务端的投票更重要。为了获取一个法定人数，我们得到足够的投票结果所有投票的权重的总全比所有权重的总全的一半要大。</p></div>
+<div class="paragraph"><p>一个不同的构造使用权重并且在wide-area(co-locations)部署是有用的是一个分层次法定人数。对于这个构造，我们把服务端分为不相交的组并且分配权重来处理。为了组成一个法定人数，我们不得不从一个一个组G的大多数获取足够的服务端，对于G中的每一个组g,g中的投票的总数比g中的权重的总数的一半要大。有趣的是，这个构造允许更小的法定人数。例如，如果我们有9个服务端，我们把他们分为三组，并且给每一个服务端分配一个权重1，那么我们可以组成一个大小为4的法定人数。注意，处理的两个字集从每一个组的大多数组成的每一个大多数服务器必需有一个非空的交集。这是合理的期望一个co-locations的大多数将有很大的概率有大多数可用的服务端。</p></div>
+<div class="paragraph"><p>对于ZK,我们提供给用户配置服务端来使用大多数法定人数，权重，或者分层次的组的能力。</p></div>
+<div class="paragraph"><p>ZK使用slf4j作为日志的抽象层。现在版本1.2的log4j被选择作为最终的日志实现。为了更好的嵌入支持，在未来计划把最终日志实现的选择扔给用户。因些总是在代码里使用slf4jAPI来写日志语句，但是在运行时配置log4j怎么记录日志。注意slf4j没有FATAl级别，在以前的FATAl级别的消息已经被移到ERROR级别。对于ZK关于配置log4j的信息参考ZooKeeper Administrator&#8217;s Guide的Logging部分。</p></div>
+<div class="paragraph"><p>请按照slf4j manual当在代码中创建日志语句的时候。当创建日志语句的时候同时读FAQ on performance，补丁的审稿人将寻找下面:
+在正确的级别上记录日志</p></div>
+<div class="paragraph"><p>在slf4j中有几个日志级别。选择正确的一个非常重要。为了更高的较低的严重程度：</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+ERROR级别指定错误事件可能仍然允许应用继续运行。
+</p>
+</li>
+<li>
+<p>
+WARN级别指示潜在的有害的情况。
+</p>
+</li>
+<li>
+<p>
+INFO级别指示信息的消息突出程序过处理以粗粒度地。
+</p>
+</li>
+<li>
+<p>
+DEBUG级别指示细粒度的信息事件对调试应用程序是最有用的。
+</p>
+</li>
+<li>
+<p>
+TRACE级别指示比DEBUG更详细的信息事件。
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>ZK通常以INFO级别的日志消息和更高的(更严重的)被输出到日志中的形式在生产环境中运行。</p></div>
+<div class="paragraph"><div class="title">标准slf4j的使用</div><p><em>静态消息日志</em></p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>LOG.debug("process completed successfully!");</code></pre>
+</div></div>
+<div class="paragraph"><p>然而当需要创建带参数的消息，使用格式锚。</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>LOG.debug("got {} messages in {} minutes",new Object[]{count,time});</code></pre>
+</div></div>
+<div class="paragraph"><p><em>命名</em></p></div>
+<div class="paragraph"><p>日志应该被命名在他们被使用的类之后。</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p><em>异常处理</em></p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+</div></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+template::[footer-text]
+</div>
+</div>
+</body>
+</html>
