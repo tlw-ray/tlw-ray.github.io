@@ -1,0 +1,91 @@
+= 领导者锁
+== 说明
+
+在分布式计算中，领导选举是指定一个任务的组织者在几台计算机（节点）之间分配的过程。 在任务开始之前，所有网络节点都不知道哪个节点将作为任务的“领导者”或协调者。 然而，在执行了领导选举算法之后，整个网络中的每个节点识别出一个特定的唯一节点作为任务负责人。
+
+注意：Curator有两个领导选举配方。 哪一个合适取决于您的要求。
+
+== 参与类
+
+* LeaderLatch
+
+== 用法
+
+=== 创建LeaderLatch
+
+[source, java]
+----
+public LeaderLatch(CuratorFramework client,
+                   String latchPath)
+Parameters:
+client - the client
+latchPath - the path for this leadership group
+----
+
+[source, java]
+----
+public LeaderLatch(CuratorFramework client,
+                   String latchPath,
+                   String id)
+Parameters:
+client - the client
+latchPath - the path for this leadership group
+id - participant ID
+----
+
+=== 一般用法
+
+LeaderLatches必须启动：
+
+[source, java]
+----
+leaderLatch.start();
+----
+
+一旦开始，LeaderLatch将与使用相同锁存路径的任何其他LeaderLatch参与者进行协商，并随机选择其中一个作为领导者。 在任何时候，您可以通过调用以下方式来确定给定的实例是否为领导者：
+
+[source, java]
+----
+public boolean hasLeadership()
+Return true if leadership is currently held by this instance
+----
+
+与JDK的CountDownLatch类似，LeaderLatch具有阻止直到获得领导的方法：
+
+[source, java]
+----
+public void await()
+          throws InterruptedException,
+                 EOFException
+Causes the current thread to wait until this instance acquires leadership
+unless the thread is interrupted or closed.
+----
+
+[source, java]
+----
+public boolean await(long timeout,
+                     TimeUnit unit)
+             throws InterruptedException
+Causes the current thread to wait until this instance acquires leadership unless
+the thread is interrupted, the specified waiting time elapses or the instance is closed.
+&nbsp;
+Parameters:
+timeout - the maximum time to wait
+unit - the time unit of the timeout argument
+Returns:
+true if the count reached zero and false if the waiting time elapsed before the count
+reached zero or the instances was closed
+----
+
+当您使用LeaderLatch实例时，您必须调用close。 这样就可以将实例从领导选举中移除，如果实例具有这一点，就会释放领导力 一旦领导发布，另一个参与实例（如果有）将被选为领导者。
+
+[source, java]
+----
+leaderLatch.close();
+----
+
+== 错误处理
+
+LeaderLatch实例添加一个ConnectionStateListener来监视连接问题。 如果报告了SUSPENDED或LOST，那么作为领导者的LeaderLatch将会报告它不再是领导者（即在重新建立连接之前不会有领导者）。 如果LOST连接被重新配置，则LeaderLatch将删除其先前的ZNode并创建一个新的ZNode。
+
+LeaderLatch的用户必须考虑到连接问题可能导致领导失败。 即hasLeadership（）返回true，但稍后一段时间连接是SUSPENDED或LOST。 那么hasLeadership（）将返回false。 强烈建议LeaderLatch用户注册一个ConnectionStateListener。

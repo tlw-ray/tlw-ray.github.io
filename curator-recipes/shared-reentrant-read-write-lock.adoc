@@ -1,0 +1,44 @@
+= 共享可重入读写锁
+
+== 说明
+
+跨JVM的跨入读写互斥体。使用Zookeeper握住锁。使用相同锁路径的所有JVM中的所有进程将实现一个进程间关键部分。此外，该互斥体是“公平的”，每个用户将按照请求的顺序获取互斥体（从ZK的角度来看）。
+
+读写锁保持一对关联的锁，一个用于只读操作，一个用于写入。读锁定可以通过多个读取器进程同时保持，只要没有写入器即可。写锁是排他的。
+
+可重入该锁允许读者和作者以重新锁定的方式重新获取读写锁。在写入线程/进程所持有的所有写锁已经被释放之前，不允许非入门读卡器。另外，写入器可以获取读锁，但反之亦然。如果读者尝试获取写入锁定，它将永远不会成功。
+
+锁定降级重入还允许通过获取写入锁定，然后释放写入锁定，从写入锁定到读取锁定。但是，从读锁定升级到写锁是不可能的。
+
+== 参与类
+
+* InterProcessReadWriteLock
+* InterProcessLock
+
+== 用法
+
+=== 创建一个InterProcessReadWriteLock
+
+[source, java]
+----
+public InterProcessReadWriteLock(CuratorFramework client,
+                                 String basePath)
+Parameters:
+client - the client
+basePath - path to use for locking
+----
+
+=== 一般用法
+
+访问读锁或写锁，然后使用如共享锁所述的方法。
+
+[source, java]
+----
+public InterProcessLock readLock()
+
+public InterProcessLock writeLock()
+----
+
+== 错误处理
+
+强烈建议您添加一个ConnectionStateListener并观察SUSPENDED和LOST状态更改。 如果报告了SUSPENDED状态，则无法确定您仍然保持锁定状态，除非您随后收到RECONNECTED状态。 如果报告了LOST状态，则确定您不再持有该锁。

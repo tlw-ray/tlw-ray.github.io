@@ -1,0 +1,94 @@
+= 共享可重入锁
+
+== 说明
+
+完全分布的全局同步锁，意味着任何时间的快照，没有两个客户端认为它们拥有相同的锁。
+
+== 参与类
+
+    InterProcessMutex
+
+== 用法
+
+=== 创建一个InterProcessMutex
+[source, java]
+----
+public InterProcessMutex(CuratorFramework client,
+                         String path)
+Parameters:
+client - client
+path - the path to lock
+----
+
+== 一般用法
+
+要获取锁，请使用以下方法之一：
+
+[source, java]
+----
+public void acquire()
+Acquire the mutex - blocking until it's available. Note: the same thread can call acquire
+re-entrantly. Each call to acquire must be balanced by a call to release()
+----
+
+[source, java]
+----
+public boolean acquire(long time,
+                       TimeUnit unit)
+Acquire the mutex - blocks until it's available or the given time expires. Note: the same thread can
+call acquire re-entrantly. Each call to acquire that returns true must be balanced by a call to release()
+
+Parameters:
+time - time to wait
+unit - time unit
+Returns:
+true if the mutex was acquired, false if not
+----
+
+要释放互斥量，请调用：
+
+[source, java]
+----
+public void release()
+Perform one release of the mutex if the calling thread is the same thread that acquired it. If the
+thread had made multiple calls to acquire, the mutex will still be held when this method returns.
+----
+
+.注意
+[NOTE]
+====
+InterProcessMutex实例是可重用的。 即不要每次都创建一个新的实例。 重新使用单个实例。
+====
+
+== 撤销
+
+InterProcessMutex支持ZooKeeper用法wiki中描述的合作撤销机制。
+
+要使互斥可撤销，请调用：
+
+[source, java]
+----
+public void makeRevocable(RevocationListener<T> listener)
+Make the lock revocable. Your listener will get called when another process/thread wants you to release the lock. Revocation is cooperative.
+Parameters:
+listener - the listener
+----
+
+要求锁撤销/释放，请使用Revoker类中的静态方法：
+
+[source, java]
+----
+public static void attemptRevoke(CuratorFramework client,
+                                 String path)
+                         throws Exception
+Utility to mark a lock for revocation. Assuming that the lock has been registered
+with a RevocationListener, it will get called and the lock should be released. Note,
+however, that revocation is cooperative.
+Parameters:
+client - the client
+path - the path of the lock - usually from something like InterProcessMutex.getParticipantNodes()
+----
+
+== 错误处理
+
+强烈建议您添加一个ConnectionStateListener并观察SUSPENDED和LOST状态更改。 如果报告了SUSPENDED状态，则无法确定您仍然保持锁定状态，除非您随后收到RECONNECTED状态。 如果报告了LOST状态，则确定您不再持有该锁。

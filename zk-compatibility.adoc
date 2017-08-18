@@ -1,0 +1,42 @@
+= ZooKeeper版本兼容性
+
+虽然ZooKeeper 3.5.x仍然被ZooKeeper开发团队视为“beta”，但现实情况是它被许多用户用于生产。 但是，ZooKeeper 3.4.x也用于生产。 在Apache Curator 4.0之前，两个版本的ZooKeeper都支持两个版本的Apache Curator。 从Curator4.0开始，两个版本的ZooKeeper都通过相同的Curator库进行支持。
+
+== ZooKeeper 3.5.x
+
+* Curator4.0对ZooKeeper 3.5.x有很大的依赖性
+* 如果您使用的是ZooKeeper 3.5.x，那么没有什么可以做的 - 只需使用Curator 4.0
+
+== ZooKeeper 3.4.x
+
+Curator4.0以软兼容模式支持ZooKeeper 3.4.x系列。 要使用此模式，在将Curator添加到依赖关系管理工具时，必须排除ZooKeeper。
+
+Maven
+
+[source, xml]
+----
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-recipes</artifactId>
+    <version>${curator-version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+----
+
+Gradle
+
+[source, groovy]
+----
+compile('org.apache.curator:curator-recipes:$curatorVersion') {
+  exclude('org.apache.zookeeper:zookeeper')
+}
+----
+
+您也必须在ZooKeeper 3.4.x上添加依赖关系。
+
+Curator将检测哪个ZooKeeper库正在使用，并根据需要自动设置ZooKeeper 3.4兼容性模式。 在此模式下，3.4不支持的所有功能都被禁用。 您的应用程序代码“做正确的事情”，而不是使用这些功能。 使用isZk34CompatibilityMode（）方法来确定策路人在运行时使用的模式。

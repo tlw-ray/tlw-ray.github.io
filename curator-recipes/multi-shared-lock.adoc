@@ -1,0 +1,40 @@
+= 多重共享锁
+
+== 说明
+
+将多个锁定为单个实体的容器。 当调用capture（）时，将获取所有锁。 如果失败，则获取的任何路径都将被释放。 类似地，当调用release（）时，所有锁都被释放（忽略失败）。
+
+== 参与类
+
+* InterProcessMultiLock
+* InterProcessLock
+
+== 用法
+
+=== 创建InterProcessMultiLock
+
+[source, java]
+----
+public InterProcessMultiLock(List<InterProcessLock> locks)
+Creates a multi lock of any type of inter process lock
+Parameters:
+locks - the locks
+----
+
+[source, java]
+----
+public InterProcessMultiLock(CuratorFramework client,
+                             List<String> paths)
+Creates a multi lock of InterProcessMutexes
+Parameters:
+client - client
+paths - list of paths to manage in the order that they are to be locked
+----
+
+== 一般用法
+
+用法与“共享锁”相同。 但是，当调用gets（）时，将获取所有的锁。 如果失败，则获取的任何路径都将被释放。 类似地，当调用release（）时，所有锁都被释放（忽略失败）。
+
+== 错误处理
+
+强烈建议您添加一个ConnectionStateListener并观察SUSPENDED和LOST状态更改。 如果报告了SUSPENDED状态，则无法确定您仍然保持锁定状态，除非您随后收到RECONNECTED状态。 如果报告了LOST状态，则确定您不再持有该锁。

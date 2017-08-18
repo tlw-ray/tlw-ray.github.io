@@ -1,0 +1,50 @@
+= 欢迎来到Apache Curator
+
+== 什么是Curator？
+
+Curator：博物馆或其他收藏品的守护者保管人 - Zookeeper 守护者。
+
+Apache Curator是用于Apache ZooKeeper（一种分布式协调服务）的Java / JVM客户端库。它包括一个高级的API框架和实用程序，使Apache ZooKeeper更容易和更可靠。它还包括常见用例和扩展的配方，如服务发现和Java 8异步DSL。
+image:images/ph-quote.png[]
+
+== Maven / 构件
+
+Curator二进制出版给Maven Central。Curator由几件构件组成。使用哪些构件取决于您的需求。对于大多数用户来说，您唯一需要的工具就是Curator配方。
+
+[cols="10, 30, 60"]
+|===
+|GroupID / Org | ArtifactID / Name | Description
+
+|org.apache.curator
+|curator-recipes
+|所有的配方。注意：这个构件依赖于客户端和框架，因此，Maven（或者您使用的任何工具）应该自动拉出。
+
+|org.apache.curator
+|curator-async
+|异步DSL与O/R建模，迁移和许多其他功能。
+
+|org.apache.curator
+|curator-framework
+|Curator框架高级API。这是建立在客户端之上，应该自动拉入。
+
+|org.apache.curator
+|curator-client
+|策展客户端 - 替换ZK分发中的ZooKeeper类。
+
+|org.apache.curator
+|curator-test
+|包含TestingServer，TestingCluster和一些其他有用的测试工具。
+示例各种Curator功能的示例用法。
+
+|org.apache.curator
+|Curator-x-discovery
+|在Curator框架上构建的服务发现实现。
+
+|org.apache.curator
+|curator-x-discovery-server
+|可与Curator发现一起使用的RESTful服务器。
+|===
+
+== ZooKeeper兼容性
+
+Apache Curator旨在与ZooKeeper 3.5+一起使用。但是，它也兼容ZooKeeper 3.4.x.有关细节请参阅 link:zk-compatibility.html[兼容性]

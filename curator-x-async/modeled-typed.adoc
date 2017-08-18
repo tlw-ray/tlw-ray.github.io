@@ -1,0 +1,76 @@
+= 建模Curator - 缓存，类型参数和版本控制
+
+除了主要功能，建模Curator还支持集成缓存，类型参数和版本控制。
+
+== 缓存
+
+ModeledFramework实例可以使用在内部使用Curator缓存的外观来封装。 所有读取操作都使用此缓存，而不是直接进行ZooKeeper调用。 您也可以监听节点更改。 例如：
+[source, java]
+----
+ModeledFramework<MyModel> modeledClient = ModeledFramework.wrap(client, myModelSpec);
+CachedModeledFramework<MyModel> cached = modeledClient.cached();
+cached.start();
+
+// reads come from the cache
+cached.read().whenComplete(...) ...
+
+cached.listenable.addListener((type, path, stat, model) -> {
+    // type is NODE_ADDED, NODE_UPDATED, etc.
+});
+----
+
+== 未解决的路径和缓存
+
+如果ModelSpec路径中的最后一个节点是一个参数，CachedModeledFramework将自动侦听父路径。 例如：
+[source, java]
+----
+ZPath path = ZPath.parseWithIds("/root/instance/{id}");
+ModelSpec<MyModel> modelSpec = ModelSpec.builder(path, serializer);
+ModeledFramework<MyModel> modeledClient = ModeledFramework.wrap(modelSpec, client, modelSpec);
+
+CachedModeledFramework<MyModel> cached = modeledClient.cached();
+cached.start(); // automatically listens to "/root/instance" and below
+----
+
+== 类型参数
+
+ZPath等人的“解决”方法使用无类型对象。 理想情况下，我们应该能够以强类型的方式指定参数。 建模Curator的“类型”模板提供了这一点。 您可以为ZPaths，ModelSpecs和ModeledFramework指定类型参数。 Pub-Sub示例显示了如何使用ModeledFramework类型的参数。
+
+类型化接口最多可提供10个参数，名为TypedZPath，TypedZPath2，TypedModelSpec，TypedModelSpec2，TypedModeledFramework，TypedModeledFramework2等。
+
+以下是TypedModeledFramework的一个示例，它为Person创建一个模型，并使用两个参数来生成路径，即组和组织：
+
+[source, java]
+----
+TypedModeledFramework2<Person, Group, Organization> clientTemplate = TypedModeledFramework2.from(
+    ModeledFrameworkBuilder.build(),
+    personModelSpec
+);
+
+...
+
+Group group = ...
+Organization organization = ...
+ModeledFramework<Person> modeledClient = clientTemplate.resolve(asyncClient, group, organization);
+client.set(person);
+----
+
+TypedZPath和TypedModelSpec类似地工作。
+
+== 版本控制
+
+Modeled Curator支持通过Versioned界面和VersionedModeledFramework API将ZNode版本与模型对象相关联。 要阅读模型及其ZNode版本，请使用：
+[source, java]
+----
+ModeledFramework<Person> client = ...
+
+client.versioned().read().whenComplete((value, e) -> {
+    if ( value != null ) {
+        // value's type is Versioned<Person>
+        Person personModel = value.model();
+        int znodeVersion = value.version();
+    }
+});
+----
+
+VersionedModeledFramework具有自动使用Versioned实例版本的set / update API。

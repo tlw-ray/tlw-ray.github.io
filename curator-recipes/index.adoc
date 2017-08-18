@@ -1,0 +1,40 @@
+= 用法
+
+Curator实现ZooKeeper用法文档中列出的所有用法（两阶段提交除外）。点击下面的配方名称以获取详细的文档。注意：大多数Curator用法将自动创建给予用法的路径的父节点为CreateMode.CONTAINER。另请参见技术说明7关于“Curator用法拥有自己的ZNode/Paths”。
+
+.选举
+[horizonital]
+* link:leader-latch.html[领导锁] - 在分布式计算中，领导者选举是指定一个进程的过程，作为一些任务的组织者分布在几台计算机（节点）之间。在任务开始之前，所有网络节点都不知道哪个节点将作为任务的“领导者”或协调者。然而，在执行了领导选举算法之后，整个网络中的每个节点识别出一个特定的唯一节点作为任务负责人。
+* link:leader-election.html[领导选举] - 初步Curator领导选举方案。
+
+.锁
+* link:shared-reentrant-lock.html[共享可重入锁] - 全局同步的全分布式锁，意味着任何时间的快照，没有两个客户端认为它们拥有相同的锁。
+* link:shared-lock.html[共享锁] - 类似于共享可重入锁，但不可重入。
+* link:share-reentrant-read-write-lock.html[共享可重入读写锁] - 一种跨JVM可访问的读/写互斥体。读写锁保持一对关联的锁，一个用于只读操作，一个用于写入。读锁定可以通过多个读取器进程同时保持，只要没有写入器即可。写锁是排他的。
+* link:shared-semaphore.html[共享信号量] - 跨JVM运行的计数信号量。使用相同锁定路径的所有JVM中的所有进程将实现一个进程间限制的租约集合。此外，这个信号灯大多是“公平的” - 每个用户将按照要求的顺序（从ZK的角度）获得租约。
+* link:multi-shared-lock.html[多重共享锁] - 一个将多个锁定为一个实体的容器。当调用capture（）时，将获取所有锁。如果失败，则获取的任何路径都将被释放。类似地，当调用release（）时，所有锁都被释放（忽略失败）。
+
+.屏障
+* link:barrier.html[屏障] - 分布式系统使用屏障来阻止一组节点的处理，直到满足条件才允许所有节点继续进行。
+* link:double-barrier.html[双重屏障] - 双重屏障使客户端能够同步计算的开始和结束。当足够的流程加入屏障物时，流程开始计算，一旦完成就离开屏障物。
+
+.计数器
+* link:share-counter.html[共享计数器] - 管理共享整数。观看相同路径的所有客户端将具有共享整数的最新值（考虑到ZK的一般一致性保证）。
+* link:distributed-atomic-long.html[分布式长原子] - 尝试原子增量的计数器。它首先尝试使用乐观锁定。如果失败，则采用可选的InterProcessMutex。对于乐观和互斥两者，重试策略用于重试增量。
+
+.缓存
+* link:path-cache.html[路径缓存] - 路径缓存用于观察ZNode。每当一个孩子被添加，更新或删除时，路径缓存将更改其状态，以包含当前的一组子项，孩子的数据和孩子的状态。Curator框架中的路径缓存由PathChildrenCache类提供。对路径的更改将传递到已注册的PathChildrenCacheListener实例。
+* link:node-cache.html[节点缓存] - 尝试保留本地缓存节点数据的实用程序。该类将观察节点，响应更新/创建/删除事件，下拉数据等。您可以注册一个在发生更改时收到通知的监听器。
+* link:tree-cache.html[树缓存] - 一种实用程序，尝试保留ZK路径的所有子项的所有数据本地缓存。该类将观看ZK路径，响应更新/创建/删除事件，下拉数据等。您可以注册一个监听器，当发生更改时将收到通知。
+
+.节点
+* link:persistent-node.html[持久性节点] - 即使通过连接和会话中断，也试图保留在ZooKeeper中的节点。
+* link:persistent-ttl-node.html[持久TTL节点] - 当您需要创建TTL节点但不希望通过定期设置数据手动保持活动时很有用。
+* link:group-member.html[组成员] - 组成员管理。将此实例添加到组中，并将组中的成员缓存。
+
+.队列
+* [.line-through]#分布式队列# - 分布式队列ZK配方的实现。保证放入队列的物品被订购（通过ZK的PERSISTENTSEQUENTIAL节点）。如果单个消费者将项目从队列中取出，则它们将被命令为FIFO。如果订购很重要，请使用LeaderSelector提名单个消费者。
+* [.line-through]#分布式Id队列# - 允许ID与队列项相关联的DistributedQueue版本。如果需要，项目可以从队列中删除。
+* [.line-through]#分布式优先级队列# - 分布式优先级队列ZK配方的实现。
+* [.line-through]#分布式延迟队列# - 分布式延迟队列的实现。
+* [.line-through]#简单的分布式队列# - ZK分发随附的DistributedQueue的替换。

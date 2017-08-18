@@ -1,0 +1,195 @@
+= Curator 异步
+
+使用这种DSL，您可以使用Java 8 lambdas以更自然，更有效的方式执行异步任务。例如：
+
+[source, java]
+----
+// let "client" be a CuratorFramework instance
+AsyncCuratorFramework async = AsyncCuratorFramework.wrap(client);
+async.checkExists().forPath(somePath).thenAccept(stat -> mySuccessOperation(stat));
+----
+
+== 用法
+
+注意：要使用Curator异步，您应该熟悉Java 8的lambdas，CompletedFuture和CompletionStage。
+
+以正常方式创建一个CuratorFramework实例。然后使用AsyncCuratorFramework包装此实例。即
+
+[source, java]
+----
+// let "client" be a CuratorFramework instance
+AsyncCuratorFramework async = AsyncCuratorFramework.wrap(client);
+----
+
+AsyncCuratorFramework具有与CuratorFramework相同的构建器方法与一些重要的区别：
+
+* AsyncCuratorFramework构建器返回AsyncStage实例
+* AsyncCuratorFramework构建器没有检查异常
+* 许多生成方法已被简化/澄清
+* 所有构建器都调用了ZooKeeper API的异步版本
+* 观察者也使用CompletionStages - 有关详细信息，请参见下文
+
+.AsyncStage
+
+AsyncStage实例扩展了Java 8的CompletionStage。 CompletionStage对象可以通过成功值或异常“完成”。 AsyncStage的参数化类型将是所使用的构建器将自然返回为成功值。例如。 async getData（）构建器的AsyncStage参数化为“byte []”。
+
+.Watchers
+
+ZooKeeper观察者也获得了CuratorAsync中的CompletionStage处理。要添加观察者，请在启动适当的构建器之前调用监视（）。例如。
+
+[source, java]
+----
+async.watched().getData().forPath(path) ...
+----
+
+因此，数据监视器将被设置在指定的路径上。您可以使用AsyncStage的event（）方法访问观察者的CompletionStage。这是一个完整的例子：
+
+[source, java]
+----
+async.watched().getData().forPath(path).event().thenAccept(watchedEvent -> watchWasTriggered(watchedEvent));
+----
+
+当连接丢失时，ZooKeeper会呼叫观察者。这可以使得CompletionStage有些复杂（参见下面的AsyncEventException）。如果您对观察者连接问题不感兴趣，您可以告诉CuratorAsync不要通过致电：
+
+[source, java]
+----
+// only complete the CompletionStage when the watcher is successfully triggered
+// i.e. don't complete on connection issues
+async.with(WatchMode.successOnly).watched()...
+----
+
+.AsyncEventException
+
+当异步观察器失败时，CompletionStage中设置的异常将为AsyncEventException类型。此异常允许您查看导致触发器的KeeperState，并允许您重置完成阶段。需要重置，因为当存在连接事件时，ZooKeeper会暂时触发观察者（除非使用了WatchMode.successOnly）。但是，观察者保持为原始操作设置。使用AsyncEventException＃reset启动一个新的完成阶段，等待观察者的下一个触发器。
+
+例如：
+
+[source, java]
+----
+AsyncStage stage = ...
+stage.event().exceptionally(e -> {
+    AsyncEventException asyncEx = (AsyncEventException)e;
+
+    ... note a connection problem ...
+
+    asyncEx.reset().thenAccept(watchedEvent -> watchWasTriggered(watchedEvent));
+});
+----
+
+.AsyncResult
+
+为方便起见，您可以使用AsyncResult将ZooKeeper方法值，ZooKeeper结果代码和任何异常结合在一个对象中，使您不必担心异常完成。即AsyncResult.of（）返回的CompletionStage始终使用AsyncResult对象成功完成。
+
+AsyncResult有方法获取方法结果（路径，Stat等），KeeperException代码或一般异常：
+
+[source, java]
+----
+Optional<T> getValue();
+
+KeeperException.Code getCode();
+
+Optional<Throwable> getException();
+----
+
+通过包装AsyncStage值来使用AsyncResult。即
+
+[source, java]
+----
+CompletionStage<AsyncResult<Stat>> resultStage = AsyncResult.of(async.checkExists().forPath(path));
+resultStage.thenAccept(result -> {
+    if ( result.getValue().isPresent() ) {
+        // ...
+    } else if ( result.getCode() == KeeperException.Code.NOAUTH ) {
+        // ...
+    }
+    // etc.
+});
+----
+
+== 例子
+
+.创建一个顺序的ZNode
+
+创建一个顺序的ZNode，一旦成功完成，在ZNode上设置一个观察器。注意：此代码不处理错误。如果发生连接问题或发生另一个异常，则不会调用完成lambda。
+
+[source, java]
+----
+async.create().withMode(PERSISTENT_SEQUENTIAL).forPath(path).thenAccept(actualPath ->
+    async.watched().getData().forPath(actualPath).thenApply(() -> watchTriggered()));
+----
+
+.AsyncStage规范使用
+
+这是处理AsyncStage的规范方法。使用提供成功值和异常的handle（）方法。异常将在错误时为非空。
+
+[source, java]
+----
+async.create().withOptions(EnumSet.of(doProtected)).forPath(path).handle((actualPath, exception) -> {
+    if ( exception != null )
+    {
+        // handle problem
+    }
+    else
+    {
+        // actualPath is the path created
+    }
+    return null;
+});
+----
+
+.通过AsyncResult简化使用
+
+[source, java]
+----
+AsyncResult.of(async.create().withOptions(EnumSet.of(doProtected)).forPath(path)).thenAccept(result -> {
+    if ( result.getRawValue() != null )
+    {
+        // result.getRawValue() is the path created
+    }
+    else
+    {
+        // ...
+    }
+});
+----
+
+.使用执行者
+
+如果您提供执行程序，您的完成例程可以在单独的线程中运行。
+
+[source, java]
+----
+async.create().withOptions(EnumSet.of(createParentsIfNeeded)).forPath("/a/b/c")
+    .thenAcceptAsync(path -> handleCreate(path), executor);
+----
+
+.独立的处理程序
+
+此示例显示为成功和异常指定单独的完成处理程序。
+
+[source, java]
+----
+AsyncStage<byte[]> stage = async.getData().forPath("/my/path");
+stage.exceptionally(e -> {
+    if ( e instanceof KeeperException.NoNodeException )
+    {
+        // handle no node
+    }
+    else
+    {
+        // handle other
+    }
+    return null;
+});
+stage.thenAccept(data -> processData(data));
+----
+
+.同步使用
+
+CompletionStage也提供了一个阻塞方法，以便您可以阻止获取操作的结果。 即这样可以以同步的方式使用异步API。
+
+[source, java]
+----
+// NOTE: get() specifies a checked exception
+async.create().forPath("/foo").toCompletableFuture().get();
+----

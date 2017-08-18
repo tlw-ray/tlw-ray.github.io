@@ -1,0 +1,45 @@
+= 屏障
+
+== 说明
+
+分布式障碍ZK配方的实现。
+
+分布式系统使用障碍来阻止对一组节点的处理，直到满足所有节点才允许进行的条件。
+
+== 参与类
+
+* 分布式障碍
+
+== 用法
+
+=== 创建分布式障碍
+
+[source, java]
+----
+public DistributedBarrier(CuratorFramework client,
+                          String barrierPath)
+Parameters:
+client - client
+barrierPath - path to use as the barrier
+----
+
+== 一般用法
+
+等待障碍：
+
+[source, java]
+----
+public void waitOnBarrier()
+----
+
+有设置/去除屏障的实用程序：
+
+[source, java]
+----
+setBarrier();
+removeBarrier();
+----
+
+== 错误处理
+
+DistributedBarrier实例监视连接丢失，并将从waitOnBarrier（）中引发异常。

@@ -1,0 +1,192 @@
+= Curator框架
+
+Curator框架是一个高级的API，大大简化了使用ZooKeeper。 它增加了许多基于ZooKeeper的功能，并处理管理与ZooKeeper集群的连接以及重试操作的复杂性。 一些功能是：
+
+* 自动连接管理：
+** 存在需要ZooKeeper客户端重新创建连接和/或重试操作的潜在错误情况。 Curator自动和透明（主要）处理这些情况。
+** 观察NodeDataChanged事件，并根据需要调用updateServerList（）。
+** 手表由Curator配方自动删除
+* 清洁API：
+** 简化了原始的ZooKeeper方法，事件等。
+** 提供了现代流畅的界面
+* 配方实施（见配方）：
+** 领导选举
+** 共享锁
+** 路径缓存和观察器
+** 分布式队列
+** 分布式优先级队列
+** ...
+
+[NOTE]
+====
+可以使用Java 8异步版本的CuratorFramework：CuratorAsync。
+====
+
+== 分配Curator框架实例
+
+CuratorFrameworks使用CuratorFrameworkFactory分配，它提供了工厂方法和用于创建实例的构建器。 重要信息：CuratorFramework实例完全线程安全。 您应该在应用程序中分享一个ZooKeeper集群的Curator框架。
+
+工厂方法（newClient（））提供了创建实例的简化方法。 Builder可以控制所有参数。 一旦你有一个CuratorFramework实例，你必须调用start（）方法。 在你的应用程序结束时，你应该调用close（）。
+
+== CuratorFramework API
+
+Curator框架使用流畅的界面。 操作是使用由CuratorFramework实例返回的构建器构建的。 当串在一起时，方法形成类似句子的语句。 例如
+
+[source, java]
+----
+client.create().forPath("/head", new byte[0]);
+client.delete().inBackground().forPath("/head");
+client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/head/child", new byte[0]);
+client.getData().watched().inBackground().forPath("/test");
+----
+
+.Methods
+[cols="20, 80"]
+|===
+|方法名| 描述
+
+|create()
+|开始创建操作。调用其他方法（模式或背景）并通过调用forPath（）来完成操作
+
+|delete()
+|开始删除操作。调用其他方法（版本或背景）并通过调用forPath（）来完成操作，
+
+|checkExists()
+|开始一个操作来检查ZNode是否存在。调用其他方法（观察或背景）并通过调用forPath（）来完成操作
+
+|getData()
+|开始一个操作来获取一个ZNode的数据。调用其他方法（watch，background或get stat）并通过调用forPath（）来完成操作
+
+|setData()
+|开始一个设置ZNode数据的操作。调用其他方法（版本或背景）并通过调用forPath（）来完成操作，
+
+|getChildren()
+|开始一个操作来获取ZNode的子节点列表ZNodes。调用其他方法（watch，background或get stat）并通过调用forPath（）来完成操作
+
+|transactionOp()
+|用于分配与transaction（）一起使用的操作。
+
+|transaction()
+|作为事务原子提交一组操作。
+
+|getACL()
+|开始一个返回ZNode的ACL设置的操作。调用其他方法并通过调用forPath（）来完成操作
+
+|setACL()
+|开始设置ZNode的ACL设置的操作。调用其他方法并通过调用forPath（）来完成操作
+
+|getConfig()
+|开始返回最后提交的配置的操作。调用其他方法并通过调用forEnsemble（）来完成操作
+
+|reconfig()
+|开始更改配置的操作。调用其他方法并通过调用forEnsemble（）来完成操作
+|===
+
+== 通知
+
+通过ClientListener接口发布后台操作和手表通知。 您可以使用addListener（）方法使用CuratorFramework实例注册侦听器。 监听器实现两种方法：
+
+[cols =“20，80”]
+|===
+| eventReceived（）|后台操作已完成或手表已触发。 检查给定的事件的细节
+|===
+
+== CuratorEvent
+
+CuratorEvent对象是一个超级POJO，可以保存每种类型的后台通知和触发的手表。 CuratorEvent的有用字段取决于通过getType（）方法公开的事件的类型。
+
+[cols="35, 65"]
+|===
+|事件类型(Event Type) |事件方法(Event Methods)
+
+|CREATE
+|getResultCode() and getPath()
+
+|DELETE
+|getResultCode() and getPath()
+
+|EXISTS
+|getResultCode(), getPath() and getStat()
+
+|GET_DATA
+|getResultCode(), getPath(), getStat() and getData()
+
+|SET_DATA
+|getResultCode(), getPath() and getStat()
+
+|CHILDREN
+|getResultCode(), getPath(), getStat(), getChildren()
+
+|SYNC
+|getResultCode(), getStat()
+
+|GET_ACL
+|getResultCode(), getACLList()
+
+|SET_ACL
+|getResultCode()
+
+|TRANSACTION
+|getResultCode(), getOpResults()
+
+|WATCHED
+|getWatchedEvent()
+
+|GET_CONFIG
+|getResultCode(), getData()
+
+|RECONFIG
+|getResultCode(), getData()
+|===
+
+== 命名空间
+
+因为ZooKeeper集群是一个共享环境，因此遵守命名空间约定至关重要，因此使用给定集群的各种应用程序不会使用冲突的ZK路径。
+
+Curator框架有一个“命名空间”的概念。 创建CuratorFramework实例（通过Builder）设置命名空间。 随后，CuratorFramework将在其中一个API被调用时将命名空间添加到所有路径。即
+
+[source, java]
+----
+CuratorFramework    client = CuratorFrameworkFactory.builder().namespace("MyApp") ... build();
+ ...
+client.create().forPath("/test", data);
+// node was actually written to: "/MyApp/test"
+----
+
+== 临时连接
+
+Temporary CuratorFramework实例是针对容易发生故障的网络（如WAN）向ZooKeeper系列单个请求。 CuratorTempFramework提供的API有限制。 此外，连接将在一段时间不活动后关闭。
+
+这是基于Camille Fournier的一篇文章中提到的想法：http://whilefalse.blogspot.com/2012/12/building-global-highly-available.html。
+
+=== 创建CuratorTempFramework
+
+CuratorTempFramework实例通过CuratorFrameworkFactory创建，就像正常的CuratorFramework实例一样。 但是，不要调用build（）方法，而是调用buildTemp（）。 buildTemp（）创建一个CuratorTempFramework实例，在3分钟的不活动状态后自动关闭。 buildTemp（）的替代版本允许您指定不活动期。
+
+=== 有限API
+
+[source, java]
+----
+CuratorTempFramework instances provide the following methods:
+
+    /**
+     * Stop the client
+     */
+    public void     close();
+
+    /**
+     * Start a transaction builder
+     *
+     * @return builder object
+     * @throws Exception errors
+     */
+    public CuratorTransaction inTransaction() throws Exception;
+
+    /**
+     * Start a get data builder
+     *
+     * @return builder object
+     * @throws Exception errors
+     */
+    public TempGetDataBuilder getData() throws Exception;
+----

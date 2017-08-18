@@ -1,0 +1,52 @@
+= 持久TTL节点
+
+== 说明
+
+PersistentTtlNode在您需要创建TTL节点但不希望通过定期设置数据时手动保持活动时非常有用 - PersistentTtlNode为您提供此功能。 此外，保持活动以不在父节点上生成监视触发器的方式完成。 它还提供了Persistent Node类似的保证：即使通过连接和会话中断，节点也试图保持在ZooKeeper中。
+
+== 参与类
+
+* PersistentNode
+* PersistentTtlNode
+
+== 用法
+
+=== 创建PersistentTtlNode
+
+[source, java]
+----
+public PersistentTtlNode(CuratorFramework client,
+                               String path,
+                               long ttlMs,
+                               byte[] initData)
+Parameters:
+client - client instance
+path path for the parent ZNode
+ttlMs max ttl for the node in milliseconds
+initData - initData for the node
+----
+
+== 一般用法
+
+必须启动PersistentTtlNode：
+
+[source, java]
+----
+node.start();
+----
+
+当您使用PersistentTtlNode实例时，应该调用close：
+
+[source, java]
+----
+node.close();
+----
+
+[NOTE]
+====
+这不会立即删除节点。 该节点将基于ttl被删除。
+====
+
+== 错误处理
+
+PersistentTtlNode实例内部处理根据需要重新创建节点的所有错误状态。

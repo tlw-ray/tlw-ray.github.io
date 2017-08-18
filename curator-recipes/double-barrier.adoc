@@ -1,0 +1,49 @@
+= 双重屏障
+
+== 说明
+
+分布式双屏障ZK配方的实现。
+
+双重屏障使客户端能够同步计算的开始和结束。 当足够的流程加入屏障物时，流程开始计算，一旦完成就离开屏障物。
+
+== 参与类
+
+* DistributedDoubleBarrier
+
+== 用法
+
+=== 创建分布式屏障
+
+[source, java]
+----
+public DistributedDoubleBarrier(CuratorFramework client,
+                                String barrierPath,
+                                int memberQty)
+Creates the barrier abstraction. memberQty is the number of members in the barrier. When enter() is called, it blocks until
+all members have entered. When leave() is called, it blocks until all members have left.
+
+Parameters:
+client - the client
+barrierPath - path to use
+memberQty - the number of members in the barrier
+----
+
+== 一般用法
+
+进入屏障：
+
+[source, java]
+----
+public void     enter();
+----
+
+To leave on the barrier:
+
+[source, java]
+----
+public void     leave();
+----
+
+== 错误处理
+
+分布式双屏障实例监视连接丢失，并将从enter（）和/或leave（）中引发异常。

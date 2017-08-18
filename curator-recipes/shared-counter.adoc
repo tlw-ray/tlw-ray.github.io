@@ -1,0 +1,81 @@
+= 共享计数器
+
+== 说明
+
+管理共享整数。 观看相同路径的所有客户端将具有共享整数的最新值（考虑到ZK的一般一致性保证）。
+
+== 参与类
+
+* SharedCount
+* SharedCountReader
+* SharedCountListener
+
+== 用法
+
+=== 创建一个SharedCounter
+
+[source, java]
+----
+public SharedCount(CuratorFramework client,
+                   String path,
+                   int seedValue)
+Parameters:
+client - the client
+path - the shared path - i.e. where the shared count is stored
+seedValue - the initial value for the count if/f the path has not yet been created
+----
+
+== 一般用法
+
+必须启动SharedCounts：
+
+[source, java]
+----
+count.start();
+----
+
+当你通过实例，你应该调用close：
+
+[source, java]
+----
+count.close();
+----
+
+[source, java]
+----
+int getCount()
+Return the current value of the count
+----
+
+[source, java]
+----
+void addListener(SharedCountListener listener)
+Add a listener for changes to the count
+----
+
+[source, java]
+----
+public void setCount(int newCount)
+
+Change the shared count value irrespective of its previous state
+----
+
+[source, java]
+----
+public boolean trySetCount(int newCount)
+
+Changes the shared count only if its value has not changed since this client last read it. If the count
+has changed, the value is not set and this client's view of the value is updated. i.e. if the count is
+not successful you can get the updated value by calling getCount().
+Parameters:
+newCount - the new value to attempt
+Returns:
+true if the change attempt was successful, false if not. If the change was not successful, getCount()
+will return the updated value
+----
+
+== 错误处理
+
+SharedCountListener类扩展了ConnectionStateListener。 当SharedCount启动时，它将监听器添加到策展人实例。 SharedCount的用户必须注意任何连接状态更改。
+
+如果报告了SUSPENDED状态，则该实例必须假定，直到它收到RECONNECTED状态，该计数将不再准确并且没有被更新。 如果报告了LOST状态，计数将永久关闭。

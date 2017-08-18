@@ -1,0 +1,65 @@
+= 分布式原子长
+
+== 说明
+
+一个尝试原子增量的计数器。 它首先尝试使用乐观锁定。 如果失败，则采用可选的InterProcessMutex。 对于乐观和互斥两者，重试策略用于重试增量
+
+== 参与类
+
+* DistributedAtomicLong
+* AtomicValue
+* PromotedToLock
+
+== 用法
+
+=== 创建一个DistributedAtomicLong
+
+乐观模式：
+
+[source, java]
+----
+public DistributedAtomicLong(CuratorFramework client,
+                                String counterPath,
+                                RetryPolicy retryPolicy)
+Creates the counter in optimistic mode only - i.e. the promotion to a mutex is not done
+Parameters:
+client - the client
+counterPath - path to hold the counter value
+retryPolicy - the retry policy to use
+----
+
+互斥促进模式:
+
+[source, java]
+----
+public DistributedAtomicLong(CuratorFramework client,
+                                String counterPath,
+                                RetryPolicy retryPolicy,
+                                PromotedToLock promotedToLock)
+Creates the counter in mutex promotion mode. The optimistic lock will be tried first using
+the given retry policy. If the increment does not succeed, a InterProcessMutex will be
+tried with its own retry policy
+Parameters:
+client - the client
+counterPath - path to hold the counter value
+retryPolicy - the retry policy to use
+promotedToLock - the arguments for the mutex promotion
+----
+
+== 一般用法
+
+. 在计数器上执行操作：
+* get()
+* increment()
+*  decrement()
+*  add()
+*  subtract()
+. 检查结果AtomicValue：
++
+* 必须首先检查successed（），如果操作成功，则返回true。 如果返回false，则操作失败，原子未更新。
++
+* 如果操作成功，您可以通过preValue（）和操作后的值postValue（）获取操作前的值，
+
+== 错误处理
+
+所有原子实例访问ZooKeeper服务器进行每个方法调用。 因此，将应用标准重试机制，任何执行操作的错误将导致抛出异常。

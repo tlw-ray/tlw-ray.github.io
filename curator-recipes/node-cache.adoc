@@ -1,0 +1,42 @@
+= 节点缓存
+
+== 说明
+
+节点缓存用于观察ZNode。 无论何时修改数据或删除ZNode，节点缓存将更改其状态以包含当前数据（如果ZNode已删除，则为空）。
+
+== 参与类
+
+* NodeCache
+* NodeCacheListener
+* ChildData
+
+== 用法
+
+=== 创建一个NodeChildrenCache
+
+[source, java]
+----
+public NodeCache(CuratorFramework client,
+                         String path)
+Parameters:
+client - the client
+path - path to cache
+----
+
+== 一般用法
+
+缓存必须通过调用start（）来启动。 当您通过缓存时调用close（）。
+
+在任何时候，调用getCurrentData（）来获取缓存的当前状态。 您也可以通过调用getListenable（），然后：
+
+[source, java]
+----
+public void addListener(NodeCacheListener listener)
+     Add a change listener
+Parameters:
+listener - the listener
+----
+
+== 错误处理
+
+NodeCache实例内部监视ConnectionStateListener。

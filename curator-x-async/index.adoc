@@ -1,0 +1,51 @@
+= Curator异步
+
+== 打包
+
+Curator异步在Maven Central有自己的软件包：Curatorx-async
+
+== 什么是Curator异步？
+
+Curator Async是一个 https://en.wikipedia.org/wiki/Domain-specific_language[DSL]，用于包装现有的CuratorFramework实例。该DSL完全是异步的，并使用Java 8的 https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html[CompletionStage]机制进行链接，编写等。此外，Curator的原始DSL已经被清理和简化，特别是对于诸如create（）的操作。
+
+使用这种DSL，您可以使用 https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html[Java 8 lambdas]以更自然，更有效的方式执行异步任务。
+
+Curator Async包还包含一个强类型的DSL和强类型的缓存配方包装器，它允许您将ZooKeeper路径映射到可序列化的类，而不是原始字节数组。
+
+== Curator异步
+
+使用这种DSL，您可以使用Java 8 lambdas以更自然，更有效的方式执行异步任务。例如：
+
+[source, java]
+----
+// let "client" be a CuratorFramework instance
+AsyncCuratorFramework async = AsyncCuratorFramework.wrap(client);
+async.checkExists().forPath(somePath).thenAccept(stat -> mySuccessOperation(stat));
+----
+
+更多详细信息请查阅 link: async.html[Curator Async]
+
+== 建模Curator
+
+这是一种强类型DSL，可让您将Curator风格的客户端映射到：
+
+* ZooKeeper路径（支持参数化替换）
+* 用于存储在路径上的数据的串行器
+* 如何创建节点的选项（顺序，压缩数据，ttl等）
+* 路径上节点的ACL
+* 选择如何删除节点（保证，删除子等）
+
+例如：
+[source, java]
+----
+ModeledFramework<Foo> modeled = ModeledFramework.wrap(client, fooModelSpec);
+modeled.set(new Foo());
+----
+
+更多详细信息请查阅 link: async.html[Curator Async]
+
+== 迁移
+
+Curator迁移允许您以分阶段方式预先应用事务，以便您可以以类似于数据库迁移实用程序的方式确保ZooKeeper节点层次结构的部分一致状态。
+
+有关详细信息，请参阅migrations.html[迁移]

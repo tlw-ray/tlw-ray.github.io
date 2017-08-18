@@ -1,0 +1,176 @@
+= 建模Curator - 组件
+
+建模Curator组件旨在允许您在应用程序早期对ZooKeeper使用进行建模，以便与ZooKeeper交互的大多数代码不需要关心路径，字节数组，ACL，选项等。 https://github.com/apache/curator/tree/master/curator-examples/src/main/java/pubsub[Pub-Sub Example]可以给你一些关于如何实现这一点的想法。
+
+== ZPath
+
+Modeled Curator不是使用原始字符串路径来定义抽象ZooKeeper路径的ZPath接口。 ZPath可以是简单的静态路径，也可以包含可根据需要进行替换的参数。
+
+要构建一个简单的静态路径，请使用：
+[source, java]
+----
+ZPath path = ZPath.parse("/my/static/path");
+----
+
+要用参数构建路径，请使用。 使用值“{XXXX}”的ZPath.parseWithIds（）表示参数。 然后可以使用resolve（）方法来替换参数。 “{}”之间的值可以是任何值。 例如:
+
+[source, java]
+----
+ZPath path = ZPath.parseWithIds("/foo/{first param}/bar/{second param}");
+
+...
+
+ZPath resolvedPath = path.resolve(param1, param2);
+----
+
+== NodeName
+
+通过调用参数onString（）来解析参数。 您可以使用NodeName来更改此行为。 如果参数实现NodeName，则使用nodeName（）方法作为参数值。
+
+== 部分决议
+
+注意：ZPaths可以部分解决。 例如:
+
+[source, java]
+----
+ZPath path = ZPath.parseWithIds("/foo/{type}/bar/{id}");
+
+...
+
+ZPath partial = path.resolve("standard");
+// partial is now "/foo/standard/bar/{id}"
+----
+
+ModeledFramework利用这一点。 详见下文。
+
+== ModelSpec
+
+ModelSpec包含在ZooKeeper路径上操作所需的所有元数据：
+
+* 一个ZPath
+* 用于存储在路径上的数据的串行器
+* 如何创建节点的选项（顺序，压缩数据，ttl等）
+* 路径上节点的ACL
+* 选择如何删除节点（保证，删除子等）
+
+ModelSpec实例通过构建器创建。 构建器设置对大多数应用程序应该有用的默认值，但是您可以根据需要更改任何这些。
+
+[source, java]
+----
+// a standard model spec for the given path and serializer
+// the model spec will have no ACLs and the options:
+// * createParentsAsContainers
+// * setDataIfExists
+// * DeleteOption.guaranteed
+ModelSpec<MyModel> spec = ModelSpec.builder(path, JacksonModelSerializer.build(MyModel.class)).build();
+----
+
+为方便起见，ModelSpec提供了resolve（）方法，以防ZPath使用参数。 例如:
+
+[source, java]
+----
+ZPath path = ZPath.parseWithIds("/foo/{id}/bar/{id}");
+ModelSpec<MyModel> spec = ModelSpec.builder(path, JacksonModelSerializer.build(MyModel.class)).build();
+
+...
+
+ModelSpec<MyModel> resolvedSpec = spec.resolve(param1, param2);
+----
+
+=== JacksonModelSerializer
+
+包括杰克逊序列化器，JacksonModelSerializer。 但是，Jackson的依赖关系在Curatorx-async Maven POM文件中被指定为“提供”，以避免向Curator添加新的依赖关系。 因此，如果您希望使用JacksonModelSerializer，则必须手动将依赖关系添加到构建系统中。
+
+Maven示例：
+[source, xml]
+----
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>XXXX</version>
+</dependency>
+----
+
+== ModeledFramework
+
+ModeledFramework将所有元数据连接在一个用于执行ZooKeeper操作的Curator样式实例中。 例如:
+
+[source, java]
+----
+ModeledFramework<MyModel> modeledClient = ModeledFramework.wrap(client, myModelSpec);
+
+...
+
+MyModel instance = ...
+modeledClient.set(instance);
+----
+
+上述示例中的“set”调用相当于：
+
+[source, java]
+----
+MyModel instance = ...
+String path = "/foo/bar/" + instance.getId();
+byte[] data = serializer.serialize(instance);
+client.create()
+    .withOptions(Sets.newHashSet(CreateOption.createParentsAsContainers, CreateOption.setDataIfExists))
+    .forPath(path, data);
+----
+
+要获得一个值：
+
+[source, java]
+----
+ModeledFramework<MyModel> modeledClient = ModeledFramework.wrap(client, myModelSpec);
+
+...
+
+modeledClient.read().whenComplete((value, e) -> {
+    if ( e != null ) {
+        // handle the error
+    } else {
+        // "value" is the MyModel instance
+    }
+});
+----
+
+上述示例中的“读取”调用相当于：
+
+[source, java]
+----
+String path = "/foo/bar/" + instanceId;
+client.getData().forPath(path).whenComplete((data, e) -> {
+    if ( e != null ) {
+        // handle the error
+    } else {
+        // NOTE: you must deal with possible deserialization problems
+        // caused by clients that write bad data
+        // If all of your code uses ModeledFramework you can guarantee that
+        // the data is always correctly written
+        MyModel model = serializer.deserialize(data);
+        // ...
+    }
+});
+----
+
+=== 部分解决ZPaths和Set / Update
+
+ModeledFramework的各种设置和更新方法检查未解决的ZPath。 如果当调用set / update时，当前modelSpec具有未解析的ZPath，则会使用正在设置/更新的模型实例自动解析。 例如：
+
+[source, java]
+----
+ZPath path = ZPath.parseWithIds("/root/{type}/instance/{id}");
+ModelSpec<MyModel> modelSpec = ModelSpec.builder(path, serializer);
+ModeledFramework<MyModel> modeledClient = ModeledFramework.wrap(modelSpec, client, modelSpec);
+
+...
+
+String currentType = ...
+MyModel model = ...
+modeledClient.resolved(currentType).set(model); // internally, ModeledFramework calls ZPath.resolved()
+                                                // using "model" as the argument to get the actual ZPath
+----
+
+== 缓存和类型参数
+
+除了上述功能之外，建模Curator还支持集成缓存，类型参数和版本控制。 有关详细信息，请参阅缓存和类型参数。

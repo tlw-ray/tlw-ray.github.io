@@ -1,0 +1,52 @@
+= 持久节点
+
+== 说明
+
+持久性节点是即使通过连接和会话中断也试图保持在ZooKeeper中的节点。
+
+== 参与类
+
+* PersistentNode
+
+== 用法
+
+=== 创建PersistentNode
+[source, java]
+----
+public PersistentNode(CuratorFramework client,
+                               CreateMode mode,
+                               boolean useProtection,
+                               String basePath,
+                               byte[] data)
+Parameters:
+client - client instance
+mode - creation mode
+useProtection - if true, call CreateBuilder.withProtection()
+basePath - the base path for the node
+data - data for the node
+----
+
+== 一般用法
+
+必须启动PersistentNodes：
+
+[source, java]
+----
+node.start();
+----
+
+当您使用PersistentNode实例时，应该调用close：
+
+[source, java]
+----
+node.close();
+----
+
+[NOTE]
+====
+这将删除节点
+====
+
+== 错误处理
+
+PersistentNode实例内部处理根据需要重新创建节点的所有错误状态。

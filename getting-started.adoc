@@ -1,0 +1,83 @@
+= 入门
+
+== 学习ZooKeeper
+
+Curator的用户必须了解ZooKeeper： http://zookeeper.apache.org/doc/trunk/zookeeperStarted.html
+
+== 使用Curator
+
+CuratorJAR可从Maven Central获得。各种构件列在主页上。 Maven，Gradle，Ant等的用户可以轻松地将Curator纳入其构建脚本中。
+
+大多数用户都希望使用Curator的预制配方。所以，Curator的配方是正确的构件使用。如果您只想在ZooKeeper周边添加连接管理和重试策略的包装，请使用Curator框架。
+
+== 获得连接
+
+Curator使用 http://en.wikipedia.org/wiki/Fluent%5Finterface[Fluent Style]风格。如果您以前没有使用过，可能看起来很奇怪，因此建议您熟悉风格。
+
+Curator连接实例（CuratorFramework）由CuratorFrameworkFactory分配。您要连接到的每个ZooKeeper群集只需要一个CuratorFramework对象：
+
+[source, java]
+----
+CuratorFrameworkFactory.newClient（zookeeperConnectionString，retryPolicy）
+----
+
+这将使用默认值创建与ZooKeeper集群的连接。您唯一需要指定的是重试策略。在大多数情况下，您应该使用：
+
+[source, java]
+----
+RetryPolicy retryPolicy = new ExponentialBackoffRetry（1000,3）
+CuratorFramework client = CuratorFrameworkFactory.newClient（zookeeperConnectionString，retryPolicy）;
+client.start（）;
+----
+
+必须启动客户端（不再需要时关闭）。
+
+== 直接调用ZooKeeper
+
+一旦你有一个CuratorFramework实例，你可以直接调用ZooKeeper，就像使用ZooKeeper分发中提供的原始ZooKeeper对象一样。例如。：
+
+[source, java]
+----
+client.create（）.forPath（“/ my / path”，myData）
+----
+
+好处是Curator管理ZooKeeper连接，如果有连接问题，将重试操作。
+
+== 配方
+
+=== 分布式锁
+
+[source, java]
+----
+InterProcessMutex lock = new InterProcessMutex(client, lockPath);
+if ( lock.acquire(maxWait, waitUnit) )
+{
+    try
+    {
+        // do some work inside of the critical section here
+    }
+    finally
+    {
+        lock.release();
+    }
+}
+----
+
+=== 领导选举
+
+[source, java]
+----
+LeaderSelectorListener listener = new LeaderSelectorListenerAdapter()
+{
+    public void takeLeadership(CuratorFramework client) throws Exception
+    {
+        // this callback will get called when you are the leader
+        // do whatever leader work you need to and only exit
+        // this method when you want to relinquish leadership
+    }
+}
+
+LeaderSelector selector = new LeaderSelector(client, path, listener);
+selector.autoRequeue();  // not required, but this is behavior that you will probably expect
+selector.start();
+----

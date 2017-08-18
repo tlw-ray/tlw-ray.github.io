@@ -1,0 +1,71 @@
+= 路径缓存
+
+== 说明
+
+路径缓存用于观察ZNode。 每当一个孩子被添加，更新或删除时，路径缓存将更改其状态，以包含当前的一组子项，孩子的数据和孩子的状态。
+
+== 参与类
+
+* PathChildrenCache
+* PathChildrenCacheEvent
+* PathChildrenCacheListener
+* ChildData
+
+== 用法
+
+=== 创建PathChildrenCache
+
+[source, java]
+----
+public PathChildrenCache(CuratorFramework client,
+                         String path,
+                         boolean cacheData)
+Parameters:
+client - the client
+path - path to watch
+cacheData - if true, node contents are cached in addition to the stat
+----
+
+=== 一般用法
+
+缓存必须通过调用start（）来启动。 当您通过缓存时调用close（）。
+
+有两个版本的start（）。 no-arg版本提供默认行为。 另一个版本采用枚举，允许您控制初始缓存的加热方式：
+
+[source, java]
+----
+public enum StartMode
+{
+    /**
+     * cache will _not_ be primed. i.e. it will start empty and you will receive
+     * events for all nodes added, etc.
+     */
+    NORMAL,
+
+    /**
+     * rebuild() will be called before this method returns in
+     * order to get an initial view of the node.
+     */
+    BUILD_INITIAL_CACHE,
+
+    /**
+     * After cache is primed with initial values (in the background) a
+     * PathChildrenCacheEvent.Type.INITIALIZED event will be posted
+     */
+    POST_INITIALIZED_EVENT
+}
+----
+
+在任何时候，调用getCurrentData（）来获取缓存的当前状态。 您也可以通过调用getListenable（），然后：
+
+[source, java]
+----
+public void addListener(PathChildrenCacheListener listener)
+     Add a change listener
+Parameters:
+listener - the listener
+----
+
+== 错误处理
+
+PathChildrenCache实例内部监视ConnectionStateListener。 如果连接状态发生变化，缓存将被重置（PathChildrenCacheListener将收到一个RESET）。

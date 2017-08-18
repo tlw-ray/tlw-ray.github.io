@@ -1,0 +1,47 @@
+= 树缓存
+
+== 说明
+
+尝试保留来自ZK路径的所有子项的所有数据的实用程序本地缓存。 该类将观看ZK路径，响应更新/创建/删除事件，下拉数据等。您可以注册一个监听器，当发生更改时将收到通知。
+
+== 参与类
+
+* TreeCache
+* TreeCacheListener
+* TreeCacheEvent
+* ChildData
+
+== 用法
+
+=== 创建TreeCache
+
+[source, java]
+----
+public TreeCache(CuratorFramework client,
+                         String path,
+                         boolean cacheData)
+Parameters:
+client - the client
+path - path to watch
+cacheData - if true, node contents are cached in addition to the stat
+----
+
+== 一般用法
+
+缓存必须通过调用start（）来启动。 当您通过缓存时调用close（）。
+
+在任何时候，调用getCurrentChildren（）来获取缓存的当前状态。 或者，调用getCurrentData（）来获取正在监视的给定路径的数据。
+
+您也可以通过调用getListenable（），然后：
+
+[source, java]
+----
+public void addListener(TreeCacheListener listener)
+     Add a change listener
+Parameters:
+listener - the listener
+----
+
+== 错误处理
+
+TreeCache实例内部监视ConnectionStateListener。 如果连接状态发生变化，缓存将会收到详细说明更改的消息。

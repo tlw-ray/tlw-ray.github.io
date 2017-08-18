@@ -1,0 +1,89 @@
+= 迁移
+
+Curator迁移允许您以分阶段方式预先应用事务，以便您可以以类似于数据库迁移实用程序的方式确保ZooKeeper节点层次结构的部分一致状态。
+
+== 背景和用法
+
+注意：要使用迁移，您应该熟悉Java 8的lambdas，CompletedFuture和CompletionStage。
+
+“迁移”是要在事务中执行的一组操作。 “迁移集”是迁移列表。 结合起来，这可以用于确保您的ZooKeeper节点的初始状态以及支持升级/修改现有状态。
+
+例如，给出一个全新的ZooKeeper实例，您可能需要填充几个节点和数据。 例如:
+
+[source, java]
+----
+CuratorOp op1 = client.transactionOp().create().forPath("/parent");
+CuratorOp op2 = client.transactionOp().create().forPath("/parent/one");
+CuratorOp op3 = client.transactionOp().create().forPath("/parent/two");
+CuratorOp op4 = client.transactionOp().create().forPath("/parent/three");
+CuratorOp op5 = client.transactionOp().create().forPath("/main", someData);
+----
+
+这些操作中的所有5个将被组合成一个迁移并设置：
+
+[source, java]
+----
+Migration migration = () -> Arrays.asList(op1, op2, op3, op4, op5);
+MigrationSet set = MigrationSet.build("main", Collections.singletonList(migration));
+----
+
+然后可以将该集合传递给MigrationManager进行处理。 MigrationManager会检查迁移是否已被应用，如果不是，则处理该事务。
+
+在将来的日期，可以扩展迁移集以更新/修改事物。 例如：
+
+[source, java]
+----
+CuratorOp newOp1 = client.transactionOp().create().forPath("/new");
+CuratorOp newOp2 = client.transactionOp().delete().forPath("/main");    // maybe this is no longer needed
+----
+
+这将与以前的迁移相结合：
+
+[source, java]
+----
+Migration initialMigration = () -> Arrays.asList(op1, op2, op3, op4, op5);
+Migration newMigration = () -> Arrays.asList(newOp1, newOp2);
+MigrationSet set = MigrationSet.build("main", Arrays.asList(initialMigration, newMigration));
+----
+
+当运行此集合时，MigrationManager将对新的ZooKeeper数据库执行两次迁移操作，但仅在已应用第一次迁移的ZK数据库上执行第二个“newMigration”。
+
+== 详细/参考
+
+Migration::
+
+迁移是围绕迁移集合中的一个阶段的操作列表的包装器，并且被用作单个事务。
+
+MigrationSet::
+
+MigrationSet是迁移的有序列表。 Curator跟踪以前应用的集合中的哪些迁移，并且仅处理未应用的迁移。 每个迁移集必须具有唯一的标识符。 通过其构建器创建MigrationSet：
++
+[source, java]
+----
+MigrationSet set = MigrationSet.build(migrationId, migrations);
+----
+
+MigrationManager::
+
+MigrationManager处理MigrationSets。 通常，您只能在新的ZooKeeper数据库上运行，或者作为更新ZooKeeper数据库的维护操作的一部分。 例如：
++
+[source, java]
+----
+MigrationManager manager = new MigrationManager(client,
+    lockPath,       // base path for locks used by the manager
+    metaDataPath,   // base path to store the meta data
+    executor,       // the executor to use
+    lockMax         // max time to wait for locks
+);
+manager.migrate(set).exceptionally(e -> {
+    if ( e instanceof MigrationException ) {
+        // migration checksum failed, etc.
+    } else {
+        // some other kind of error
+    }
+    return null;
+});
+----
+
+* 集合中的每个迁移都应用在单个事务中，即构成迁移集的所有操作（所有单个迁移操作的总和）都作为单个事务发送到ZooKeeper。
+* 迁移管理器将所有操作的哈希存储在迁移中，以便将来进行比较。 即如果将来尝试迁移集合，但是之前的迁移之一的散列不匹配，那么该阶段会以MigrationException异常完成。

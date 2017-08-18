@@ -1,0 +1,29 @@
+= 例子
+
+该模块包含各种策展人功能的示例用法。 模块中的每个目录都是一个单独的示例。
+
+[cols="20, 80"]
+|===
+|/leader
+|领导者选择器代码示例
+
+|/cache
+|PathChildrenCache示例用法
+
+|/locking
+|使用InterProcessMutex的示例
+
+|/discovery
+|Curator的ServiceDiscovery的用法示例
+
+|/framework
+|几个例子说明如何使用CuratorFramework类
+
+|/async
+|AsyncCuratorFramework示例代码
+
+|/modeled
+|ModeledFramework和Modeled Cache示例
+|===
+
+请参阅每个示例的 https://github.com/apache/curator/tree/master/curator-examples/src/main/java[示例源代码]。

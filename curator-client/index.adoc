@@ -1,0 +1,104 @@
+= 客户端
+
+== 重要提示
+
+策展人客户端是一个低级API。 强烈建议您使用策展人框架而不是直接使用CuratorZookeeperClient。
+
+== 背景
+
+CuratorZookeeperClient是ZooKeeper的Java客户端的一个封装，使得客户端对ZooKeeper的访问更简单，更容易出错。 它提供以下功能：
+
+* 连续连接管理 - ZooKeeper有关于连接管理的许多注意事项（有关详细信息，请参阅“ZooKeeper常见问题”）。 策展人ZookeeperClient自动管理其中大部分。
+* 操作重试实用程序 - 提供重试操作的方法
+* 测试ZooKeeper服务器 - 提供了一个可以用于测试用例和实验的一个正在进行的，独立的ZooKeeper测试服务器
+
+== 方法文档
+[cols="30,70"]
+|===
+|方法(Method) 	|描述(Description)
+
+|Constructor
+|创建与给定的ZooKeeper集群的连接。你可以通过一个可选的观察者。您必须提供重试策略。
+
+|getZooKeeper()
+|返回被管理的ZooKeeper实例。重要注意事项：a）连接完成需要时间，应在使用其他方法之前验证连接是否已完成。 b）受管理的ZooKeeper实例可能由于某些事件而改变。不要长时间坚持实例。总是从getZooKeeper（）获得新的参考。
+
+|isConnected()
+|如果ZooKeeper客户端当前已连接，则返回true（这可能会由于错误而始终更改）
+
+|blockUntilConnectedOrTimedOut()
+|一个方便的方法，直到初始连接成功或超时为止
+
+|close()
+|关闭连接
+
+|setRetryPolicy()
+|更改重试策略
+
+|newRetryLoop()
+|分配一个新的重试循环 - 参见下面的详细信息
+|===
+
+== 重试循环
+
+由于各种原因，ZooKeeper群集上的操作可能会失败。最佳做法规定应重试这些操作。重试循环机制提供了这样做的手段。每个操作都应该被包裹在重试循环中。这是规范用法：
+
+[source, java]
+----
+RetryLoop retryLoop = client.newRetryLoop();
+while ( retryLoop.shouldContinue() )
+{
+   try
+   {
+       // perform your work
+       ...
+       // it's important to re\-get the ZK instance as there may have been an error and the instance was re\-created
+       ZooKeeper      zk = client.getZookeeper();
+       retryLoop.markComplete();
+   }
+   catch ( Exception e )
+   {
+       retryLoop.takeException(e);
+   }
+}
+----
+
+重试循环维护重试计数，并确定给定错误是否可重试。 如果操作是重试的候选者，则会调用重试策略来确定重试是否应继续。
+
+为了方便起见，RetryLoop有一个静态方法，它可以使Callable执行一个完整的重试循环。 例如。
+
+[source, java]
+----
+RetryLoop.callWithRetry(client, new Callable<Void>()
+{
+      @Override
+      public Void call() throws Exception
+      {
+          // do your work here - it will get retried if needed
+          return null;
+      }
+});
+----
+
+== 重试策略
+
+重试策略是改变重试行为的机制。 它由RetryPolicy接口抽象，它具有一个方法：public boolean allowRetry（int retryCount，long elapsedTimeMs）; 在尝试重试之前，将使用当前重试计数和操作的经过时间来调用allowRetry（）。 如果策略允许，则尝试重试。 如果没有，抛出异常。
+
+提供了几个重试策略实现（在com.netflix.curator.retry包中）：
+
+[cols="30, 70"]
+|===
+|策略名称(Policy Name) 	|说明(Description)
+
+|ExponentialBackoffRetry
+|重试次数的重试策略，在重试次数增加之间增加休眠时间
+
+|RetryNTimes
+|重试次数最多的重试策略
+
+|RetryOneTime
+|重试次数只有一次
+
+|RetryUntilElapsed
+|一个重试策略，直到经过一段时间才能重试
+|===

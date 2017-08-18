@@ -1,0 +1,46 @@
+= 建模Curator
+
+这是一种强类型DSL，可让您将Curator风格的客户端映射到：
+
+* ZooKeeper路径（支持参数化替换）
+* 用于存储在路径上的数据的串行器
+* 如何创建节点的选项（顺序，压缩数据，ttl等）
+* 节点和路径的访问控制
+* 选择如何删除节点（保证，删除子等）
+
+例如：
+
+[source, java]
+----
+ModeledFramework<Foo> modeled = ModeledFramework.wrap(client, fooModelSpec);
+modeled.set(new Foo());
+----
+
+该ModeledFramework实例知道要使用的路径，如何序列化“Foo”实例，创建要使用的选项和ACL等。
+
+== 背景和用法
+
+注意：要使用Modeled Curator，您应该熟悉Java 8的lambdas，CompletedFuture和CompletionStage。你也应该熟悉CuratorAsync，就像建模Curator一样。
+
+建模Curator由组件组成：
+
+* link:modeled-components.html[ZPath]
+* link:modeled-components.html[ModelSpec]
+* link:modeled-components.html[ModeledFramework]
+
+附加功能由以下方面提供：
+
+* link:modeled-typed.html[CachedModeledFramework]
+* link:modeled-typed.html[键入的参数模板]
+* link:modeled-typed.html[版本]
+
+== 示例
+
+建模Curator以及CachedModeledFramework和类型参数模板的完整示例用法可以在这里找到https://github.com/apache/curator/tree/master/curator-examples/src/main/java/pubsub。
+
+== 细节
+
+详情请见：
+
+* link:modeled-components.html[组件]
+* link:modeled-typed.html[缓存，类型参数和版本控制]

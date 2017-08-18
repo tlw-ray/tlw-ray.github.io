@@ -1,0 +1,60 @@
+= 组员
+
+== 说明
+
+集团会员管理。 将此实例添加到组中，并将组中的成员缓存。
+
+== 参与类
+
+* GroupMember
+* PersistentNode
+* PathChildrenCache
+
+== 用法
+
+=== 创建GroupMember
+
+[source, java]
+----
+public GroupMember(CuratorFramework client,
+                        String membershipPath,
+                        String thisId,
+                        byte[] payload)
+Parameters:
+client - client instance
+membershipPath - the path to use for membership
+thisId - ID of this group member. MUST be unique for the group
+payload - the payload to write in our member node
+----
+
+== 一般用法
+
+GroupMember必须启动：
+
+[source, java]
+----
+group.start();
+----
+
+当您使用GroupMember实例时，应该调用close：
+
+[source, java]
+----
+group.close();
+----
+
+[NOTE]
+====
+这将从组中删除该实例
+====
+
+您可以通过以下方式获取成员的当前视图：
+
+[source, java]
+----
+group.getCurrentMembers();
+----
+
+== 错误处理
+
+GroupMember实例内部处理根据需要重新创建节点的所有错误状态。

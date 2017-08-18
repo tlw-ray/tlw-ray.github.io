@@ -1,0 +1,169 @@
+= 架构/文档 支持
+
+在较大的ZooKeeper应用程序中，您将结束具有特定含义和用途的ZNodes的许多路径。 例如。 “/ myapp / clients / clusters / instances”或“/ myapp / writers / locks”。 这些路径可能变得笨重，难以理解。 理想情况下，您应该有一种简单的方法来通常参考这些路径，一种验证它们的使用方式，以及一种记录它们所用的方式。
+
+策展人提供了一种机制：
+
+* 记录您的ZooKeeper路径
+* 验证ZooKeeper路径上的操作
+* 将一个简单的字符串映射到ZooKeeper路径
+
+当策展人操作违反模式时，将抛出SchemaViolation。
+模式和SchemaSet
+
+.Schema类的基本规范
+[cols="20, 20, 10, 50"]
+|===
+|字段|类型|必需|说明
+
+|name
+|String
+| Y
+|此模式的唯一名称
+
+|path
+|String
+| Y
+| ZNode的完整路径或ZNode的正则表达式模式
+
+|documentation
+|String
+| N
+|用于此模式的用户可显示文档
+
+| schemaValidator
+| SchemaValidator
+| N
+|见下文
+
+|ephemeral
+|can/must/cannot
+| N
+|该模式是否允许在路径上的短暂
+
+|sequential
+|can/must/cannot
+| N
+|模式是否允许在路径上的顺序
+
+|watched
+|can/must/cannot
+| N
+|该模式是否允许在路径上的观察者
+
+| canBeDeleted
+|真/假
+| N
+|模式是否允许删除路径
+
+|metadata
+|map
+| N
+|任何想要的字段到值
+|===
+
+所有Schema实例组合成一个SchemaSet，并且可以在创建CuratorFramework实例时在CuratorFrameworkFactory中设置。 SchemaSet中的模式按以下顺序应用：
+
+. 完整路径上的完全匹配（即非重定向）
+. 匹配第一个正则表达式路径，按照给SchemaSet构造函数的顺序进行搜索
+
+.SchemaValidator
+
+当创建或修改节点时，SchemaValidators用于可选地验证ZNode操作。它是形式的函数：
+
+[source, java]
+----
+boolean isValid(Schema schema, String path, byte[] data, List<ACL> acl);
+----
+
+== 按名称获取ZNode路径/模式
+
+使用SchemaSet以简单的名称访问ZNode路径。例如。
+
+[source, java]
+----
+CuratorFramework client = ...
+String path = SchemaSet.getNamedPath(client, "locks");
+client.create().forPath(path);
+----
+
+== 从文件/流中加载JSON模式
+
+提供了一个可选实用程序来从JSON文件或流中加载SchemaSets：SchemaSetLoader。 注意：为了避免向Curator添加新的依赖关系，Jackson库已经与“提供的”范围一起使用。 您将需要向jackson-core和jackson-databind添加依赖项到您的项目。
+
+JSON流应该是一系列模式：
+
+[source, json]
+----
+[
+   {
+       "name": "name",                       required - name of the schema
+       "path": "path or pattern",            required - full path or regex pattern
+       "isRegex": true/false,                optional - true if path is a regular expression - default is false
+       "schemaValidator": "name",            optional - name of a schema validator - default is no validator
+       "documentation": "docs",              optional - user displayable docs - default is ""
+       "ephemeral": "allowance",             optional - "can", "must" or "cannot" - default is "can"
+       "sequential": "allowance",            optional - "can", "must" or "cannot" - default is "can"
+       "watched": "allowance",               optional - "can", "must" or "cannot" - default is "can"
+       "canBeDeleted": true/false,           optional - true if ZNode at path can be deleted - default is true
+       "metadata": {                         optional - any fields -> values that you want
+           "field1": "value1",
+           "field2": "value2"
+       }
+   }
+]
+----
+
+== 示例
+
+=== 示例 1
+
+[source, JSON]
+----
+[
+    {
+        "name": "test",
+        "path": "/a/b/c",
+        "ephemeral": "must",
+        "sequential": "cannot",
+        "metadata": {
+            "origin": "outside",
+            "type": "large"
+        }
+    }
+]
+----
+
+* 此SchemaSet只有1个模式
+* 模式仅适用于路径“/ a / b / c”
+* ZNode“/ a / b / c”必须是ephemeral的，不能sequential，可以被watch，并且可以删除
+
+=== 示例 2
+
+[source, JSON]
+----
+[
+    {
+        "name": "test",
+        "path": "/a/b/c",
+        "ephemeral": "must",
+        "sequential": "cannot"
+    },
+
+    {
+        "name": "test2",
+        "path": "/a/.*",
+        "isRegex": true,
+        "schemaValidator": "test"
+        "ephemeral": "cannot",
+        "canBeDeleted": false
+    }
+]
+----
+
+* 该SchemaSet有2个模式
+* 第一个模式仅适用于路径“/ a / b / c”
+* ZNode“/ a / b / c”必须是短暂的，不能顺序，可以观看，并且可以删除
+* 第二个模式是正则表达式，适用于与表达式“/a/.*”匹配的任何路径
+* 符合“/a/.*”的ZNodes不能是短暂的，可以是顺序的，可以被监视，也不能被删除
+* 第二个模式也有一个模式验证器。 将调用名为“test”（构造SchemaSetLoader时配置）的模式验证器来验证与“/a/.*”匹配的ZNodes。

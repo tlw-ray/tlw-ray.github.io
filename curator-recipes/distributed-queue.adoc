@@ -1,0 +1,88 @@
+= 分布式队列
+
+== 重要信息 - 我们建议您不要将ZooKeeper用于队列。 有关详细信息，请参阅 https://cwiki.apache.org/confluence/display/CURATOR/TN4[技术说明4]。
+
+== 说明
+
+分布式队列ZK配方的实现。 保证放入队列的物品被订购（通过ZK的PERSISTENTSEQUENTIAL节点）。 如果单个消费者将项目从队列中取出，则它们将被命令为FIFO。 如果订购很重要，请使用LeaderSelector提名单个消费者。
+
+== 参与类
+
+* QueueBuilder
+* QueueConsumer
+* QueueSerializer
+* DistributedQueue
+
+== 用法
+
+=== 创建一个DistributedQueue
+
+[source, java]
+----
+public static <T> QueueBuilder<T> builder(CuratorFramework client,
+                                          QueueConsumer<T> consumer,
+                                          QueueSerializer<T> serializer,
+                                          java.lang.String queuePath)
+Parameters:
+client - the curator client
+consumer - functor to receive messages
+serializer - serializer to use for items
+queuePath - path to store queue
+----
+
+[source, java]
+----
+QueueBuilder<MessageType>    builder = QueueBuilder.builder(client, consumer, serializer, path);
+... more builder method calls as needed ...
+DistributedQueue<MessageType queue = builder.build();
+----
+
+== 一般用法
+
+队列必须通过start（）方法启动。 当你完成队列时调用close（）。
+
+要将消息添加到队列中：
+
+[source, java]
+----
+queue.put(aMessage);
+----
+
+您的消费者（QueueConsumer.consumeMessage（））将在消息到达时被调用。
+
+== 锁定安全
+
+在一般使用情况下，消息被调用之前消息从队列中删除。 提供了更多的原子模式，仅在消费者成功返回后才从队列中删除该项。 要启用此模式，请调用Queue Builder的lockPath（）方法。 这使用锁来使消息可以恢复。 正在处理消息时，会保持锁定 - 这样可以防止其他进程接收消息。 在消费者函子返回之前，消息将不会从队列中删除。 因此，如果发生故障或进程中断，则该消息将被发送到另一进程。 然而，对于这种行为来说，性能会受到很大的损害
+
+== 数据格式
+
+.分布式队列使用以下格式写入消息
+|===
+|偏移(Offset) |尺寸(Size) |描述(Description)
+
+|0
+|4
+|格式版本. 当前 0x00010001
+
+|4
+|1
+|Opcode: 0x01 = 消息, 0x02 = 数据结束
+
+|5
+|4
+|信息的byte长度
+
+|9
+|n
+|信息: 持久化信息的byte数量
+
+|9
+| n
+|... 	下一组操作码大小字节直到数据结束
+|===
+
+== 错误处理
+
+QueueConsumer类扩展了ConnectionStateListener。 队列启动时，它将侦听器添加到策展人实例。 DistributedQueue的用户必须注意任何连接状态的变化。
+
+如果报告了SUSPENDED状态，则该实例必须假定，直到它收到RECONNECTED状态，该队列将不再被更新。 如果报告了LOST状态，则队列将永久关闭。

@@ -1,0 +1,68 @@
+= 领导选举
+
+== 说明
+
+在分布式计算中，领导选举是指定一个任务的组织者在几台计算机（节点）之间分配的过程。 在任务开始之前，所有网络节点都不知道哪个节点将作为任务的“领导者”或协调者。 然而，在执行了领导选举算法之后，整个网络中的每个节点识别出一个特定的唯一节点作为任务负责人。
+
+注意：策展人有两个领导选举配方。 哪一个使用取决于您的要求。
+
+== 参与类
+
+* LeaderSelector
+* LeaderSelectorListener
+* LeaderSelectorListenerAdapter
+* CancelLeadershipException
+
+== 用法
+
+=== 创建LeaderSelector
+
+[source, java]
+----
+public LeaderSelector(CuratorFramework client,
+                      String mutexPath,
+                      LeaderSelectorListener listener)
+Parameters:
+client - the client
+mutexPath - the path for this leadership group
+listener - listener
+----
+
+[source, java]
+----
+public LeaderSelector(CuratorFramework client,
+                      String mutexPath,
+                      ThreadFactory threadFactory,
+                      Executor executor,
+                      LeaderSelectorListener listener)
+Parameters:
+client - the client
+mutexPath - the path for this leadership group
+threadFactory - factory to use for making internal threads
+executor - the executor to run in
+listener - listener
+----
+
+=== 一般用法
+
+LeaderSelectors 必须启动：
+
+[source, java]
+----
+leaderSelector.start();
+----
+
+一旦开始，您的监听器的takeLeadership（）将在您领导时被调用。 您的takeLeadership（）方法只能在领导层被放弃时才返回。
+
+当您通过LeaderSelector实例时，您应该调用close：
+
+[source, java]
+----
+leaderSelector.close();
+----
+
+== 错误处理
+
+LeaderSelectorListener类扩展了ConnectionStateListener。当LeaderSelector启动时，它将监听器添加到策展人实例。 LeaderSelector的用户必须注意任何连接状态更改。如果一个实例成为领导者，它应该响应被挂起或丢失的通知。如果报告了SUSPENDED状态，则该实例必须假定它在接收到RECONNECTED状态之前可能不再是前导。如果报告了LOST状态，则实例不再是引导者，并且其takeLeadership方法应该退出。
+
+重要信息：建议的接收SUSPENDED或LOST的操作是抛出CancelLeadershipException。这将导致LeaderSelector实例尝试中断和取消正在执行takeLeadership方法的线程。因为这很重要，你应该考虑扩展LeaderSelectorListenerAdapter。 LeaderSelectorListenerAdapter已经为您编写了推荐的处理方式。
