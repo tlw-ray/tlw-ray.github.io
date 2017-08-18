@@ -585,7 +585,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>创建配置文件。这个文件可以是任何名字。使用下面的设置作为开始:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties" data-lang="properties">tickTime=2000
+<pre class="highlightjs highlight"><code class="language-Properties" data-lang="Properties">tickTime=2000
 dataDir=/var/lib/ZooKeeper/
 clientPort=2181
 initLimit=5
@@ -607,9 +607,9 @@ server.3=zoo3:2888:3888</code></pre>
 </li>
 <li>
 <p>如果您的配置文件已设置，您可以启动ZooKeeper服务器：</p>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>$ java -cp ZooKeeper.jar：lib / slf4j-api-1.7.5.jar：lib / slf4j-log4j12-1.7.5.jar：lib / log4j-1.2.17.jar：conf \ org.apache.ZooKeeper。 server.quorum.QuorumPeerMain zoo.cfg</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">$ java -cp ZooKeeper.jar：lib / slf4j-api-1.7.5.jar：lib / slf4j-log4j12-1.7.5.jar：lib / log4j-1.2.17.jar：conf \ org.apache.ZooKeeper。 server.quorum.QuorumPeerMain zoo.cfg</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -624,9 +624,9 @@ server.3=zoo3:2888:3888</code></pre>
 <div class="paragraph">
 <p>在Java中，您可以运行以下命令来执行简单的操作：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>$ bin / zkCli.sh -server 127.0.0.1:2181</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">$ bin / zkCli.sh -server 127.0.0.1:2181</code></pre>
 </div>
 </div>
 </li>
@@ -781,7 +781,7 @@ server.3=zoo3:2888:3888</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-cmd" data-lang="cmd">java -cp ZooKeeper.jar:lib/slf4j-api-1.7.5.jar:lib/slf4j-log4j12-1.7.5.jar:lib/log4j-1.2.16.jar:conf org.apache.ZooKeeper.server.PurgeTxnLog &lt;dataDir&gt; &lt;snapDir&gt; -n &lt;count&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">java -cp ZooKeeper.jar:lib/slf4j-api-1.7.5.jar:lib/slf4j-log4j12-1.7.5.jar:lib/log4j-1.2.16.jar:conf org.apache.ZooKeeper.server.PurgeTxnLog &lt;dataDir&gt; &lt;snapDir&gt; -n &lt;count&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -807,12 +807,12 @@ server.3=zoo3:2888:3888</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-parameter" data-lang="parameter">-XX:+HeapDumpOnOutOfMemoryError -XX:OnOutOfMemoryError='kill -9 %p'</code></pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">-XX:+HeapDumpOnOutOfMemoryError -XX:OnOutOfMemoryError='kill -9 %p'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-parameter" data-lang="parameter">"-XX:+HeapDumpOnOutOfMemoryError" "-XX:OnOutOfMemoryError=cmd /c taskkill /pid %%%%p /t /f"</code></pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">"-XX:+HeapDumpOnOutOfMemoryError" "-XX:OnOutOfMemoryError=cmd /c taskkill /pid %%%%p /t /f"</code></pre>
 </div>
 </div>
 </div>
@@ -1461,7 +1461,7 @@ server.3=zoo3:2888:3888</code></pre>
 复制代码</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell" data-lang="shell">$ echo mntr | nc localhost 2185
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">$ echo mntr | nc localhost 2185
 
               ZooKeeper_version  3.4.0
               ZooKeeper_avg_latency  0
@@ -1493,7 +1493,7 @@ server.3=zoo3:2888:3888</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>key \t value</code></pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">key \t value</code></pre>
 </div>
 </div>
 </dd>
@@ -1588,13 +1588,13 @@ server.3=zoo3:2888:3888</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell" data-lang="shell">$ echo ruok | nc 127.0.0.1 5111
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">$ echo ruok | nc 127.0.0.1 5111
         imok</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <div class="title">AdminServer</div>
-<p><strong>3.5.0新增内容：</strong>AdminServer是一个内置的Jettry服务，它提供了一个HTTP接口为四字母单词命令。默认的，服务被启动在8080端口，并且命令被发起通过URL "/commands/[command name]",例如，http://localhost:8080/commands/stat。命令响应以JSON的格式返回。不像原来的协议，命令不是限制为四字母的名字，并且命令可以有多个名字。例如"stmk"可以被指定为"set_trace_mask"。为了查看所有可用命令的列表，指向一个浏览器的URL /commands (例如， <a href="http://localhost:8080/commands)。参考" class="bare">http://localhost:8080/commands)。参考</a> AdminServer configuration options关于怎么改变端口和URLS。</p>
+<p><strong>3.5.0新增内容：</strong> AdminServer是一个内置的Jettry服务，它提供了一个HTTP接口为四字母单词命令。默认的，服务被启动在8080端口，并且命令被发起通过URL "/commands/[command name]",例如，http://localhost:8080/commands/stat。命令响应以JSON的格式返回。不像原来的协议，命令不是限制为四字母的名字，并且命令可以有多个名字。例如"stmk"可以被指定为"set_trace_mask"。为了查看所有可用命令的列表，指向一个浏览器的URL /commands (例如， <a href="http://localhost:8080/commands)。参考" class="bare">http://localhost:8080/commands)。参考</a> AdminServer configuration options关于怎么改变端口和URLS。</p>
 </div>
 <div class="paragraph">
 <p>AdminServer默认开启，但是可以被关闭通过下面的方法：
@@ -1708,7 +1708,7 @@ snapshot.&lt;zxid&gt;
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:10:58
+Last updated 2017-08-18 12:19:36
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

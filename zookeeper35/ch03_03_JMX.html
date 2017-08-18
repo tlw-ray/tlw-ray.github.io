@@ -438,10 +438,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="true-jmx-zk"><a class="anchor" href="#true-jmx-zk"></a>带着JMX启动ZK</h2>
+<h2 id="true-jmx-zookeeper"><a class="anchor" href="#true-jmx-zookeeper"></a>带着JMX启动ZooKeeper</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>org.apache.zookeeper.server.quorum.QuorumPeerMai将启动一个可用JMX管理的ZooKeeper服务。这个类在初始化的时候注册适当的MBeans来支持JMX监控和实例管理。参考bin/zkServer.sh关于使用QuorumPeerMai启动ZK的例子。</p>
+<p>org.apache.zookeeper.server.quorum.QuorumPeerMai将启动一个可用JMX管理的ZooKeeper服务。这个类在初始化的时候注册适当的MBeans来支持JMX监控和实例管理。参考bin/zkServer.sh关于使用QuorumPeerMai启动ZooKeeper的例子。</p>
 </div>
 </div>
 </div>
@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>有几个可用的JMX控制台可以连接到运行的服务端。对于这个例子，我们将使用Sun的jconsole.</p>
 </div>
 <div class="paragraph">
-<p>Java JDK本身带着一个JMX控制台叫jconsole,这可以被用来连接ZK和查看运行的服务端。一旦你使用QuorumPeerMai启动了ZK，启动jconsole，它通常放在JDK_HOME/bin/jconsole</p>
+<p>Java JDK本身带着一个JMX控制台叫jconsole,这可以被用来连接ZooKeeper和查看运行的服务端。一旦你使用QuorumPeerMai启动了ZooKeeper，启动jconsole，它通常放在JDK_HOME/bin/jconsole</p>
 </div>
 <div class="paragraph">
 <p>当通过本地进程连接或使用远程进程连接来显示一个新连接的窗口。</p>
@@ -464,15 +464,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>你现在应该可以看到org.apache.ZooKeeperService在左手边。展开这个条目，根据你怎么启动的服务，你将可以监控和管理不现的服务端相关的特性。</p>
 </div>
 <div class="paragraph">
-<p>同时注意Zk也将会注册log4jMbeans。在左边的同一区域你将会看到"log4j".展示它来通过JMX管理log4j。告别有趣的是可以动态改变日志级别。通过修改附加器(appender)和root阈值。</p>
+<p>同时注意ZooKeeper也将会注册log4jMbeans。在左边的同一区域你将会看到"log4j".展示它来通过JMX管理log4j。告别有趣的是可以动态改变日志级别。通过修改附加器(appender)和root阈值。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="truezk-mbean"><a class="anchor" href="#truezk-mbean"></a>ZK MBean手册</h2>
+<h2 id="truezookeeper-mbean"><a class="anchor" href="#truezookeeper-mbean"></a>ZooKeeper MBean手册</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>这个表格详述了加入一个ZK集群的服务端的JMX。这是生产环境典型的案例。</p>
+<p>这个表格详述了加入一个ZooKeeper集群的服务端的JMX。这是生产环境典型的案例。</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. MBeans名字和描述</caption>
@@ -502,7 +502,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">LeaderElection</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">LeaderElection</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">代表一个正在进行的ZK集群选举。提供了关于选举的信息，例如什么时候开始</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">代表一个正在进行的ZooKeeper集群选举。提供了关于选举的信息，例如什么时候开始</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Leader</p></td>
@@ -566,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:11:05
+Last updated 2017-08-18 12:19:44
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

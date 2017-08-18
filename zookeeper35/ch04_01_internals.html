@@ -427,7 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true-"><a class="anchor" href="#true-"></a>引言</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>这个文档包含关于ZK内部工作的信息。目前为止，它讨论了这些主题：</p>
+<p>这个文档包含关于Zookeeper内部工作的信息。目前为止，它讨论了这些主题：</p>
 </div>
 <div class="ulist">
 <ul>
@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true--2"><a class="anchor" href="#true--2"></a>原子传播</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ZK的核心是一个原子的通信系统，它使所有的服务端保持同步。</p>
+<p>Zookeeper的核心是一个原子的通信系统，它使所有的服务端保持同步。</p>
 </div>
 <div class="sect2">
 <h3 id="true--3"><a class="anchor" href="#true--3"></a>保证、属性和定义</h3>
@@ -469,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dl>
 </div>
 <div class="paragraph">
-<p>ZK的通信系统也需要是高效的，可靠的，和容易实现和维护。我们大量使用通信，所以我们需要这个系统每秒可以处理成千上万的请求。尽管我们可以要求到少k+1个正确的服务端发送新消息，我们必须能够从例如停电的相关的失败中恢复出来。当我们实现这个系统我们很少的时间和很少的工程资源，所以我们需要一个对工程师来说可用的协议并且很容易实现。我们发现我们的协议满足所有的目标。</p>
+<p>Zookeeper的通信系统也需要是高效的，可靠的，和容易实现和维护。我们大量使用通信，所以我们需要这个系统每秒可以处理成千上万的请求。尽管我们可以要求到少k+1个正确的服务端发送新消息，我们必须能够从例如停电的相关的失败中恢复出来。当我们实现这个系统我们很少的时间和很少的工程资源，所以我们需要一个对工程师来说可用的协议并且很容易实现。我们发现我们的协议满足所有的目标。</p>
 </div>
 <div class="paragraph">
 <p>我们的协议假设我们可以构造在服务端之间点到点的FIFO通道。同时类似的服务端通常认为消息传递可能丢失或重排序消息，我们的FIFO通道的假设是很实用的假定我们使用TCP来通信。特别地我们依赖TCP如下的属性：</p>
@@ -491,7 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>当我们描述ZK消息协议，我们将会讨论数据包，提议，和消息：</pre>
+<pre>当我们描述Zookeeper消息协议，我们将会讨论数据包，提议，和消息：</pre>
 </div>
 </div>
 <div class="dlist">
@@ -502,22 +502,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1"><em>提议</em></dt>
 <dd>
-<p>协议单位。提议通过在ZK服务端的法定人数之间交换数据包来达成一致。大部分提议包含消息，然而NEW_LEADER提议是一个提议的样例它不对应一个消息。</p>
+<p>协议单位。提议通过在Zookeeper服务端的法定人数之间交换数据包来达成一致。大部分提议包含消息，然而NEW_LEADER提议是一个提议的样例它不对应一个消息。</p>
 </dd>
 <dt class="hdlist1"><em>消息</em></dt>
 <dd>
-<p>将要原子传播到所有ZK服务端的的字节序列。消息放入一个提议当中并且在被传递之前同意。</p>
+<p>将要原子传播到所有Zookeeper服务端的的字节序列。消息放入一个提议当中并且在被传递之前同意。</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>如上所述，ZK确保一个消息的总顺序，并且它也确保提议的总顺序。ZK暴露总顺序使用一个ZK事务id(zxid)。所有提议将被标识一个zxid当它被提出并且确切地反应总顺序。提议被发送到所有ZK服务端并且当他们的法定人数确认了这一提议将被提交。如果一个提议包含一个消息，这个消息将被传递当提议被提交的时候。确认意为着服务端已经记录这个提议到永久存储。Our quorums have the requirement that any pair of quorum must have at least one server in common(意思就是法定人数有多数可用，至少是n/2+1个法定人数)。我们确保这个通过要求所有法定人数有（n/2+1)个，这里的n是组成ZK服务的服务端数量。</p>
+<p>如上所述，Zookeeper确保一个消息的总顺序，并且它也确保提议的总顺序。Zookeeper暴露总顺序使用一个Zookeeper事务id(zxid)。所有提议将被标识一个zxid当它被提出并且确切地反应总顺序。提议被发送到所有ZK服务端并且当他们的法定人数确认了这一提议将被提交。如果一个提议包含一个消息，这个消息将被传递当提议被提交的时候。确认意为着服务端已经记录这个提议到永久存储。Our quorums have the requirement that any pair of quorum must have at least one server in common(意思就是法定人数有多数可用，至少是n/2+1个法定人数)。我们确保这个通过要求所有法定人数有（n/2+1)个，这里的n是组成Zookeeper服务的服务端数量。</p>
 </div>
 <div class="paragraph">
 <p>zxid有两部分：时期和计数器。在我们的实现中zxid是一个64位的数字。我们使用高32位来表示时期，低32位来表示计数器。因为它有两部分表示zxid，两部分都是数字并且作为一对整数（时期，计数器）。时期数字代表领导者改变。每当一个新的领导人上台，它将有它自己的时期数字。我们有一个简单的逻辑来给每一个提议分配一个唯一的zxid：领导者简单地增加zxid来为每一个提议获取一个唯一的zxid。领导者激活将确保只有一个领导者使用一个给定的时期，所以我们简单的逻辑确保每一个提议将有一个唯一的id。</p>
 </div>
 <div class="paragraph">
-<p>ZK通信包含两阶段：</p>
+<p>Zookeeper通信包含两阶段：</p>
 </div>
 <div class="dlist">
 <dl>
@@ -532,13 +532,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dl>
 </div>
 <div class="paragraph">
-<p>ZK是一个整体协议。我们不关注个别的提议，而是把提议的流作为一个整体。我们严格的顺序性使我们能够有效地做到这一点并且大大地简化了我们的协议。领导者激活体现了这个整体概念。一个领导者变得活跃只当一个追随者(领导者也算是一个追随者，你可以总是投票给自己)已经和领导者同步过，他们拥有相同的状态。这个状态包含所有领导者相信已经被提交的提议和追随领导者的提议，也就是NEW_LEADER提议。（希望你也正在思考，真的领导者相信已经被提议的提议包括所有真的已经被提交的提议？答案是是的。下面，我们弄清楚为什么）。</p>
+<p>Zookeeper是一个整体协议。我们不关注个别的提议，而是把提议的流作为一个整体。我们严格的顺序性使我们能够有效地做到这一点并且大大地简化了我们的协议。领导者激活体现了这个整体概念。一个领导者变得活跃只当一个追随者(领导者也算是一个追随者，你可以总是投票给自己)已经和领导者同步过，他们拥有相同的状态。这个状态包含所有领导者相信已经被提交的提议和追随领导者的提议，也就是NEW_LEADER提议。（希望你也正在思考，真的领导者相信已经被提议的提议包括所有真的已经被提交的提议？答案是是的。下面，我们弄清楚为什么）。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="true--4"><a class="anchor" href="#true--4"></a>领导者激活</h3>
 <div class="paragraph">
-<p>领导者渡海包括领导者选举。我们现在在ZK中有两个领导者选举逻辑：LeaderElection和FastLeaderElection(AuthFastLeaderElection 是一个FastLeaderElection的变种，它使用UDP和允许 服务端执行简单形式的谁来避免IP欺骗)。ZK通信不关心选举领导者的具体方法只要以下拥有：</p>
+<p>领导者激活包括领导者选举。我们现在在Zookeeper中有两个领导者选举逻辑：LeaderElection和FastLeaderElection(AuthFastLeaderElection 是一个FastLeaderElection的变种，它使用UDP和允许 服务端执行简单形式的WHO来避免IP欺骗)。Zookeeper通信不关心选举领导者的具体方法只要拥有以下：</p>
 </div>
 <div class="ulist">
 <ul>
@@ -591,10 +591,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="true--5"><a class="anchor" href="#true--5"></a>消息传递</h3>
 <div class="paragraph">
-<p>领导者激活所有的沉重的起重（Leader Activation does all the heavy lifting）。一旦领导者被选举它可以开始发起提议。只要它是领导者就没有其它其它领导可以出现，因为没有其它领导者将可以有追随者的法定人数。如果一个新的领导者确实出现，它意为着这个领导者已经失去了法定人数，并且新的领导者将清理任何遗留的混乱在他的领导者激活的过程中。</p>
+<p>领导激活做的都很重。 一旦领导人加冕，他就可以开始爆破提案。 只要他仍然是领导人，没有其他领导人可以出现，因为没有其他领导人能够获得法定的追随者。 如果新的领导人出现，这意味着领导人已经失去了法定人数，新的领导人将在领导激活期间清理遗留下来的混乱。</p>
 </div>
 <div class="paragraph">
-<p>ZK的消息操作和一个典型的两段式提交相似。</p>
+<p>Zookeeper的消息操作和一个典型的两段式提交相似。</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -641,7 +641,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="true--8"><a class="anchor" href="#true--8"></a>法定人数</h3>
 <div class="paragraph">
-<p>原子传播和领导者选举使用法定人数的概念来保证系统的一致性视图。默认地，ZK使用多数法定人数，这意为着每一个在这些协议中发生的投票需要一个大多数来投票。一个例子是承认一个领导者的建议：领导者可以提交一旦它从服务端的法定人数收到一个确认。</p>
+<p>原子传播和领导者选举使用法定人数的概念来保证系统的一致性视图。默认地，Zookeeper使用多数法定人数，这意为着每一个在这些协议中发生的投票需要一个大多数来投票。一个例子是承认一个领导者的建议：领导者可以提交一旦它从服务端的法定人数收到一个确认。</p>
 </div>
 <div class="paragraph">
 <p>如果我们提取这一性质，我们真的需要使用大多数，我们实现这一点，我们只需要保证一组使用的进程通过投票来检测一个操作（也就是说，确认一个领导者提议）。使用大多数保证这样一个属性。然而有砣不同与大多数的的方法来构建法定人数。例如，我们可以分配权重给服务端的投票，来说明一些服务端的投票更重要。为了获取一个法定人数，我们得到足够的投票结果所有投票的权重的总全比所有权重的总全的一半要大。</p>
@@ -650,13 +650,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>一个不同的构造使用权重并且在wide-area(co-locations)部署是有用的是一个分层次法定人数。对于这个构造，我们把服务端分为不相交的组并且分配权重来处理。为了组成一个法定人数，我们不得不从一个一个组G的大多数获取足够的服务端，对于G中的每一个组g,g中的投票的总数比g中的权重的总数的一半要大。有趣的是，这个构造允许更小的法定人数。例如，如果我们有9个服务端，我们把他们分为三组，并且给每一个服务端分配一个权重1，那么我们可以组成一个大小为4的法定人数。注意，处理的两个字集从每一个组的大多数组成的每一个大多数服务器必需有一个非空的交集。这是合理的期望一个co-locations的大多数将有很大的概率有大多数可用的服务端。</p>
 </div>
 <div class="paragraph">
-<p>对于ZK,我们提供给用户配置服务端来使用大多数法定人数，权重，或者分层次的组的能力。</p>
+<p>对于Zookeeper,我们提供给用户配置服务端来使用大多数法定人数，权重，或者分层次的组的能力。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="true--9"><a class="anchor" href="#true--9"></a>日志</h3>
 <div class="paragraph">
-<p>ZK使用slf4j作为日志的抽象层。现在版本1.2的log4j被选择作为最终的日志实现。为了更好的嵌入支持，在未来计划把最终日志实现的选择扔给用户。因些总是在代码里使用slf4jAPI来写日志语句，但是在运行时配置log4j怎么记录日志。注意slf4j没有FATAl级别，在以前的FATAl级别的消息已经被移到ERROR级别。对于ZK关于配置log4j的信息参考ZooKeeper Administrator&#8217;s Guide的Logging部分。</p>
+<p>Zookeeper使用slf4j作为日志的抽象层。现在版本1.2的log4j被选择作为最终的日志实现。为了更好的嵌入支持，在未来计划把最终日志实现的选择扔给用户。因些总是在代码里使用slf4jAPI来写日志语句，但是在运行时配置log4j怎么记录日志。注意slf4j没有FATAl级别，在以前的FATAl级别的消息已经被移到ERROR级别。对于Zookeeper关于配置log4j的信息参考ZooKeeper Administrator&#8217;s Guide的Logging部分。</p>
 </div>
 </div>
 </div>
@@ -665,8 +665,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true--10"><a class="anchor" href="#true--10"></a>开发者指南</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>请按照slf4j manual当在代码中创建日志语句的时候。当创建日志语句的时候同时读FAQ on performance，补丁的审稿人将寻找下面:
-在正确的级别上记录日志</p>
+<p>在代码中创建日志语句时，请遵循slf4j手册。 在创建日志语句时，请阅读有关性能的FAQ。 补丁审核人员将寻找以下内容：</p>
 </div>
 <div class="paragraph">
 <p>在slf4j中有几个日志级别。选择正确的一个非常重要。为了更高的较低的严重程度：</p>
@@ -691,7 +690,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ol>
 </div>
 <div class="paragraph">
-<p>ZK通常以INFO级别的日志消息和更高的(更严重的)被输出到日志中的形式在生产环境中运行。</p>
+<p>Zookeeper通常以INFO级别的日志消息和更高的(更严重的)被输出到日志中的形式在生产环境中运行。</p>
 </div>
 <div class="paragraph">
 <div class="title">标准slf4j的使用</div>
@@ -748,7 +747,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:11:20
+Last updated 2017-08-18 12:20:01
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

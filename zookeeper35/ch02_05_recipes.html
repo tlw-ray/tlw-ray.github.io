@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5.dev">
-<title>ZooKeeper食谱与方案</title>
+<title>ZooKeeper配方与方案</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>ZooKeeper食谱与方案</h1>
+<h1>ZooKeeper配方与方案</h1>
 </div>
 <div id="content">
 <div class="sect1">
@@ -430,13 +430,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>在这个文章中，你将会发现使用ZooKeeper来实现高级别功能的指南。所有的它们在客户端上被实现而不需要ZooKeeper特别的支持.希望社区将注意到这些约定在客户端库里来方便他们的使用并且促进标准化。</p>
 </div>
 <div class="paragraph">
-<p>其中一个关于ZooKeeper最有趣的事是尽管ZooKeeper使用异步的通知，你可以使用它构造同步的一致性原语，例如队列和锁。正如你将要看到的一样，这是可能的因为ZooKeeper对更新强加了一个整体的顺序，和暴躁这个顺序的机制。</p>
+<p>ZooKeeper最有趣的一件事是即使ZooKeeper使用异步通知，也可以使用它来构建同步的一致性原语，比如队列和锁。 正如你将看到的，这是可能的，因为ZooKeeper对更新施加了一个整体的顺序，并且具有暴露这种排序的机制。</p>
 </div>
 <div class="paragraph">
-<p>注意下面的食谱试图实用最挂实践。特别地，他们避免投票，定时器或者任何其它导致产生“羊群效应”的造成突发的事故和限制扩展性。</p>
+<p>请注意，下面的配方尝试采用最佳做法。 特别是，它们避免了轮询，计时器或其他任何会导致“羊群效应”的事件，从而导致流量突发和限制可扩展性。</p>
 </div>
 <div class="paragraph">
-<p>有很多可以被想到的有用的功能没有包含在这 - 可撤销的读-写优先锁，只有一个例子。并且这里提到的一些构件 - 特别是锁 - 阐明了特定的观点，尽管你可能找到其它构件，例如事件处理或队列，执行相同功能的一个更实用的方法。通常，这部分的例子被设计用来刺激思想。</p>
+<p>有许多有用的功能可以被想象为不包括在这里 - 可撤销的读写优先级锁，仅作为一个例子。 而且这里提到的一些结构 - 特别是锁定 - 说明某些点，即使您可能会发现其他构造，例如事件句柄或队列，更实际的执行相同功能的方法。 一般来说，本节中的例子旨在激发思想。</p>
 </div>
 </div>
 </div>
@@ -444,12 +444,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true-"><a class="anchor" href="#true-"></a>关于错误处理的重要注意事项</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>当实现这些食谱你必须处理可恢复的异常(参考 FAQ)。特别地，一些食谱利用了顺序的短暂节点。当创建一个顺序的短暂节点时，有一个错误的案例，当create()在服务端成功了但是在返回给客户端这个节点的名字之前服务端挂掉了。当客户端重新连接它的会话仍然是有效的并且，因此，这个节点没有被删除。这个意思是对客户端来说它很难知道这个节点有没有被创建。下面的食谱包含了处理这种情况的方法。</p>
+<p>当实现这些配方你必须处理可恢复的异常(参考 FAQ)。特别地，一些配方利用了顺序的短暂节点。当创建一个顺序的短暂节点时，有一个错误的案例，当create()在服务端成功了但是在返回给客户端这个节点的名字之前服务端挂掉了。当客户端重新连接它的会话仍然是有效的并且，因此，这个节点没有被删除。这个意思是对客户端来说它很难知道这个节点有没有被创建。下面的配方包含了处理这种情况的方法。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--2"><a class="anchor" href="#true--2"></a>取出即可用的应用:命名服务，配置，集群管理</h2>
+<h2 id="true--2"><a class="anchor" href="#true--2"></a>开箱即用应用程序：名称服务，配置，组成员资格</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>命名服务和配置管理是ZooKeeper的两个主要应用。这两上功能被ZooKeeper API直接提供。</p>
@@ -461,6 +461,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="true--3"><a class="anchor" href="#true--3"></a>屏障</h3>
 <div class="paragraph">
 <p>分布式的系统使用屏障来一组节点的进程，直到遇到满足的条件的时候所有节点才被允许继续执行。在ZooKeeper中屏障通过指定一个屏障节点来实现。障碍在路上如果屏障节点存在。下面的它的伪代码:</p>
+</div>
+<div class="paragraph">
+<p>分布式系统使用屏障来阻止对一组节点的处理，直到满足某个条件后，所有节点才允许执行。 屏障通过指定一个屏障节点在ZooKeeper中实现。 如果屏障节点存在，屏障就生效。 下面是伪代码：</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -481,10 +484,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect3">
 <h4 id="true--4"><a class="anchor" href="#true--4"></a>双重屏障</h4>
 <div class="paragraph">
-<p>两重屏障使客户端同步一个计算的开始和结束。当足够的进程进入到屏障，进程开始他们的计算，并且一旦完成就离开屏障。这个食谱展示了怎么作为屏障使用ZooKeeper节点。</p>
+<p>两重屏障使客户端同步一个计算的开始和结束。当足够的进程进入到屏障，进程开始他们的计算，并且一旦完成就离开屏障。这个配方展示了怎么作为屏障使用ZooKeeper节点。</p>
 </div>
 <div class="paragraph">
-<p>这个食谱中的伪代码用b来表示一个屏障节点。每一个客户端进程 p 在进入的时候注册到屏障节点上并且在离开的时候取消注册。一个节点通过下面的Enter过程来注册到屏障节点上，在继续计算之前它等待直到 x 客户端进程完成注册(这里的x取决于你的系统)。</p>
+<p>这个配方中的伪代码用b来表示一个屏障节点。每一个客户端进程 p 在进入的时候注册到屏障节点上并且在离开的时候取消注册。一个节点通过下面的Enter过程来注册到屏障节点上，在继续计算之前它等待直到 x 客户端进程完成注册(这里的x取决于你的系统)。</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -515,13 +518,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p>当进入的时候，所有进程监视一个准备好的节点，并且创建一个短暂节点作为屏障节点的子节点，每一个进程但是最后进入的屏障，并且等待准备的节点出现在第5行。创建第x个节点的进程，也就是最后一个节点。将看到x个节点在孩子列表中。并且创建准备结点。然后唤醒其它进程。注意等待进程只有在退出的时候才唤醒。所以等待是高效的。</p>
+<p>在进入时，所有进程在可用节点(一个准备好的节点)上Watch，并创建一个Ephemeral短暂节点作为屏障节点的子节点。每个进程，除了最后一个进入屏障的那个，等待就绪节点出现在第5行。创建第x个节点的进程（最后一个进程）将在子列表中看到x个节点，并创建就绪节点，唤醒其他流程。请注意，等待进程只有在退出时才醒来，所以等待是有效的。</p>
 </div>
 <div class="paragraph">
-<p>在退出的时候。你不能使用一个标示，例如ready,因为你正在等待处理的节点离开。通过使用短暂节点。在进入屏障之后失败的进程不能阻止正确的进程结束。当进程准备离开的时候。它们必须删除进程节点并且等待其它进程做同样的事情。</p>
+<p>在退出时，您不能使用标志（诸如'ready'），因为您正在Watch进程节点的消失。通过使用Ephemeral短暂节点，输入屏障后失败的过程不会阻止正确的过程完成。当进程准备离开时，他们需要删除其进程节点并等待所有其他进程执行相同操作。</p>
 </div>
 <div class="paragraph">
 <p>进程退出当没有进程节点作为b的孩子节点的时候。然而，为了效率，你可以使用最底的进程节点作为准备标示。准备退出的所有其它进程监视最底的退出节点离开。并且最底节点的拥有者监视任一其它节点(为了简单选择最高的)的离开。这意为只一个节点唤醒当一个节点删除的时候除了最后一个节点删除。最后节点删除的时候所有节点被唤醒。</p>
+</div>
+<div class="paragraph">
+<p>当b的子进程节点剩余时，进程退出。然而，为了效率，您可以使用最低的进程节点作为就绪标志。准备退出的所有其他进程观察最低的现有进程节点，并且最低进程的所有者监视任何其他进程节点（为了简单起见，最高）为止消失。这意味着除了最后一个节点之外，每个节点删除只有一个进程将被唤醒，最后一个节点在删除时唤醒每个进程。</p>
 </div>
 </div>
 </div>
@@ -531,7 +537,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true--5"><a class="anchor" href="#true--5"></a>队列</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>分布式队列是一个普遍的数据结构。为了在ZooKeeper中实现一个分布式队列。首先指定一个znode持有队列。队列节点。分布式的客户端放一些东西进入队列通过用以queue-结尾的路径,序号和为短暂的标示true调用create()。因为序号的标示被设置。新的路径名字的形式为<em>path-to-queue-node</em>/queue-X,这里的X是自动增加的数字。一个想要从队列中被删除的节点调用ZooKeeper 的<strong>getChildren( )</strong> 函数。在队列中的节点都设置了监视器。并且开始处理最小数值的节点。客户端不需要发起另一个<strong>getChildren( )</strong>直到消耗到第一次调用<strong>getChildren( )</strong>返回的列表。如果没有孩子在队列节点中。读进程等待一个监视通知来再次检查队列。</p>
+<p>分布式队列是一个普遍的数据结构。为了在ZooKeeper中实现一个分布式队列。首先指定一个znode持有队列。队列节点。分布式的客户端放一些东西进入队列通过用以queue-结尾的路径,序号和为短暂的标示true调用create()。因为序号的标示被设置。新的路径名字的形式为_path-to-queue-node_/queue-X,这里的X是自动增加的数字。一个想要从队列中被删除的节点调用ZooKeeper 的<strong>getChildren( )</strong> 函数。在队列中的节点都设置了监视器。并且开始处理最小数值的节点。客户端不需要发起另一个<strong>getChildren( )</strong>直到消耗到第一次调用<strong>getChildren( )</strong>返回的列表。如果没有孩子在队列节点中。读进程等待一个监视通知来再次检查队列。</p>
 </div>
 <div class="paragraph">
 <p>[注意]</p>
@@ -539,7 +545,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<p>现在有一个队列实现在ZooKeeper食谱目录下。它在发行版本的src/recipes/queue 目录下。</p>
+<p>现在有一个队列实现在ZooKeeper配方目录下。它在发行版本的src/recipes/queue 目录下。</p>
 </div>
 </div>
 </div>
@@ -562,7 +568,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </td>
 <td class="content">
 <div class="paragraph">
-<p>现在有一个锁实现在ZooKeeper食谱目录下，它在发行版本的src/recipes/queue 目录下。</p>
+<p>现在有一个锁实现在ZooKeeper配方录下，它在发行版本的src/recipes/queue 目录下。</p>
 </div>
 </td>
 </tr>
@@ -574,7 +580,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>以参数"<em>locknode</em>/guid-lock-"同时设置sequence和ephemeral标识来调用create()。需要一个guid以防create()丢失。参考下面的注意事项。</p>
+<p>以参数"_locknode_/guid-lock-"同时设置sequence和ephemeral标识来调用create()。需要一个guid以防create()丢失。参考下面的注意事项。</p>
 </li>
 <li>
 <p>在锁节点上调用getChildren()而不设置监视标识(这对避免羊群效应很重要)</p>
@@ -599,13 +605,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>一个节点的删除将只引起一个客户端唤醒因为每一个节点恰恰被一个客户端监视着。用这种方式你避免了羊群效应。</p>
+<p>一个节点的删除将只引起一个客户端唤醒因为每一个节点恰恰被一个客户端监视着。用这种方式避免羊群效应。</p>
 </li>
 <li>
 <p>这里没有投票或超时。</p>
 </li>
 <li>
-<p>因为你实现锁的方式，很容易看到锁竞争的数量，打断锁，调试锁问题，等等。</p>
+<p>根据您实现锁的方式，很容易看到锁竞争的数量，打断锁，调试锁问题，等等。</p>
 </li>
 </ul>
 </div>
@@ -619,10 +625,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="true--8"><a class="anchor" href="#true--8"></a>共享锁</h3>
 <div class="paragraph">
+<div class="title">共享锁</div>
 <p>你可以实现共享锁通过对锁协议做一些小的改变:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -658,7 +662,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>这个食谱它可能出现羊群效应:当很多组的客户端正在等待读锁，在最小序列号的"write-"节点被删除的时候，这些客户端几乎同时获取到了通知。实际上，这是合法的行为：因为所有这些等待读的客户端应该被释放因为它们拥有锁。羊群效应是指释放一个"羊群"当实际上只有一个或一小部分机器可能处理的时候。</p>
+<p>这个配方可能出现羊群效应:当很多组的客户端正在等待读锁，在最小序列号的"write-"节点被删除的时候，这些客户端几乎同时获取到了通知。实际上，这是合法的行为：因为所有这些等待读的客户端应该被释放因为它们拥有锁。羊群效应是指释放一个"羊群"当实际上只有一个或一小部分机器可能处理的时候。</p>
 </li>
 <li>
 <p>参考note for Locks关于怎么使用guid</p>
@@ -667,7 +671,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="true--9"><a class="anchor" href="#true--9"></a>可撤消的共享锁</h3>
+<h3 id="true--8"><a class="anchor" href="#true--8"></a>可撤消的共享锁</h3>
 <div class="paragraph">
 <p>对共享锁做一些小的修改，通过修改共享锁你可以使用锁可撤销。</p>
 </div>
@@ -681,7 +685,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--10"><a class="anchor" href="#true--10"></a>两段式提交</h2>
+<h2 id="true--9"><a class="anchor" href="#true--9"></a>两段式提交</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>一个两段式提交协议是一种逻辑，它让所有在分布式系统中的的客户端同意要么提交事务要么取消事务。</p>
@@ -704,7 +708,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--11"><a class="anchor" href="#true--11"></a>领导者选举</h2>
+<h2 id="true--10"><a class="anchor" href="#true--10"></a>领导者选举</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>ZooKeeper做领导者选择的一个简单的方法是当创建代表揭底客户端的节点时使用<strong>SEQUENCE|EPHEMERAL</strong>标记。这个思路是有一个znode,比如 “/election",每一个znode创建一个带着SEQUENCE|EPHEMERAL孩子节点"/election/guid-n_"，有了顺序标记，ZooKeeper自动地附加一个比选择增加的都大的数字到一个"/election"的孩子上面。创建的最小顺序号的节点就是领导者。</p>
@@ -765,7 +769,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:10:55
+Last updated 2017-08-18 11:25:11
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

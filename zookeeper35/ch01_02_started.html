@@ -427,18 +427,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true-zookeeper"><a class="anchor" href="#true-zookeeper"></a>开始:通过zookeeper协调分布式程序</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>这份文档包含了让你快速开始使用zookeeper的帮助信息。文章主要是针对初级想尝试使用zookeeper的开发者，其中包含了一些简单的例子，仅用一台zookeeper服务器，一些命令确认服务器正在运行，一个简单的程序样例。文章最后，为了方便，也有一些内容考虑到一些相对复杂些的例子。列如，以复制模式部署，优化事务日志。但是如果想运用到商业项目中。请参阅ZooKeeper管理员指南</p>
+<p>这份文档包含了让你快速开始使用zookeeper的帮助信息。文章主要是针对初级想尝试使用zookeeper的开发者，其中包含了一些简单的例子，仅用一台zookeeper服务器，一些命令确认服务器正在运行，一个简单的程序样例。文章最后，为了方便，也有一些内容考虑到一些相对复杂些的例子。列如，以复制模式部署，优化事务日志。但是如果想运用到商业项目中。请参阅<a href="ch03_01_admin.html">ZooKeeper管理员指南</a>。</p>
 </div>
 <div class="sect2">
 <h3 id="true-"><a class="anchor" href="#true-"></a>先决条件</h3>
 <div class="paragraph">
-<p>参考管理手册中的系统需求</p>
+<p>参考<a href="ch03_01_admin.html">管理手册</a>中的系统需求部分。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="true--2"><a class="anchor" href="#true--2"></a>下载</h3>
 <div class="paragraph">
-<p>从Apache的镜像站点下载Zookeeper的稳定发行版。</p>
+<p>从Apache的镜像站点下载Zookeeper的 <a href="http://zookeeper.apache.org/releases.html">稳定</a>发行版。</p>
 </div>
 </div>
 <div class="sect2">
@@ -462,32 +462,32 @@ clientPort=2181</pre>
 <div class="paragraph">
 <p>你可以随意命名这个文件，但是为了描述的清楚我们就叫它 <strong>conf/zoo.cfg</strong>. 设定<strong>dataDir</strong>的值到存在（初始为空）的目录。下面是对每一个字段意义的介绍：</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>tickTime
-zookeeper用到的时间单位是毫秒。这个时间好比是zookeeper的心跳时间，是最小会话单元的超时时间范围是这个时间的2倍。</p>
-</li>
-<li>
-<p>dataDir
-这个目录是存储内存中数据库快照的位置，除非你特别说明，更新该数据库事物的日志也在这个位置。</p>
-</li>
-<li>
-<p>clientPort
-客户端连接监听端口。</p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">tickTime</dt>
+<dd>
+<p>zookeeper用到的时间单位是毫秒。这个时间好比是zookeeper的心跳时间，是最小会话单元的超时时间范围是这个时间的2倍。</p>
+</dd>
+<dt class="hdlist1">dataDir</dt>
+<dd>
+<p>这个目录是存储内存中数据库快照的位置，除非你特别说明，更新该数据库事物的日志也在这个位置。</p>
+</dd>
+<dt class="hdlist1">clientPort</dt>
+<dd>
+<p>客户端连接监听端口。</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p>现在你创建了这个配置文件，就可以启动Zookeeper：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>bin/zkServer.sh start</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">bin/zkServer.sh start</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>ZooKeeper 的日志记录是通过log4j — 更多关于日志的讲解请看开发者手册。你会看到日志信息根据log4j配置被发送到控制台并且/或者日志文件。</p>
+<p>ZooKeeper 的日志记录是通过log4j — 更多关于日志的讲解请看 <a href="ch02_02_programmers.html">开发者手册</a>。你会看到日志信息根据log4j配置被发送到控制台并且/或者日志文件。</p>
 </div>
 <div class="paragraph">
 <p>这里介绍的启动zookeeper是以单例模式。这里没有做复制，因此假如zookeeper进程运行失败，服务就会挂掉。单例模式启动对于开发环境来说是良好的，如果想启动Zookeeper在复制模式，请看Running Replicated ZooKeeper.</p>
@@ -499,16 +499,16 @@ zookeeper用到的时间单位是毫秒。这个时间好比是zookeeper的心�
 <h2 id="true-zookeeper-2"><a class="anchor" href="#true-zookeeper-2"></a>管理ZooKeeper存储</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>对于长时间运行在生产环境的zookeeper服务，存储必须被额外的管理（dataDir and logs），关于这些的更多细节请看maintenance</p>
+<p>对于长时间运行在生产环境的zookeeper服务，存储必须被额外的管理（dataDir and logs），关于这些的更多细节请看 <a href="ch0301_admin.html">管理手册</a>的维护章节。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="true-zookeeper-3"><a class="anchor" href="#true-zookeeper-3"></a>连接到ZooKeeper</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>bin/zkCli.sh -server 127.0.0.1:2181</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">bin/zkCli.sh -server 127.0.0.1:2181</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -517,14 +517,14 @@ zookeeper用到的时间单位是毫秒。这个时间好比是zookeeper的心�
 <div class="paragraph">
 <p>一旦你已经联接，可以看到一些类似如下内容：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>Connecting to localhost:2181
+<pre class="highlightjs highlight"><code class="language-Log" data-lang="Log">Connecting to localhost:2181
 log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
 log4j:WARN Please initialize the log4j system properly.
 Welcome to ZooKeeper!
 JLine support is enabled
-[zkshell: 0]</pre>
+[zkshell: 0]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -533,9 +533,9 @@ JLine support is enabled
 <div class="paragraph">
 <p>从shell中运行，键入 help 将获得客户端可以执行的命令列表，如下:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 0] help
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 0] help
 ZooKeeper host:port cmd args
         get path [watch]
         ls path [watch]
@@ -554,34 +554,34 @@ ZooKeeper host:port cmd args
         addauth scheme auth
         delete path [version]
         deleteall path
-        setquota -n|-b val path</pre>
+        setquota -n|-b val path</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>你可以尝试一些简单的命令来了解这个简单的命令行。首先，从了解这个命令列表开始，例如ls，如下 :</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 8] ls /
-[zookeeper]</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">    [zkshell: 8] ls /
+    [zookeeper]</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>接下来，通过运行create /zk_test my_data来创建一个新的znode。这个会创建一个新的znode并且与字符串数据“my_data” 关联,你可以看到下面的运行结果:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 9] create /zk_test my_data
-Created /zk_test</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 9] create /zk_test my_data
+Created /zk_test</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>通过运行 ls / 命令会看到展现当前的目录情况:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 11] ls /
-[zookeeper, zk_test]</pre>
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 11] ls /
+[zookeeper, zk_test]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -590,9 +590,9 @@ Created /zk_test</pre>
 <div class="paragraph">
 <p>接下来，你可以确认下和这个节点关联的数据通过运行get命令，如下：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 12] get /zk_test
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 12] get /zk_test
 my_data
 cZxid = 5
 ctime = Fri Jun 05 13:57:06 PDT 2009
@@ -604,15 +604,15 @@ dataVersion = 0
 aclVersion = 0
 ephemeralOwner = 0
 dataLength = 7
-numChildren = 0</pre>
+numChildren = 0</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>我们也可以改变和zk_test关联的数据通过set命令，如下：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 14] set /zk_test junk
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 14] set /zk_test junk
 cZxid = 5
 ctime = Fri Jun 05 13:57:06 PDT 2009
 mZxid = 6
@@ -636,23 +636,23 @@ dataVersion = 1
 aclVersion = 0
 ephemeralOwner = 0
 dataLength = 4
-numChildren = 0</pre>
+numChildren = 0</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>(注意我们在设置zk_test的数据后又运行了get 命令，数据的确改变了）。
 最后通过delete 删除zk_test这个节点：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[zkshell: 16] delete /zk_test
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">[zkshell: 16] delete /zk_test
 [zkshell: 17] ls /
 [zookeeper]
-[zkshell: 18]</pre>
+[zkshell: 18]</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>获取更多其它内容，请看Programmer’s Guide.</p>
+<p>获取更多其它内容，请看 <a href="ch02_02_programmers.html">编程指南</a>。</p>
 </div>
 </div>
 </div>
@@ -660,7 +660,7 @@ numChildren = 0</pre>
 <h2 id="true-zookeeper-4"><a class="anchor" href="#true-zookeeper-4"></a>对ZooKeeper编程</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ZooKeeper具有Java和C的绑定。它们最终是等效的。C的绑定具有两个变体：单线程和多线程。它们仅仅区别在于消息循环如何被实现。更多信息请查阅 Zookeeper编程手册中的编程示例 获得使用不同API的示例代码.</p>
+<p>ZooKeeper具有Java和C的绑定。它们最终是等效的。C的绑定具有两个变体：单线程和多线程。它们仅仅区别在于消息循环如何被实现。更多信息请查阅 Zookeeper编程手册中的编程示例 获得使用不同API的示例代码。</p>
 </div>
 </div>
 </div>
@@ -688,15 +688,17 @@ numChildren = 0</pre>
 <div class="paragraph">
 <p>每个zookeeper服务器都有一份同样的配置文件。这个文件和上面介绍单例模式使用的配置文件和类似，只是有一点小小的不同，如下：</p>
 </div>
-<div class="paragraph">
-<p>tickTime=2000
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-SH" data-lang="SH">tickTime=2000
 dataDir=/var/lib/zookeeper
 clientPort=2181
 initLimit=5
 syncLimit=2
 server.1=zoo1:2888:3888
 server.2=zoo2:2888:3888
-server.3=zoo3:2888:3888</p>
+server.3=zoo3:2888:3888</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>新的实体, <strong>initLimit</strong>是用来定义zookeeper连接到leader的超时时间。实体<strong>syncLimit</strong> 限制一个leader过时时间。
@@ -715,6 +717,7 @@ server.3=zoo3:2888:3888</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
+<div class="title">注意</div>
 <div class="paragraph">
 <p>假如你想在一台机器上进行多个zookeeper服务测试，需要指出唯一的集群名localhost和那些leader选举端口(例如2888:3888, 2889:3889, 2890:3890 在下面的例子）。隔离各个dataDir目录和不同的端口号也是必须的。（在这个复制模式运行的例子里，每个运行在单一的机器都有一个配置文件）</p>
 </div>
@@ -748,7 +751,7 @@ server.3=zoo3:2888:3888</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:10:16
+Last updated 2017-08-18 10:04:14
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

@@ -427,20 +427,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true-"><a class="anchor" href="#true-"></a>一个简单的监视客户端</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>要介绍ZooKeeper Java API，我们在这里开发一个非常简单的观看客户端。 该ZooKeeper客户端通过启动或停止程序来监视ZooKeeper节点的更改并进行响应。</p>
+<p>介绍ZooKeeper Java API，我们在这里开发一个非常简单的观看客户端。 该ZooKeeper客户端通过启动或停止程序来监视ZooKeeper节点的更改并进行响应。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--2"><a class="anchor" href="#true--2"></a>要求</h2>
+<h2 id="true--2"><a class="anchor" href="#true--2"></a>需求</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>客户端有四个要求:</p>
+<p>客户端有四个需求:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>这需要作为参数:</p>
+<p>需要的参数:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -459,7 +459,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </li>
 <li>
-<p>它与znode获取相关的数据并开始执行。</p>
+<p>获取znode相关的数据并开始执行程序。</p>
 </li>
 <li>
 <p>如果znode发生变化,重启客户端重新提取内容和可执行文件。</p>
@@ -475,7 +475,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true--3"><a class="anchor" href="#true--3"></a>程序设计</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>一般来说,zookpeer应用被分解成两个部分,一个保持连接,另负责监控数据。在这个应用程序中,这个类称为<strong>Executor</strong>(执行者)保持zookpeer联系,和另一个类<strong>DataMonitor</strong>(数据监视者)监控树中的数据。此外,Executor包含主线程和包含执行逻辑。它负责小用户交互是什么,以及交互exectuable计划你在作为参数,该示例根据znode状态进行关闭和重新启动。</p>
+<p>一般来说,zookpeer应用被分解成两个部分,一个保持连接,另负责监控数据。在这个应用程序中,<strong>Executor</strong>(执行者)保持zookpeer联系,另一个类<strong>DataMonitor</strong>(数据监视者)监控树中的数据。此外,Executor包含主线程和包含执行逻辑。它负责小用户交互是什么,以及交互exectuable计划你在作为参数,该示例根据znode状态进行关闭和重新启动。</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -532,9 +532,9 @@ public void run() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">    public void process(WatchedEvent event) {
-        dm.process(event);
-    }</code></pre>
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void process(WatchedEvent event) {
+    dm.process(event);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -563,7 +563,7 @@ public void run() {
 </div>
 <div class="paragraph">
 <p>当Executor.closing()调用,执行程序决定是否关闭自己的Zookpeer连接。
-您可能已经猜到,DataMonitor的对象调用这些方法,以应对变化的Zookpeer状态。</p>
+您可能已经猜到, DataMonitor的对象调用这些方法,以应对变化的Zookpeer状态。</p>
 </div>
 <div class="paragraph">
 <p>以下是Executor的DataMonitorListener.exists实现()和DataMonitorListener.closing:</p>
@@ -650,10 +650,10 @@ public void closing(int rc) {
 </td>
 <td class="content">
 <div class="paragraph">
-<p>不要将完成回调与手表回调混淆。 当监视操作的异步设置（由ZooKeeper.exists（））在服务器上完成时，ZooKeeper.exists（）完成回调恰好是在DataMonitor对象中实现的StatCallback.processResult（）方法。</p>
+<p>不要将完成回调与Watch回调混淆。 当监视操作的异步设置（由ZooKeeper.exists（））在服务器上完成时，ZooKeeper.exists（）完成回调恰好是在DataMonitor对象中实现的StatCallback.processResult（）方法。</p>
 </div>
 <div class="paragraph">
-<p>另一方面，触发手表会向Executor对象发送一个事件，因为Executor注册为ZooKeeper对象的Watcher。</p>
+<p>另一方面，触发Watch会向Executor对象发送一个事件，因为Executor注册为ZooKeeper对象的Watcher。</p>
 </div>
 <div class="paragraph">
 <p>除此之外，您可能会注意到，DataMonitor也可以将自己注册为此特定观看事件的观察者。 这是ZooKeeper 3.0.0（支持多个观察者）的新功能。 但是在这个例子中，DataMonitor不会注册为Watcher。</p>
@@ -1044,7 +1044,7 @@ public class DataMonitor implements Watcher, StatCallback {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:12:10
+Last updated 2017-08-18 10:19:58
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

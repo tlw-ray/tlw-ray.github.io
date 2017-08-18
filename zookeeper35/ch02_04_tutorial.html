@@ -427,7 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="true-"><a class="anchor" href="#true-"></a>引言</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>在这个指南中，使用展示了使用ZooKeeper实现的屏障和生产-消费队列。我们分别称这些类为Barrier和Queue。这些例子假定你至少有一个运行的ZooKeeper服务。</p>
+<p>在这个指南中，使用展示了使用ZooKeeper实现的屏障和生产-消费队列。我们分别称这些类为Barrier和Queue。执行这些例子假定你至少有一个运行的ZooKeeper服务。</p>
 </div>
 <div class="paragraph">
 <p>两个原语都使用下面的代码片断:</p>
@@ -469,7 +469,7 @@ synchronized public void process(WatchedEvent event) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--2"><a class="anchor" href="#true--2"></a>屏障</h2>
+<h2 id="true-barrier"><a class="anchor" href="#true-barrier"></a>屏障(Barrier)</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>一个屏障是一个原语，它使一组进程可以同步地开始和结束一个计算。这种实现的总体思想是有一个barrier节点作为每一个进程节点的父节点。假如我们这个屏障节点为"/b1"。每一个进程"p"创建一个节点”/b1/p“。一旦有足够的进程已经创建的它们对象的节点，加入的进程可以开始计算。</p>
@@ -491,8 +491,7 @@ synchronized public void process(WatchedEvent event) {
 </ul>
 </div>
 <div class="paragraph">
-<p>Barrier的构造函数传递ZooKeeper服务端的地址给父类的构造器。父类创建一个ZooKeeper实例如果没有这个实例。Barrier的构造函数在ZooKeeper上创建一个节点，这个节点是所有进程节点的父节点，并且 我们称它为root(<strong>注意</strong>:它不是ZooKeeper的根"/").
-复制代码</p>
+<p>Barrier的构造函数传递ZooKeeper服务端的地址给父类的构造器。父类创建一个ZooKeeper实例如果没有这个实例。Barrier的构造函数在ZooKeeper上创建一个节点，这个节点是所有进程节点的父节点，并且 我们称它为root(<strong>注意</strong>:它不是ZooKeeper的根"/").</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -513,13 +512,10 @@ Barrier(String address, String root, int size) {
         try {
             Stat s = zk.exists(root, false);
             if (s == null) {
-                zk.create(root, new byte[0], Ids.OPEN_ACL_UNSAFE,
-                        CreateMode.PERSISTENT);
+                zk.create(root, new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
         } catch (KeeperException e) {
-            System.out
-                    .println("Keeper exception when instantiating queue: "
-                            + e.toString());
+            System.out.println("Keeper exception when instantiating queue: " + e.toString());
         } catch (InterruptedException e) {
             System.out.println("Interrupted exception");
         }
@@ -536,7 +532,7 @@ Barrier(String address, String root, int size) {
 </div>
 </div>
 <div class="paragraph">
-<p>为了进入屏障，一个进程调用enter()。一个进程在root下面创建一个节来代表它，用它的主机名来表示节点的名字。它然后等待直到足够的进程进入到屏障。一个进程通过用getChildren()检查root节点的孩子节点数量来实现。并且等待通知一旦它没有足够的孩子节点。为了收到一个通知当root节点改变的时候，一个进程不得不设置 一个监视器，并且通过调用"getChildren()"来实现。在代码中，我们的"getChildren()"方法有两个参数。第一个是那一个节点来读数据的，并且第二个是布尔标识使进程设置 一个监视器，在代码中标识是true.</p>
+<p>为了进入屏障，一个进程调用enter()。一个进程在root下面创建一个节来代表它，用它的主机名来表示节点的名字。它然后等待直到足够的进程进入到屏障。一个进程通过用getChildren()检查root节点的孩子节点数量来实现。并且等待通知一旦它没有足够的孩子节点。为了收到一个通知当root节点改变的时候，一个进程不得不设置 一个监视器，并且通过调用"getChildren()"来实现。在代码中，我们的"getChildren()"方法有两个参数。第一个是那一个节点来读数据的，并且第二个是布尔标识使进程设置 一个监视器，在代码中标识是true。</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -600,7 +596,7 @@ boolean leave() throws KeeperException, InterruptedException{
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--3"><a class="anchor" href="#true--3"></a>生产者-消费者队列</h2>
+<h2 id="true--2"><a class="anchor" href="#true--2"></a>生产者-消费者队列</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>一个生产者-消费者队列是一个数据分发结构，一组进程生产并且消费物品。生产者进程创建新的元素并且加入到队列。消费者进程从队列中删除元素，并且处理它们。在这个实现中，元素中简单的数字。队列被一个root节点表示，并且加入一个元素到这个队列，一个生产者进程创建一个新节点，root节点的孩子节点。</p>
@@ -714,7 +710,7 @@ int consume() throws KeeperException, InterruptedException{
 </div>
 </div>
 <div class="sect1">
-<h2 id="true--4"><a class="anchor" href="#true--4"></a>完整的源码列表</h2>
+<h2 id="true--3"><a class="anchor" href="#true--3"></a>完整的源码列表</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title">SyncPrimitive.Java</div>
@@ -1028,7 +1024,7 @@ public class SyncPrimitive implements Watcher {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-17 15:10:31
+Last updated 2017-08-18 10:20:02
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
