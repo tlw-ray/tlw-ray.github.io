@@ -1,0 +1,593 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>parameters.md</title><link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic&subset=latin,cyrillic-ext,cyrillic,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}.CodeMirror { height: auto; }
+.CodeMirror-scroll { overflow-y: hidden; overflow-x: auto; }
+.CodeMirror-lines { padding: 4px 0px; }
+.CodeMirror pre { }
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler { background-color: white; }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); background-color: rgb(247, 247, 247); white-space: nowrap; }
+.CodeMirror-linenumbers { }
+.CodeMirror-linenumber { padding: 0px 3px 0px 5px; text-align: right; color: rgb(153, 153, 153); }
+.CodeMirror div.CodeMirror-cursor { border-left: 1px solid black; z-index: 3; }
+.CodeMirror div.CodeMirror-secondarycursor { border-left: 1px solid silver; }
+.CodeMirror.cm-keymap-fat-cursor div.CodeMirror-cursor { width: auto; border: 0px; background: rgb(119, 238, 119); z-index: 1; }
+.CodeMirror div.CodeMirror-cursor.CodeMirror-overwrite { }
+.cm-tab { display: inline-block; }
+.cm-s-typora-default .cm-header, .cm-s-typora-default .cm-property { color: rgb(217, 79, 138); }
+.cm-s-typora-default pre.cm-header1:not(.cm-atom) :not(.cm-overlay) { font-size: 2rem; line-height: 2rem; }
+.cm-s-typora-default pre.cm-header2:not(.cm-atom) :not(.cm-overlay) { font-size: 1.4rem; line-height: 1.4rem; }
+.cm-s-typora-default .cm-atom, .cm-s-typora-default .cm-number { color: rgb(149, 132, 134); }
+.cm-s-typora-default .cm-table-row, .cm-s-typora-default .cm-block-start { font-family: monospace; }
+.cm-s-typora-default .cm-comment, .cm-s-typora-default .cm-code { color: rgb(74, 90, 159); font-family: monospace; }
+.cm-s-typora-default .cm-tag { color: rgb(169, 68, 66); }
+.cm-s-typora-default .cm-string { color: rgb(126, 134, 169); }
+.cm-s-typora-default .cm-link { color: rgb(196, 122, 15); text-decoration: underline; }
+.cm-s-typora-default .cm-variable-2, .cm-s-typora-default .cm-variable-1 { color: inherit; }
+.cm-s-typora-default .cm-overlay { font-size: 1rem; font-family: monospace; }
+.CodeMirror.cm-s-typora-default div.CodeMirror-cursor { border-left: 3px solid rgb(228, 98, 154); }
+.cm-s-typora-default .CodeMirror-activeline-background { left: -60px; right: -30px; background: rgba(204, 204, 204, 0.2); }
+.cm-s-typora-default .CodeMirror-gutters { border-right: none; background-color: inherit; }
+.cm-s-typora-default .cm-trailing-space-new-line::after, .cm-startspace::after, .cm-starttab .cm-tab::after { content: "•"; position: absolute; left: 0px; opacity: 0; font-family: LetterGothicStd, monospace; }
+.os-windows .cm-startspace::after, .os-windows .cm-starttab .cm-tab::after { left: -0.1em; }
+.cm-starttab .cm-tab::after { content: " "; }
+.cm-startspace, .cm-tab, .cm-starttab, .cm-trailing-space-a, .cm-trailing-space-b, .cm-trailing-space-new-line { font-family: monospace; position: relative; }
+.cm-s-typora-default .cm-trailing-space-new-line::after { content: "↓"; opacity: 0.3; }
+.cm-s-inner .cm-keyword { color: rgb(119, 0, 136); }
+.cm-s-inner .cm-atom, .cm-s-inner.cm-atom { color: rgb(34, 17, 153); }
+.cm-s-inner .cm-number { color: rgb(17, 102, 68); }
+.cm-s-inner .cm-def { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-variable { color: black; }
+.cm-s-inner .cm-variable-2 { color: rgb(0, 85, 170); }
+.cm-s-inner .cm-variable-3 { color: rgb(0, 136, 85); }
+.cm-s-inner .cm-property { color: black; }
+.cm-s-inner .cm-operator { color: rgb(152, 26, 26); }
+.cm-s-inner .cm-comment, .cm-s-inner.cm-comment { color: rgb(170, 85, 0); }
+.cm-s-inner .cm-string { color: rgb(170, 17, 17); }
+.cm-s-inner .cm-string-2 { color: rgb(255, 85, 0); }
+.cm-s-inner .cm-meta { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-qualifier { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-builtin { color: rgb(51, 0, 170); }
+.cm-s-inner .cm-bracket { color: rgb(153, 153, 119); }
+.cm-s-inner .cm-tag { color: rgb(17, 119, 0); }
+.cm-s-inner .cm-attribute { color: rgb(0, 0, 204); }
+.cm-s-inner .cm-header, .cm-s-inner.cm-header { color: blue; }
+.cm-s-inner .cm-quote, .cm-s-inner.cm-quote { color: rgb(0, 153, 0); }
+.cm-s-inner .cm-hr, .cm-s-inner.cm-hr { color: rgb(153, 153, 153); }
+.cm-s-inner .cm-link, .cm-s-inner.cm-link { color: rgb(0, 0, 204); }
+.cm-negative { color: rgb(221, 68, 68); }
+.cm-positive { color: rgb(34, 153, 34); }
+.cm-header, .cm-strong { font-weight: bold; }
+.cm-del { text-decoration: line-through; }
+.cm-em { font-style: italic; }
+.cm-link { text-decoration: underline; }
+.cm-error { color: rgb(255, 0, 0); }
+.cm-invalidchar { color: rgb(255, 0, 0); }
+.cm-constant { color: rgb(38, 139, 210); }
+.cm-defined { color: rgb(181, 137, 0); }
+div.CodeMirror span.CodeMirror-matchingbracket { color: rgb(0, 255, 0); }
+div.CodeMirror span.CodeMirror-nonmatchingbracket { color: rgb(255, 34, 34); }
+.cm-s-inner .CodeMirror-activeline-background { background: inherit; }
+.CodeMirror { position: relative; overflow: hidden; }
+.CodeMirror-scroll { margin-bottom: -30px; margin-right: -30px; padding-bottom: 30px; padding-right: 30px; height: 100%; outline: none; position: relative; box-sizing: content-box; }
+.CodeMirror-sizer { position: relative; }
+.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler { position: absolute; z-index: 6; display: none; }
+.CodeMirror-vscrollbar { right: 0px; top: 0px; overflow-x: hidden; overflow-y: scroll; }
+.CodeMirror-hscrollbar { bottom: 0px; left: 0px; overflow-y: hidden; overflow-x: scroll; }
+.CodeMirror-scrollbar-filler { right: 0px; bottom: 0px; }
+.CodeMirror-gutter-filler { left: 0px; bottom: 0px; }
+.CodeMirror-gutters { position: absolute; left: 0px; top: 0px; padding-bottom: 30px; z-index: 3; }
+.CodeMirror-gutter { white-space: normal; height: 100%; box-sizing: content-box; padding-bottom: 30px; margin-bottom: -32px; display: inline-block; }
+.CodeMirror-gutter-elt { position: absolute; cursor: default; z-index: 4; }
+.CodeMirror-lines { cursor: text; }
+.CodeMirror pre { border-radius: 0px; border-width: 0px; background: transparent; font-family: inherit; font-size: inherit; margin: 0px; white-space: pre; word-wrap: normal; color: inherit; z-index: 2; position: relative; overflow: visible; }
+.CodeMirror-wrap pre { word-wrap: break-word; white-space: pre-wrap; word-break: normal; }
+.CodeMirror-code pre { border-right: 30px solid transparent; width: fit-content; }
+.CodeMirror-wrap .CodeMirror-code pre { border-right: none; width: auto; }
+.CodeMirror-linebackground { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 0; }
+.CodeMirror-linewidget { position: relative; z-index: 2; overflow: auto; }
+.CodeMirror-widget { }
+.CodeMirror-wrap .CodeMirror-scroll { overflow-x: hidden; }
+.CodeMirror-measure { position: absolute; width: 100%; height: 0px; overflow: hidden; visibility: hidden; }
+.CodeMirror-measure pre { position: static; }
+.CodeMirror div.CodeMirror-cursor { position: absolute; visibility: hidden; border-right: none; width: 0px; }
+.CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+.CodeMirror-focused div.CodeMirror-cursor { visibility: inherit; }
+.CodeMirror-selected { background: rgb(217, 217, 217); }
+.CodeMirror-focused .CodeMirror-selected { background: rgb(215, 212, 240); }
+.cm-searching { background: rgba(255, 255, 0, 0.4); }
+.CodeMirror span { }
+@media print {
+  .CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+}
+.CodeMirror-lint-markers { width: 16px; }
+.CodeMirror-lint-tooltip { background-color: infobackground; border: 1px solid black; border-radius: 4px; color: infotext; font-family: monospace; overflow: hidden; padding: 2px 5px; position: fixed; white-space: pre-wrap; z-index: 10000; max-width: 600px; opacity: 0; transition: opacity 0.4s; font-size: 0.8em; }
+.CodeMirror-lint-mark-error, .CodeMirror-lint-mark-warning { background-position: left bottom; background-repeat: repeat-x; }
+.CodeMirror-lint-mark-error { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAYAAAC09K7GAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sJDw4cOCW1/KIAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAAHElEQVQI12NggIL/DAz/GdA5/xkY/qPKMDAwAADLZwf5rvm+LQAAAABJRU5ErkJggg=="); }
+.CodeMirror-lint-marker-error, .CodeMirror-lint-marker-warning { background-position: center center; background-repeat: no-repeat; cursor: pointer; display: inline-block; height: 16px; width: 16px; vertical-align: middle; position: relative; }
+.CodeMirror-lint-message-error, .CodeMirror-lint-message-warning { padding-left: 18px; background-position: left top; background-repeat: no-repeat; }
+.CodeMirror-lint-marker-error, .CodeMirror-lint-message-error { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAHlBMVEW7AAC7AACxAAC7AAC7AAAAAAC4AAC5AAD///+7AAAUdclpAAAABnRSTlMXnORSiwCK0ZKSAAAATUlEQVR42mWPOQ7AQAgDuQLx/z8csYRmPRIFIwRGnosRrpamvkKi0FTIiMASR3hhKW+hAN6/tIWhu9PDWiTGNEkTtIOucA5Oyr9ckPgAWm0GPBog6v4AAAAASUVORK5CYII="); }
+.CodeMirror-lint-marker-warning, .CodeMirror-lint-message-warning { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAANlBMVEX/uwDvrwD/uwD/uwD/uwD/uwD/uwD/uwD/uwD6twD/uwAAAADurwD2tQD7uAD+ugAAAAD/uwDhmeTRAAAADHRSTlMJ8mN1EYcbmiixgACm7WbuAAAAVklEQVR42n3PUQqAIBBFUU1LLc3u/jdbOJoW1P08DA9Gba8+YWJ6gNJoNYIBzAA2chBth5kLmG9YUoG0NHAUwFXwO9LuBQL1giCQb8gC9Oro2vp5rncCIY8L8uEx5ZkAAAAASUVORK5CYII="); }
+.CodeMirror-lint-marker-multiple { background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAMAAADzjKfhAAAACVBMVEUAAAAAAAC/v7914kyHAAAAAXRSTlMAQObYZgAAACNJREFUeNo1ioEJAAAIwmz/H90iFFSGJgFMe3gaLZ0od+9/AQZ0ADosbYraAAAAAElFTkSuQmCC"); background-repeat: no-repeat; background-position: right bottom; width: 100%; height: 100%; }
+
+
+html { font-size: 14px; background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { background: rgb(181, 214, 252); text-shadow: none; }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; padding-bottom: 70px; white-space: pre-wrap; overflow-x: visible; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+.typora-export #write { margin: 0px auto; }
+#write > p:first-child, #write > ul:first-child, #write > ol:first-child, #write > pre:first-child, #write > blockquote:first-child, #write > div:first-child, #write > table:first-child { margin-top: 30px; }
+#write li > table:first-child { margin-top: -20px; }
+img { max-width: 100%; vertical-align: middle; }
+input, button, select, textarea { color: inherit; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+::before, ::after, * { box-sizing: border-box; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write div, #write pre { width: inherit; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6 { position: relative; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+p { -webkit-margin-before: 1rem; -webkit-margin-after: 1rem; -webkit-margin-start: 0px; -webkit-margin-end: 0px; }
+.mathjax-block { margin-top: 0px; margin-bottom: 0px; -webkit-margin-before: 0rem; -webkit-margin-after: 0rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: bold; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.701961); color: rgb(85, 85, 85); border-radius: 4px; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; margin: 4px 0px 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 80px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+pre { white-space: pre-wrap; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+.md-fences .CodeMirror.CodeMirror-wrap { top: -1.6em; margin-bottom: -1.6em; }
+.md-fences.mock-cm { white-space: pre-wrap; }
+.show-fences-line-number .md-fences { padding-left: 0px; }
+.show-fences-line-number .md-fences.mock-cm { padding-left: 40px; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; padding-top: 1em; padding-bottom: 1em; }
+.footnotes + .footnotes { margin-top: -1em; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: transparent; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: normal; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li p, li .mathjax-block { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; }
+@media print {
+  html, body { height: 100%; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid-page; orphans: 2; }
+  p { orphans: 4; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 1cm; padding-right: 1cm; }
+  .typora-export #write::after { height: 0px; }
+  @page { margin: 20mm 0mm; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 2.86rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p .md-image:only-child { display: inline-block; width: 100%; text-align: center; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.mathjax-block { white-space: pre; overflow: hidden; width: 100%; }
+p + .mathjax-block { margin-top: -1.143rem; }
+.mathjax-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: none; box-shadow: none; }
+.task-list { list-style-type: none; }
+.task-list-item { position: relative; padding-left: 1em; }
+.task-list-item input { position: absolute; top: 0px; left: 0px; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc::after, .md-toc-content::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); text-decoration: none; }
+.md-toc-inner:hover { }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: bold; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+.md-tag { opacity: 0.5; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: monospace; }
+code { text-align: left; }
+h1 .md-tag, h2 .md-tag, h3 .md-tag, h4 .md-tag, h5 .md-tag, h6 .md-tag { font-weight: initial; opacity: 0.35; }
+a.md-print-anchor { border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: none !important; background: transparent !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.mathjax-block .MathJax_SVG_Display { text-align: center; margin: 1em 0em; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: monospace; }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: normal; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none; }
+
+
+@font-face { font-family: "PT Serif"; font-style: normal; font-weight: normal; src: local("PT Serif"), local("PTSerif-Regular"), url("./newsprint/PT_Serif-Web-Regular.ttf"); }
+@font-face { font-family: "PT Serif"; font-style: italic; font-weight: normal; src: local("PT Serif"), local("PTSerif-Italic"), url("./newsprint/PT_Serif-Web-Italic.ttf"); }
+@font-face { font-family: "PT Serif"; font-style: normal; font-weight: bold; src: local("PT Serif"), local("PTSerif-Bold"), url("./newsprint/PT_Serif-Web-Bold.ttf"); }
+@font-face { font-family: "PT Serif"; font-style: italic; font-weight: bold; src: local("PT Serif"), local("PTSerif-BoldItalic"), url("./newsprint/PT_Serif-Web-BoldItalic.ttf"); }
+html { font-size: 16px; }
+html, body { background-color: rgb(243, 242, 238); font-family: "PT Serif", "Times New Roman", Times; color: rgb(31, 9, 9); line-height: 1.5em; }
+#write { max-width: 40em; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote::before, blockquote::after, q::before, q::after { content: none; }
+table { border-collapse: collapse; border-spacing: 0px; }
+h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+h1 { font-size: 1.875em; line-height: 1.6em; margin-top: 2em; }
+h2, h3 { font-size: 1.3125em; line-height: 1.15; margin-top: 2.28571em; margin-bottom: 1.15em; }
+h3 { font-weight: normal; }
+h4 { font-size: 1.125em; margin-top: 2.67em; }
+h5, h6 { font-size: 1em; }
+h1 { border-bottom: 1px solid; margin-bottom: 1.875em; padding-bottom: 0.8125em; }
+a { text-decoration: none; color: rgb(6, 85, 136); }
+a:hover, a:active { text-decoration: underline; }
+p, blockquote, .md-fences { margin-bottom: 1.5em; }
+h1, h2, h3, h4, h5, h6 { margin-bottom: 1.5em; }
+blockquote { font-style: italic; border-left: 5px solid; margin-left: 2em; padding-left: 1em; }
+ul, ol { margin: 0px 0px 1.5em 1.5em; }
+ol li { list-style-type: decimal; list-style-position: outside; }
+ul li { list-style-type: disc; list-style-position: outside; }
+.md-meta, .md-before, .md-after { color: rgb(153, 153, 153); }
+table { margin-bottom: 1.5em; font-size: 1em; }
+thead th, tfoot th { padding: 0.25em 0.25em 0.25em 0.4em; text-transform: uppercase; }
+th { text-align: left; }
+td { vertical-align: top; padding: 0.25em 0.25em 0.25em 0.4em; }
+code, .md-fences { background-color: rgb(218, 218, 218); padding-left: 1ch; padding-right: 1ch; }
+.md-fences { margin-left: 2em; margin-bottom: 3em; }
+.md-fences .CodeMirror.CodeMirror-wrap { top: -0.8em; }
+pre, code, tt { font-size: 0.875em; line-height: 1.71429em; }
+h1 { line-height: 1.3em; font-weight: normal; margin-bottom: 0.5em; }
+p + ul, p + ol { margin-top: -1em; }
+h3 + ul, h4 + ul, h5 + ul, h6 + ul, h3 + ol, h4 + ol, h5 + ol, h6 + ol { margin-top: 0.5em; }
+li > ul, li > ol { margin-top: inherit; }
+h2, h3 { margin-bottom: 0.75em; }
+hr { border-top: none; border-right: none; border-bottom: 1px solid; border-left: none; }
+h1 { border-color: rgb(197, 197, 197); }
+blockquote { border-color: rgb(186, 186, 186); color: rgb(101, 101, 101); }
+thead.md-table-edit { background-color: transparent; }
+thead { background-color: rgb(218, 218, 218); }
+tr:nth-child(2n) { background: rgb(232, 231, 231); }
+hr { border-color: rgb(197, 197, 197); }
+.task-list { padding-left: 1rem; }
+.task-list-item { padding-left: 1.5rem; list-style-type: none; }
+.task-list-item input::before { content: "√"; display: inline-block; width: 1.25rem; height: 1.6rem; vertical-align: middle; text-align: center; color: rgb(221, 221, 221); background-color: rgb(243, 242, 238); }
+.task-list-item input:checked::before, .task-list-item input[checked]::before { color: inherit; }
+#write pre.md-meta-block { min-height: 1.875rem; color: rgb(85, 85, 85); border: 0px; background: transparent; margin-left: 1em; margin-top: 1em; }
+.md-image > .md-meta { color: rgb(155, 81, 70); }
+.md-image > .md-meta { font-family: Menlo, "Ubuntu Mono", Consolas, "Courier New", "Microsoft Yahei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif; }
+#write > h3.md-focus::before { left: -1.5rem; color: rgb(153, 153, 153); border-color: rgb(153, 153, 153); }
+#write > h4.md-focus::before { left: -1.5rem; top: 0.25rem; color: rgb(153, 153, 153); border-color: rgb(153, 153, 153); }
+#write > h5.md-focus::before { left: -1.5rem; color: rgb(153, 153, 153); border-color: rgb(153, 153, 153); }
+#write > h6.md-focus::before { left: -1.5rem; top: 0.3125rem; color: rgb(153, 153, 153); border-color: rgb(153, 153, 153); }
+.md-toc:focus .md-toc-content { margin-top: 19px; }
+.md-toc-content:empty::before { color: rgb(6, 85, 136); }
+.md-toc-item { color: rgb(6, 85, 136); }
+#write div.md-toc-tooltip { background-color: rgb(243, 242, 238); }
+#outline-dropmenu { background-color: rgb(243, 242, 238); box-shadow: rgba(0, 0, 0, 0.372549) 0px 6px 12px; }
+.pin-outline #outline-dropmenu { background: inherit; box-shadow: none; border-right: 1px dashed; }
+.pin-outline #outline-dropmenu:hover .outline-title-wrapper { border-left: 1px dashed; }
+.outline-item:hover { background-color: rgb(218, 218, 218); border-left: 28px solid rgb(218, 218, 218); border-right: 18px solid rgb(218, 218, 218); }
+.typora-node .outline-item:hover { border-right: 28px solid rgb(218, 218, 218); }
+.outline-expander::before { content: ""; font-family: FontAwesome; font-size: 14px; top: 1px; }
+.outline-expander:hover::before, .outline-item-open > .outline-item > .outline-expander::before { content: ""; }
+.modal-content { background-color: rgb(243, 242, 238); }
+.auto-suggest-container ul li { list-style-type: none; }
+.megamenu-menu, #top-titlebar, #top-titlebar *, .megamenu-content { background: rgb(243, 242, 238); color: rgb(31, 9, 9); }
+.megamenu-menu-header { border-bottom: 1px dashed rgb(32, 43, 51); }
+.megamenu-menu { box-shadow: none; border-right: 1px dashed; }
+header, .context-menu, .megamenu-content, footer { font-family: "PT Serif", "Times New Roman", Times; color: rgb(31, 9, 9); }
+#megamenu-back-btn { color: rgb(31, 9, 9); border-color: rgb(31, 9, 9); }
+.megamenu-menu-header #megamenu-menu-header-title::before { color: rgb(31, 9, 9); }
+.megamenu-menu-list li a:hover, .megamenu-menu-list li a.active { color: inherit; background-color: rgb(232, 231, 223); }
+.long-btn:hover { background-color: rgb(232, 231, 223); }
+#recent-file-panel tbody tr:nth-child(2n-1) { background-color: transparent !important; }
+.megamenu-menu-panel tbody tr:hover td:nth-child(2) { color: inherit; }
+.megamenu-menu-panel .btn { background-color: rgb(210, 209, 209); }
+.btn-default { background-color: transparent; }
+.typora-sourceview-on #toggle-sourceview-btn, .show-word-count #footer-word-count { background: rgb(199, 197, 197); }
+#typora-quick-open { background-color: inherit; }
+.md-diagram-panel { margin-left: -1ch; margin-top: 24px; }
+
+
+
+
+
+
+</style>
+</head>
+<body class='typora-export' >
+<div  id='write'  class = 'is-node'><h2><a name='header-n0' class='md-header-anchor '></a>描述参数</h2><p>在Swagger中，API操作参数在操作定义的<code>parameters</code>部分定义。每个参数都有名称<code>name</code>，值类型<code>type</code>（用于原始值类型参数）或<code>schema</code>（对于请求体）和可选的<code>description</code>。例如：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /users/{userId}:
+    get:
+      summary: Gets a user by ID.
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          required: true
+          description: Numeric ID of the user to get.</pre><p>请注意，<code>parameters</code>是一个数组，所以在YAML中，每个参数定义都必须在前面加上一个破折号（<code>-</code>）。</p><h3><a name='header-n7' class='md-header-anchor '></a>参数类型</h3><p>Swagger根据参数位置区分以下参数类型。该位置由参数的<code>in</code>键确定，例如<code>in: query</code>或<code>in: path</code>。</p><ul><li><a href='#header-n26'>查询参数</a>，如<code>/users?role=admin</code></li><li><a href='#header-n37'>路径参数</a>，如<code>/ users/{id}</code></li><li><a href='#header-n50'>头参数</a>，如<code>X-MyHeader: Value</code></li><li>body参数描述POST，PUT和PATCH请求的主体（请参阅<a href='request-body.html'>描述请求体</a>）</li><li><a href='#header-n77'>表单参数</a> - 各种body参数用于描述带有<code>application/x-www-form-urlencoded</code>和<code>multipart/form-data</code>这样的<code>Content-Type</code>的请求的有效载荷（后者通常用于<a href='file-upload.html'>文件上传</a>）</li></ul><h3><a name='header-n26' class='md-header-anchor '></a>查询参数</h3><p>查询参数是最常见的参数类型。请求URL的尾部跟随一个问号（<code>?</code>），问号后面跟随不同的<code>name=value</code>对，其间由&amp;符号分隔（<code>&amp;</code>）。查询参数可以是必要或可选的。例如：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /pets/findByStatus?status=available
+GET /notes?offset=100&amp;limit=50</pre><p>使用<code>in: query</code>来表示查询参数：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>     parameters:
+        - in: query
+          name: offset
+          type: integer
+          description: The number of items to skip before starting to collect the result set.
+        - in: query
+          name: limit
+          type: integer
+          description: The numbers of items to return.</pre><p>查询参数仅支持基本类型。可以包含一个<code>array</code>，但<code>items</code>必须是原始值类型。不支持对象。</p><p><strong>注意：</strong> 要描述作为查询参数传递的API键，请改用安全性定义。请参阅<a href='authentication/api-keys.html'>API密钥</a>。</p><h3><a name='header-n37' class='md-header-anchor '></a>路径参数</h3><p>路径参数是可以变化的URL路径的组件。它们通常用于指向集合中的特定资源，例如由ID标识的用户。 URL可以有几个路径参数，每个路径参数都用大括号<code>{}</code>表示。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /users/{id}
+GET /cars/{carId}/drivers/{driverId}</pre><p>当客户端进行API调用时，每个路径参数都必须用实际值代替。</p><p>在Swagger中，根据需要使用<code>in：path</code>或其他属性定义路径参数。参数名称必须与路径中指定的相同。此外，请记住添加<code>required: true</code>，因为路径参数总是必须的。</p><p>以下是<code>GET /users/{id}</code>的示例：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /users/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id   # Note the name is the same as in the path
+          required: true
+          type: integer
+          minimum: 1
+          description: The user ID.
+       responses:
+         200:
+           description: OK</pre><p>路径参数可以是多值的，例如<code>GET /users/12,34,56</code>。这是通过将参数类型指定为“array”来实现的。请参见下面的<a href='#array-and-multi-value-parameters'>数组和多值参数</a>。</p><h3><a name='header-n50' class='md-header-anchor '></a>头参数</h3><p>API调用可能需要使用HTTP请求发送自定义标头(Head Parameter)。Swagger可以将自定义请求标头定义为<code>in: header</code>参数。</p><p>例如，假设对<code>GET /ping</code>的调用需要<code>X-Request-ID</code>头：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /ping HTTP/1.1
+Host: example.com
+X-Request-ID: 77e1c83b-7bb0-437b-bc50-a7a58e5660ac</pre><p>在Swagger中，将定义此操作如下：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /ping:
+    get:
+      summary: Checks if the server is alive.
+      parameters:
+        - in: header
+          name: X-Request-ID
+          type: string
+          required: true</pre><p>以类似的方式，可以定义<a href='#header-n50'>自定义响应标头</a>。</p><p><strong>注意：</strong> Swagger规范对某些标题有特殊关键字：</p><table><thead><tr><th>标题</th><th>Swagger关键字</th><th>有关更多信息，请参阅...</th></tr></thead><tbody><tr><td><code>Content-Type</code></td><td><code>consumes</code>, <code>produces</code></td><td><a href='mime-types.html'>MIME Types</a></td></tr><tr><td><code>Authorization</code></td><td><code>securityDefinitions</code>, <code>security</code></td><td><a href='authentication/index.html'>Authentication</a></td></tr></tbody></table><h3><a name='header-n77' class='md-header-anchor '></a>表单参数</h3><p>表单(Form Parameters)参数用于描述具有以下内容的<code>Content-Type</code>的请求的有效内容：</p><ul><li><code>application/x-www-form-urlencoded</code>（用于POST原始值和原始值的数组）。</li><li><code>multipart/form-data</code>（用于上传文件或文件和原始数据的组合）。</li></ul><p>也就是说，操作的<code>consumes</code>属性必须指定这些内容类型之一。</p><p>表单参数定义为<code>in: formData</code>。它们只能是基元（字符串，数字，布尔值）或基元数组（意味着不能使用<code>$ref</code>作为<code>items</code>值）。此外，表单参数不能与<code>in: body</code>参数共存，因为<code>formData</code>是描述正文的一种特定方式。</p><p>为了说明表单参数，请考虑使用HTML POST表单：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>&lt;form action=&quot;http://example.com/survey&quot; method=&quot;post&quot;&gt;
+  &lt;input type=&quot;text&quot;   name=&quot;name&quot; /&gt;
+  &lt;input type=&quot;number&quot; name=&quot;fav_number&quot; /&gt;
+  &lt;input type=&quot;submit&quot;/&gt;
+ &lt;/form&gt;</pre><p>此表单将数据POST到表单的端点：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>POST /survey HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 29
+
+name=Amy+Smith&amp;fav_number=321</pre><p>在Swagger中，可以如下描述端点(endpoint)：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /survey:
+    post:
+      summary: A sample survey.
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: name
+          type: string
+          description: A person&#39;s name.
+        - in: formData
+          name: fav_number
+          type: number
+          description: A person&#39;s favorite number.
+      responses:
+        200:
+          description: OK</pre><p>要了解如何定义文件上传的表单参数，请参阅<a href='file-upload.html'>文件上传</a>。</p><h3><a name='header-n102' class='md-header-anchor '></a>必需和可选参数</h3><p>默认情况下，Swagger将所有请求参数视为可选的。可以根据需要添加<code>required: true</code>来标记必选参数。请注意，路径参数必须具有<code>required: true</code>，因为它们始终是必需的。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>      parameters:
+        - in: path
+          name: userId
+          type: integer
+          required: true    # &lt;----------
+          description: Numeric ID of the user to get.</pre><h3><a name='header-n106' class='md-header-anchor '></a>默认参数值</h3><p>可以使用<code>default</code>键指定可选参数的默认值。如果客户端没有在请求中提供参数值，则默认值是服务器使用的值。值类型必须与参数的数据类型相同。</p><p>一个典型的例子是分页参数，如偏移和限量：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /users
+GET /users?offset=30&amp;limit=10</pre><p>假设offset默认为0，默认值为20，范围为0到100，您可以将这些参数定义为：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>      parameters:
+        - in: query
+          name: offset
+          type: integer
+          required: false
+          default: 0
+          minimum: 0
+          description: The number of items to skip before starting to collect the result set.
+        - in: query
+          name: limit
+          type: integer
+          required: false
+          default: 20
+          minimum: 1
+          maximum: 100
+          description: The numbers of items to return.</pre><h4><a name='header-n115' class='md-header-anchor '></a>常见错误</h4><p>使用<code>default</code>关键字时有两个常见的错误：</p><ul><li>使用<code>default</code>与<code>required</code>参数或属性，例如，使用路径参数。这没有意义 - 如果需要值，客户端必须始终发送它，并且不会使用默认值。</li><li>使用<code>default</code>指定一个样本值。这不是默认的使用，可能会导致某些Swagger工具中的意外行为。该规范的某些元素支持<code>example</code>或<code>examples</code>关键字用于此目的。请参阅<a href='provide-example-values.html'>提供示例值</a>。</li></ul><h3><a name='header-n125' class='md-header-anchor '></a>枚举参数</h3><p><code>enum</code>关键字可以将参数值限制为一组固定值。枚举值必须与参数<code>type</code>具有相同的类型。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>        - in: query
+          name: status
+          type: string
+          enum: [available, pending, sold]</pre><p>更多信息：<a href='enums.html'>定义枚举</a>。</p><h3><a name='header-n131' class='md-header-anchor '></a>数组和多值参数</h3><p>路径，查询，标题和表单参数可以接受值列表，例如：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /users/12,34,56,78
+GET /resource?param=value1,value2,value3
+GET /resource?param=value1&amp;param=value2&amp;param=value3
+
+POST /resource
+param=value1&amp;param=value2</pre><p>多值参数必须用<code>type：array</code>和适当的<code>collectionFormat</code>定义。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>      # color=red,black,white
+      parameters:
+        - in: query
+          name: color
+          type: array
+          collectionFormat: csv
+          items:
+            type: string</pre><p><code>collectionFormat</code>指定数组格式（具有多个参数的单个参数或具有相同名称的多个参数）和数组项的分隔符。</p><table><thead><tr><th>collectionFormat</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td><code>csv</code>（默认）</td><td>逗号分隔值。</td><td><code>foo,bar,baz</code></td></tr><tr><td><code>ssv</code></td><td>空格分隔值。</td><td><code>foo bar baz</code></td></tr><tr><td><code>tsv</code></td><td>制表符分隔值。</td><td><code>&quot;foo\tbar\tbaz&quot;</code></td></tr><tr><td><code>pipes</code></td><td>管道分隔值。</td><td><code>foo|bar|baz</code></td></tr><tr><td><code>multi</code></td><td>多个参数实例，而不是多个值。这仅适用于<code>in: query</code>和<code>in: formData</code>参数。</td><td><code>foo=value&amp;foo=another_value</code></td></tr></tbody></table><p>此外，还可以：</p><ul><li>使用<code>minItems</code>和<code>maxItems</code>来控制数组的大小，</li><li>强制执行<code>uniqueItems</code>，</li><li>将数组项限制为一组固定的<code>enum</code>。</li></ul><p>例如：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>        - in: query
+          name: color
+          required: false
+          type: array
+          minItems: 1
+          maxItems: 5
+          uniqueItems: true
+          items:
+            type: string
+            enum: [black, white, gray, red, pink, orange, yellow, green, blue, purple, brown]</pre><p>如果省略此参数，还可以指定服务器将使用的默认数组：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>        - in: query
+          name: sort
+          required: false
+          type: array
+          items:
+            type: string
+          default: [&quot;-modified&quot;, &quot;+id&quot;]</pre><h3><a name='header-n184' class='md-header-anchor '></a>常量参数</h3><p>可以将常量参数定义为只有一个可能值的必需参数：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>- required: true
+  enum: [value]</pre><p><code>enum</code>属性指定可能的值。在此示例中，只能使用一个值，这将是Swagger UI中唯一可供用户选择的值。</p><p><strong>注意：</strong> 常数参数与<a href='#default-parameter-values'>默认参数值</a>不同。常量参数始终由客户端发送，而如果参数不是由客户端发送，则默认值是服务器使用的值。</p><h3><a name='header-n192' class='md-header-anchor '></a>没有值的参数</h3><p>查询字符串和表单数据参数可能只能有一个名字，没有值：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /foo?metadata
+
+POST /something
+foo&amp;bar&amp;baz</pre><p>使用<code>allowEmptyValue</code>来描述这样的参数：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>        - in: query
+          name: metadata
+          required: true
+          type: boolean
+          allowEmptyValue: true  # &lt;-----</pre><h3><a name='header-n199' class='md-header-anchor '></a>常用参数</h3><h4><a name='header-n200' class='md-header-anchor '></a>路径的所有方法的通用参数</h4><p>参数可以在路径本身下定义，在这种情况下，参数存在于此路径下描述的所有操作中。一个典型的例子是操作通过路径参数访问的相同资源的GET/PUT/PATCH/DELETE操作。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /user/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: The user ID.
+
+    get:
+      summary: Gets a user by ID.
+      ...
+    patch:
+      summary: Updates an existing user with the specified ID.
+      ...
+    delete:
+      summary: Deletes the user with the specified ID.
+      ...</pre><p>在操作级别定义的任何额外参数与路径级参数一起使用：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: The user ID.
+
+    # GET/users/{id}?metadata=true
+    get:
+      summary: Gets a user by ID.
+      # Note we only define the query parameter, because the {id} is defined at the path level.
+      parameters:
+        - in: query
+          name: metadata
+          type: boolean
+          required: false
+          description: If true, the endpoint returns only the user metadata.
+      responses:
+        200:
+          description: OK</pre><p>可以在操作级别覆盖特定路径级别的参数，但无法将其删除。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: The user ID.
+
+    # DELETE /users/{id} - uses a single ID.
+    # Reuses the {id} parameter definition from the path level.
+    delete:
+      summary: Deletes the user with the specified ID.
+      responses:
+        204:
+          description: User was deleted.
+
+    # GET /users/id1,id2,id3 - uses one or more user IDs.
+    # Overrides the path-level {id} parameter.
+    get:
+      summary: Gets one or more users by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: A comma-separated list of user IDs.
+          type: array
+          items:
+            type: integer
+          collectionFormat: csv
+          minItems: 1
+      responses:
+        200:
+          description: OK</pre><h4><a name='header-n210' class='md-header-anchor '></a>不同路径中的公共参数</h4><p>不同的API路径可能具有一些常见参数，例如分页参数。可以在全局<code>parameters</code>部分定义公共参数，并通过<code>$ref</code>在各个操作中引用它们。</p><pre class='md-fences mock-cm' style='display:block;position:relative'>parameters:
+  offsetParam:  # &lt;-- Arbitrary name for the definition that will be used to refer to it.
+                # Not necessarily the same as the parameter name.
+    in: query
+    name: offset
+    required: false
+    type: integer
+    minimum: 0
+    description: The number of items to skip before starting to collect the result set.
+  limitParam:
+    in: query
+    name: limit
+    required: false
+    type: integer
+    minimum: 1
+    maximum: 50
+    default: 20
+    description: The numbers of items to return.
+paths:
+  /users:
+    get:
+      summary: Gets a list of users.
+      parameters:
+        - $ref: &#39;#/parameters/offsetParam&#39;
+        - $ref: &#39;#/parameters/limitParam&#39;
+      responses:
+        200:
+          description: OK
+  /teams:
+    get:
+      summary: Gets a list of teams.
+      parameters:
+        - $ref: &#39;#/parameters/offsetParam&#39;
+        - $ref: &#39;#/parameters/limitParam&#39;
+      responses:
+        200:
+          description: OK</pre><p>请注意，全局<code>parameters</code>不适用于所有操作的参数 - 它们只是可以轻松重用的全局定义。</p><h3><a name='header-n216' class='md-header-anchor '></a>参数依赖关系</h3><p>Swagger不支持参数依赖和互斥参数。在<a href='https://github.com/OAI/OpenAPI-Specification/issues/256' target='_blank' >https://github.com/OAI/OpenAPI-Specification/issues/256</a>](<a href='https://github.com/OAI/OpenAPI-Specification/issues/256' target='_blank' >https://github.com/OAI/OpenAPI-Specification/issues/256</a>)上有一个开放的功能要求。</p><p>可以做的是记录参数描述中的限制，并定义400错误请求响应中的逻辑。</p><p>例如，考虑接受相对日期范围（<code>rdate</code>）或确切范围（<code>start_date</code> +<code>end_date</code>）的<code>/report</code>端点：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>GET /report?rdate=Today
+GET /report?start_date=2016-11-15&amp;end_date=2016-11-20</pre><p>可以如下描述此端点：</p><pre class='md-fences mock-cm' style='display:block;position:relative'>paths:
+  /report:
+    get:
+      parameters:
+        - name: rdate
+          in: query
+          type: string
+          description: &gt;
+             A relative date range for the report, such as `Today` or `LastWeek`.
+             For an exact range, use `start_date` and `end_date` instead.
+        - name: start_date
+          in: query
+          type: string
+          format: date
+          description: &gt;
+            The start date for the report. Must be used together with `end_date`.
+            This parameter is incompatible with `rdate`.
+        - name: end_date
+          in: query
+          type: string
+          format: date
+          description: &gt;
+            The end date for the report. Must be used together with `start_date`.
+            This parameter is incompatible with `rdate`.
+      responses:
+        400:
+          description: Either `rdate` or `start_date`+`end_date` are required.</pre><h3><a name='header-n227' class='md-header-anchor '></a>FAQ</h3><p><strong>什么时候应该使用“type”与“schema”？</strong></p><p>模式仅与<code>in: body</code>参数一起使用。任何其他参数都需要一个原始类型，例如<code>type: string</code>或&#39;array&#39;的基元。</p><p><strong>可以将对象作为查询参数吗？</strong></p><p>否。查询参数仅支持基元类型和数组。</p></div>
+</body>
+</html>
