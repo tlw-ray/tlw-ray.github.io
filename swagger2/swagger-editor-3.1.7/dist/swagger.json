@@ -1,0 +1,332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "卫宁健康服务平台-接口描述，提供描述、生产、消费和可视化RESTful Web Service。打造一个标准的、语言无关REST API接口，通过它计算机和人类无需阅读代码、文档或者监测网络流量就能发现并理解Web 服务。使用平台提供合适的定义，消费者只要提供最小的逻辑实现就可以与远程服务进行交互。与底层编程接口的实现类似，在调用服务中避免了猜测的过程。",
+    "version": "1.0.0",
+    "title": "卫宁服务平台-接口描述",
+    "contact": {
+      "name": "联系开发者",
+      "email": "tlw@winning.com.cn"
+    },
+    "license": {
+      "name": "卫宁健康科技-软件开发许可协议 v1.0",
+      "url": "http://www.winning.com/licenses/LICENSE-1.0.html"
+    }
+  },
+  "basePath": "/v2",
+  "tags": [
+    {
+      "name": "G-API",
+      "description": "平台G-API访问接口",
+      "externalDocs": {
+        "description": "更多信息",
+        "url": "http://platform.winning.com/g/api/v1"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/patientInfo/getPatientInfo": {
+      "post": {
+        "tags": [
+          "患者信息"
+        ],
+        "summary": "获取患者信息",
+        "description": "根据医疗机构代码、患者标记号、就诊流水号获得患者信息。",
+        "operationId": "getPatientInfo",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "医疗机构代码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "患者标记号",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "就诊流水号",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/患者信息"
+            }
+          },
+          "400": {
+            "description": "不可用的ID"
+          },
+          "404": {
+            "description": "资源无法找到"
+          }
+        }
+      }
+    },
+    "/g/api/v1/门诊处方列表": {
+      "get": {
+        "tags": [
+          "门诊处方"
+        ],
+        "summary": "门诊处方列表",
+        "description": "",
+        "operationId": "取门诊处方列表根据就诊流水号",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "医疗机构代码",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "就诊流水号",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/门诊处方列表"
+            }
+          },
+          "400": {
+            "description": "不可用状态"
+          },
+          "404": {
+            "description": "资源无法找到"
+          }
+        }
+      }
+    },
+    "/g/api/v1/病历列表": {
+      "get": {
+        "tags": [
+          "病历"
+        ],
+        "summary": "获得病历列表",
+        "description": "",
+        "operationId": "病历列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "医疗机构代码",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "就诊类别",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "就诊流水号",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/病历列表"
+            }
+          },
+          "400": {
+            "description": "不支持的参数"
+          },
+          "404": {
+            "description": "没有找到此病历列表"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "患者信息": {
+      "type": "object",
+      "properties": {
+        "医疗机构代码": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "患者标记号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "就诊流水号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "姓名": {
+          "type": "string"
+        },
+        "性别名称": {
+          "type": "string",
+          "enum": [
+            "男",
+            "女"
+          ]
+        },
+        "出生日期": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "门诊处方列表": {
+      "type": "object",
+      "properties": {
+        "医疗机构代码": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "医疗机构名称": {
+          "type": "string"
+        },
+        "患者标记号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "就诊流水号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "处方类型代码": {
+          "type": "integer"
+        },
+        "处方类型名称": {
+          "type": "string",
+          "enum": [
+            "西药处方",
+            "中药处方"
+          ]
+        },
+        "项目代码": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "项目名称": {
+          "type": "string"
+        },
+        "药品规格": {
+          "type": "string"
+        },
+        "剂型代码": {
+          "type": "integer"
+        },
+        "剂型名称": {
+          "type": "string"
+        },
+        "频次代码": {
+          "type": "integer"
+        },
+        "频次名称": {
+          "type": "string"
+        },
+        "用法代码": {
+          "type": "integer"
+        },
+        "用法名称": {
+          "type": "string"
+        }
+      }
+    },
+    "病历列表": {
+      "type": "object",
+      "properties": {
+        "医疗机构代码": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "医疗机构名称": {
+          "type": "string"
+        },
+        "患者标记号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "就诊流水号": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "文档标识号": {
+          "type": "integer"
+        },
+        "文档名称": {
+          "type": "string"
+        },
+        "文档明细类别代码": {
+          "type": "integer"
+        },
+        "文档明细类别名称": {
+          "type": "string"
+        },
+        "创建者名称": {
+          "type": "string"
+        },
+        "审核者名称": {
+          "type": "string"
+        },
+        "创建时间": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "审核时间": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "关于健康服务平台",
+    "url": "http://www.winning.com"
+  }
+}

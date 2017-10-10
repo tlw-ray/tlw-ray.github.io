@@ -1,0 +1,1584 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "# 患者主索引（Enterprise Master Patient Index，简称EMPI）\n## 概述\n患者主索引是指应用特定的算法实现医疗机构内患者标识信息的创建、维护，可以协助医疗人员对患者有效地进行检索。EMPI能够根据各种不同的业务系统所提供的患者标识信息重新进行组织并生成同一患者的唯一标识编码，根据此编码能找到分布在各业务系统中患者的所有医疗信息，同时消除重复的数据。\n## 集成\n开发EMPI接口的目的主要是为了更好地为患者和医生提供服务，并与相关软件进行无缝整合。本接口主要提供两种方式：Web Service和URL界面集成。接口设计的原则是不影响各自系统的运行，即保持相对独立，在使用时，目标系统只需要调用远端的Web Service或URL界面，即可实现与EMPI的集成。\n## 实现技术\nEMPI接口是采用Java语言开发的。\n",
+    "version": "1.0.0",
+    "title": "卫宁健康EMPI接口",
+    "contact": {
+      "name": "联系开发者",
+      "email": "xuehao@winning.com.cn"
+    },
+    "license": {
+      "name": "卫宁健康科技-软件开发许可协议 v1.0",
+      "url": "http://www.winning.com/licenses/LICENSE-1.0.html"
+    }
+  },
+  "host": "192.168.11.202:9012",
+  "basePath": "/winempi/HandlePatientHttpSoap11Endpoint?wsdl",
+  "tags": [
+    {
+      "name": "EMPI-API",
+      "description": "EMPI访问接口",
+      "externalDocs": {
+        "description": "更多信息",
+        "url": "http://empi.winning.com/v1"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/registerPatient": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "患者注册",
+        "description": "主要用于门诊或住院患者的注册登记",
+        "operationId": "registerPaitient",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Patient"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/Ack"
+            }
+          }
+        }
+      }
+    },
+    "/registerPatientBatch": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "批量注册患者信息",
+        "operationId": "registerPatientBatch",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DataSet"
+            },
+            "description": "输入参数的类型为DataSet，只能包含两个Table，其中Table[0]存放患者信息（每次最多传输1000个患者），Table[1]存放就诊信息。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "如果正确，返回空值，如果错误，返回错误信息",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/updatePatient": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "患者修改",
+        "description": "修改患者信息",
+        "operationId": "updatePatient",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Patient"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/Ack"
+            }
+          }
+        }
+      }
+    },
+    "/queryPatient": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "患者基本信息查询",
+        "description": "查询患者的基本信息",
+        "operationId": "queryPatient",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QueryPatientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QueryPatientResponse"
+            }
+          }
+        }
+      }
+    },
+    "/mergePatient": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "患者合并",
+        "operationId": "mergePatient",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MergePatientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/MergePatientResponse"
+            }
+          }
+        }
+      }
+    },
+    "/querySimilar": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "疑似患者查询",
+        "operationId": "querySimilar",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuerySimilarRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QuerySimilarResponse"
+            }
+          }
+        }
+      }
+    },
+    "/splitPatient": {
+      "post": {
+        "tags": [
+          "患者"
+        ],
+        "summary": "患者拆分",
+        "operationId": "splitPatient",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SplitPatientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/Ack"
+            }
+          }
+        }
+      }
+    },
+    "/queryIdentifier": {
+      "post": {
+        "tags": [
+          "标识符"
+        ],
+        "summary": "主要用于查询患者指定域的标识符",
+        "operationId": "queryIdentifier",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QueryIdentifierRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QueryIdentifierResponse"
+            }
+          }
+        }
+      }
+    },
+    "/queryIdentifierByID": {
+      "post": {
+        "tags": [
+          "标识符"
+        ],
+        "summary": "患者ID查询",
+        "operationId": "queryIdentifierByID",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QueryIdentifierByIDRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QueryIdentifierByIDResponse"
+            }
+          }
+        }
+      }
+    },
+    "/updateIdentifier": {
+      "post": {
+        "tags": [
+          "标识符"
+        ],
+        "summary": "更新标识",
+        "operationId": "updateIdentifier",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateIdentifierRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/Ack"
+            }
+          }
+        }
+      }
+    },
+    "/queryVisitByID": {
+      "post": {
+        "tags": [
+          "就诊"
+        ],
+        "summary": "就诊查询",
+        "operationId": "queryVisitByID",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QueryVisitByIDRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QueryVisitByIDResponse"
+            }
+          }
+        }
+      }
+    },
+    "/updateVisit": {
+      "post": {
+        "tags": [
+          "就诊"
+        ],
+        "summary": "更新门诊就诊信息",
+        "description": "更新门诊患者的科室、医生和诊断信息",
+        "operationId": "updateVisit",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateVisitRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/Ack"
+            }
+          }
+        }
+      }
+    },
+    "/queryRules": {
+      "post": {
+        "tags": [
+          "患者信息规则"
+        ],
+        "summary": "获取患者信息规则",
+        "operationId": "queryRules",
+        "consumes": [
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QueryRulesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功",
+            "schema": {
+              "$ref": "#/definitions/QueryRulesResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "QueryPatientRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "QueryParameter": {
+          "type": "object",
+          "properties": {
+            "PatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SourcePatientID"
+              }
+            },
+            "GlobalPID": {
+              "type": "string",
+              "description": "患者主索引号"
+            },
+            "FamilyName": {
+              "type": "string",
+              "description": "姓"
+            },
+            "GivenName": {
+              "type": "string",
+              "description": "名"
+            },
+            "MiddleName": {
+              "type": "string",
+              "description": "中间名"
+            },
+            "MothersMaidenName": {
+              "type": "string",
+              "description": "母亲姓名"
+            },
+            "DateTimeOfBirth": {
+              "type": "string",
+              "description": "出生日期",
+              "format": "date-time"
+            },
+            "Sex": {
+              "$ref": "#/definitions/Sex"
+            },
+            "PatientAddress": {
+              "$ref": "#/definitions/PatientAddress"
+            },
+            "PatientPhone": {
+              "$ref": "#/definitions/PatientPhone"
+            },
+            "TargetPatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TargetPatientID"
+              }
+            },
+            "Max": {
+              "type": "integer",
+              "format": "int32",
+              "description": "返回的最大记录数量，最大值不能大于100，如果传入空，则默认为20；"
+            }
+          }
+        }
+      }
+    },
+    "QueryPatientResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "SourcePatient": {
+          "$ref": "#/definitions/SourcePatient"
+        },
+        "PatientAddress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientAddress"
+          }
+        },
+        "PatientPhones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientPhone"
+          }
+        }
+      }
+    },
+    "MergePatientRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "GlobalPID": {
+          "$ref": "#/definitions/GlobalPID"
+        },
+        "PatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientID"
+          }
+        },
+        "SourcePatient": {
+          "$ref": "#/definitions/SourcePatient"
+        },
+        "PatientAddresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientAddress"
+          }
+        },
+        "PatientPhones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientPhone"
+          }
+        },
+        "PriorGlobalPID": {
+          "type": "string",
+          "description": "待合并患者主索引号"
+        },
+        "PriorPatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientID"
+          }
+        },
+        "PriorSourcePatient": {
+          "$ref": "#/definitions/PatientName"
+        }
+      }
+    },
+    "MergePatientResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "TargetPatient": {
+          "$ref": "#/definitions/TargetPatient"
+        }
+      }
+    },
+    "QuerySimilarRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "QueryParameter": {
+          "$ref": "#/definitions/GlobalPID"
+        }
+      }
+    },
+    "QuerySimilarResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "SimilarGlobalPID": {
+          "type": "object",
+          "properties": {
+            "GlobalPID": {
+              "$ref": "#/definitions/GlobalPID"
+            }
+          }
+        }
+      }
+    },
+    "SplitPatientRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "BasePatient": {
+          "type": "object",
+          "properties": {
+            "GlobalPID": {
+              "$ref": "#/definitions/GlobalPID"
+            },
+            "PatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PatientID"
+              }
+            },
+            "SourcePatient": {
+              "$ref": "#/definitions/SourcePatient"
+            },
+            "PatientAddresses": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PatientAddress"
+              }
+            },
+            "PatientPhones": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PatientPhone"
+              }
+            },
+            "PriorPatient": {
+              "type": "object",
+              "properties": {
+                "GlobalPID": {
+                  "$ref": "#/definitions/GlobalPID"
+                },
+                "SourcePatient": {
+                  "$ref": "#/definitions/SourcePatient"
+                },
+                "PatientAddresses": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/PatientAddress"
+                  }
+                },
+                "PatientPhones": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/PatientPhone"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "QueryIdentifierRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "QueryParameter": {
+          "type": "object",
+          "properties": {
+            "PatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SourcePatientID"
+              }
+            },
+            "TargetPatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TargetPatientID"
+              }
+            }
+          }
+        }
+      }
+    },
+    "QueryIdentifierResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "TargetPatient": {
+          "$ref": "#/definitions/TargetPatient"
+        },
+        "SourcePatient": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourcePatientID"
+          }
+        }
+      }
+    },
+    "QueryIdentifierByIDRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "QueryParameter": {
+          "type": "object",
+          "properties": {
+            "CardID": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "QueryIdentifierByIDResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "TargetPatients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TargetPatient"
+          }
+        }
+      }
+    },
+    "UpdateIdentifierRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "Type": {
+          "type": "string",
+          "enum": [
+            "D",
+            "E"
+          ],
+          "description": "操作类型\n* D - 停用标识符\n* E - 启用标识符\n"
+        },
+        "PatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientID"
+          }
+        }
+      }
+    },
+    "QueryVisitByIDRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "QueryParameter": {
+          "type": "object",
+          "properties": {
+            "FromLimit": {
+              "type": "string",
+              "description": "开始索引"
+            },
+            "ToLimit": {
+              "type": "string",
+              "description": "结束索引"
+            },
+            "FromDateTime": {
+              "type": "string",
+              "description": "起始时间",
+              "format": "date-time"
+            },
+            "ToDateTime": {
+              "type": "string",
+              "description": "结束时间",
+              "format": "date-time"
+            },
+            "PatientClass": {
+              "$ref": "#/definitions/PatientClass"
+            },
+            "VisitNumbers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VisitNumber"
+              }
+            },
+            "GlobalPID": {
+              "$ref": "#/definitions/GlobalPID"
+            },
+            "PatientIDs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PatientID"
+              }
+            }
+          }
+        }
+      }
+    },
+    "QueryVisitByIDResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "VisitCount": {
+          "type": "integer",
+          "description": "就诊记录总数"
+        },
+        "GlobalPID": {
+          "$ref": "#/definitions/GlobalPID"
+        },
+        "PatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientID"
+          }
+        },
+        "SourcePatient": {
+          "$ref": "#/definitions/SourcePatientSimple"
+        },
+        "PatientVisits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientVisit"
+          }
+        }
+      }
+    },
+    "UpdateVisitRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "PatientVisit": {
+          "$ref": "#/definitions/PatientVisit"
+        }
+      }
+    },
+    "QueryRulesRequest": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "SpecialFlag": {
+          "type": "string",
+          "enum": [
+            0,
+            1
+          ],
+          "description": "\n* 0 - 正常流程\n* 1 - 特殊流程\n"
+        },
+        "PatientID": {
+          "$ref": "#/definitions/PatientID"
+        },
+        "Fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        }
+      }
+    },
+    "QueryRulesResponse": {
+      "type": "object",
+      "properties": {
+        "Ack": {
+          "$ref": "#/definitions/Ack"
+        },
+        "Fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        }
+      }
+    },
+    "ConfigHeader": {
+      "type": "object",
+      "description": "配置头",
+      "properties": {
+        "Facility": {
+          "type": "string",
+          "description": "发送源的医疗机构代码（即当前系统所在的医院/院区代码，该字段内容需要根据医院的实际情况而定）"
+        },
+        "Application": {
+          "type": "string",
+          "description": "发送源的医疗系统代码（即当前系统的代码）"
+        }
+      }
+    },
+    "Ack": {
+      "type": "object",
+      "description": "应答",
+      "properties": {
+        "ResultCode": {
+          "type": "string",
+          "enum": [
+            "AA",
+            "AE",
+            "AR",
+            "AY"
+          ],
+          "description": "应答返回码\n* AA - 成功\n* AE - 错误\n* AR - 拒绝\n* AY - 成功但存在相似患者\n"
+        },
+        "ResultDetail": {
+          "type": "string",
+          "description": "主索引号或错误的具体内容"
+        }
+      }
+    },
+    "GlobalPID": {
+      "type": "string",
+      "description": "患者主索引号"
+    },
+    "DataSet": {
+      "type": "object"
+    },
+    "Patient": {
+      "type": "object",
+      "properties": {
+        "ConfigHeader": {
+          "$ref": "#/definitions/ConfigHeader"
+        },
+        "PatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientID"
+          }
+        },
+        "GlobalPID": {
+          "type": "string",
+          "description": "患者主索引号"
+        },
+        "SourcePatient": {
+          "$ref": "#/definitions/SourcePatient"
+        },
+        "PatientAddresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientAddress"
+          }
+        },
+        "PatientPhones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientPhone"
+          }
+        },
+        "PatientVisit": {
+          "$ref": "#/definitions/PatientVisit"
+        }
+      }
+    },
+    "PatientID": {
+      "type": "object",
+      "properties": {
+        "CardID": {
+          "type": "string",
+          "description": "标识符（医保卡号、患者ID、院内卡号等）"
+        },
+        "DomainCode": {
+          "$ref": "#/definitions/DomainCode"
+        },
+        "Facility": {
+          "type": "string",
+          "description": "标识符类型所属的医疗机构代码（如果为空，则使用ConfigHeader节点中的医疗机构代码，对于集团医院[存在多院区]，建议由此节点指定院区代码）"
+        },
+        "SourceType": {
+          "$ref": "#/definitions/SourceType"
+        }
+      }
+    },
+    "PatientName": {
+      "type": "object",
+      "properties": {
+        "FamilyName": {
+          "type": "string",
+          "description": "姓"
+        },
+        "GivenName": {
+          "type": "string",
+          "description": "名"
+        },
+        "MiddleName": {
+          "type": "string",
+          "description": "中间名"
+        }
+      }
+    },
+    "PatientPhone": {
+      "type": "object",
+      "properties": {
+        "AddressType": {
+          "$ref": "#/definitions/AddressType"
+        },
+        "EquipmentType": {
+          "$ref": "#/definitions/EquipmentType"
+        },
+        "CountryCode": {
+          "type": "string",
+          "description": "国家代码 086-中国, ..."
+        },
+        "AreaCode": {
+          "type": "string",
+          "description": "区号 021-上海,..."
+        },
+        "PhoneNumber": {
+          "type": "string",
+          "description": "电话号码"
+        },
+        "Extension": {
+          "type": "string",
+          "description": "分机号"
+        },
+        "Email": {
+          "type": "string",
+          "description": "邮箱"
+        }
+      }
+    },
+    "PatientAddress": {
+      "type": "object",
+      "properties": {
+        "Country": {
+          "type": "string",
+          "description": "国家"
+        },
+        "Province": {
+          "type": "string",
+          "description": "省份"
+        },
+        "City": {
+          "type": "string",
+          "description": "城市"
+        },
+        "Area": {
+          "type": "string",
+          "description": "区(县)"
+        },
+        "Town": {
+          "type": "string",
+          "description": "乡(镇)"
+        },
+        "StreetAddress": {
+          "type": "string",
+          "description": "街道地址"
+        },
+        "ZipCode": {
+          "type": "string",
+          "description": "邮编"
+        },
+        "Type": {
+          "$ref": "#/definitions/AddressType"
+        }
+      }
+    },
+    "PatientVisit": {
+      "type": "object",
+      "properties": {
+        "VisitNumber": {
+          "$ref": "#/definitions/VisitNumber"
+        },
+        "PatientClass": {
+          "$ref": "#/definitions/PatientClass"
+        },
+        "AssignedPatientLocation": {
+          "$ref": "#/definitions/AssignedPatientLocation"
+        },
+        "AdmissionType": {
+          "type": "string",
+          "description": "入院类型名称（例如：事故，紧急，分娩，常规等）【即入院原因】"
+        },
+        "AttendingDoctor": {
+          "$ref": "#/definitions/Doctor"
+        },
+        "ReferringDoctor": {
+          "$ref": "#/definitions/Doctor"
+        },
+        "ConsultingDoctor": {
+          "$ref": "#/definitions/Doctor"
+        },
+        "HospitalService": {
+          "type": "string",
+          "description": "医院服务名称（例如：内科服务，手术服务，泌尿科服务，……）"
+        },
+        "AdmittingDoctor": {
+          "$ref": "#/definitions/Doctor"
+        },
+        "ReadmissionIndicator": {
+          "type": "boolean",
+          "description": "是否再入院"
+        },
+        "AdmitSource": {
+          "type": "string",
+          "description": "入院来源"
+        },
+        "FinancialClass": {
+          "type": "string",
+          "description": "经济状况"
+        },
+        "DischargeDisposition": {
+          "type": "string",
+          "description": "出院处置(出院原因)"
+        },
+        "DischargedToLocation": {
+          "type": "string",
+          "description": "出院去处"
+        },
+        "AdmitDateTime": {
+          "type": "string",
+          "description": "就诊(入院)时间",
+          "format": "date-time"
+        },
+        "DischargeDateTime": {
+          "type": "string",
+          "description": "出院日期",
+          "format": "date-time"
+        },
+        "Diagnosis": {
+          "type": "object",
+          "description": "诊断",
+          "properties": {
+            "Code": {
+              "type": "string",
+              "description": "诊断代码"
+            },
+            "Name": {
+              "type": "string",
+              "description": "诊断名称"
+            }
+          }
+        }
+      }
+    },
+    "TargetPatientID": {
+      "type": "object",
+      "properties": {
+        "DomainCode": {
+          "$ref": "#/definitions/DomainCode"
+        },
+        "Facility": {
+          "type": "string",
+          "description": "标识符类型所属的医疗机构代码（如果为空，则使用ConfigHeader节点中的医疗机构代码，对于集团医院[存在多院区]，建议由此节点指定院区代码）"
+        }
+      }
+    },
+    "TargetPatient": {
+      "type": "object",
+      "properties": {
+        "GlobalPID": {
+          "type": "string",
+          "description": "患者主索引号"
+        },
+        "PatientIDs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourcePatientID"
+          }
+        },
+        "SourcePatient": {
+          "$ref": "#/definitions/SourcePatient"
+        }
+      }
+    },
+    "SourcePatientSimple": {
+      "type": "object",
+      "properties": {
+        "FamilyName": {
+          "type": "string",
+          "description": "姓"
+        },
+        "GivenName": {
+          "type": "string",
+          "description": "名"
+        },
+        "MiddleName": {
+          "type": "string",
+          "description": "中间名"
+        },
+        "DateTimeOfBirth": {
+          "type": "string",
+          "format": "date-time",
+          "description": "出生日期"
+        },
+        "Sex": {
+          "$ref": "#/definitions/Sex"
+        }
+      }
+    },
+    "SourcePatient": {
+      "type": "object",
+      "properties": {
+        "FamilyName": {
+          "type": "string",
+          "description": "姓"
+        },
+        "GivenName": {
+          "type": "string",
+          "description": "名"
+        },
+        "MiddleName": {
+          "type": "string",
+          "description": "中间名"
+        },
+        "MothersMaidenName": {
+          "type": "string",
+          "description": "母亲姓名"
+        },
+        "DateTimeOfBirth": {
+          "type": "string",
+          "format": "date-time",
+          "description": "出生日期"
+        },
+        "Sex": {
+          "$ref": "#/definitions/Sex"
+        },
+        "PrimaryLanguage": {
+          "type": "string",
+          "description": "母语"
+        },
+        "MaritalStatus": {
+          "$ref": "#/definitions/MaritalStatus"
+        },
+        "Religion": {
+          "type": "string",
+          "description": "宗教信仰"
+        },
+        "SSNNumber": {
+          "type": "string",
+          "description": "身份证号"
+        },
+        "SourceType": {
+          "$ref": "#/definitions/SourceType"
+        },
+        "DriversLicenseNumber": {
+          "type": "string",
+          "description": "驾驶证号"
+        },
+        "Ethnic": {
+          "type": "string",
+          "description": "民族名称"
+        },
+        "BirthPlace": {
+          "type": "string",
+          "description": "出生地"
+        },
+        "MultipleBirthIndicator": {
+          "type": "boolean",
+          "description": "多胞胎标识(Y-多胞胎， N-不是多胞胎)"
+        },
+        "BirthOrder": {
+          "type": "string",
+          "description": "出生顺序"
+        },
+        "Nationality": {
+          "type": "string",
+          "description": "国籍"
+        },
+        "PatientDeathIndicator": {
+          "type": "boolean",
+          "description": "死亡标识(Y-已故, N-活着)"
+        },
+        "PatientDeathDeathDateAndTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "死亡时间"
+        },
+        "LastUpdateDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "最近更新时间"
+        },
+        "LastUpdateFacility": {
+          "type": "string",
+          "description": "最近更新者(机构或人)"
+        },
+        "PatientAddresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientAddress"
+          }
+        },
+        "PatientPhones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PatientPhone"
+          }
+        },
+        "PatientVisit": {
+          "$ref": "#/definitions/PatientVisit"
+        }
+      }
+    },
+    "SourcePatientID": {
+      "type": "object",
+      "properties": {
+        "CardID": {
+          "type": "string",
+          "description": "标识符（医保卡号、患者ID、院内卡号等）"
+        },
+        "DomainCode": {
+          "$ref": "#/definitions/DomainCode"
+        },
+        "Facility": {
+          "type": "string",
+          "description": "标识符类型所属的医疗机构代码（如果为空，则使用ConfigHeader节点中的医疗机构代码，对于集团医院[存在多院区]，建议由此节点指定院区代码）"
+        }
+      }
+    },
+    "VisitNumber": {
+      "type": "object",
+      "properties": {
+        "CardID": {
+          "type": "string",
+          "description": "就诊标识符(即就诊号)"
+        },
+        "DomainCode": {
+          "$ref": "#/definitions/IdentifyType"
+        },
+        "Facility": {
+          "type": "string",
+          "description": "标识符类型所属医疗机构代码"
+        }
+      }
+    },
+    "Doctor": {
+      "type": "object",
+      "properties": {
+        "FamilyName": {
+          "type": "string",
+          "description": "姓（如果是中国人，姓和名可以都放在此字段，中间名一般为空）"
+        },
+        "GivenName": {
+          "type": "string",
+          "description": "名"
+        },
+        "MiddleName": {
+          "type": "string",
+          "description": "中间名"
+        },
+        "CardID": {
+          "type": "string",
+          "description": "工号"
+        },
+        "DomainCode": {
+          "type": "string",
+          "description": "工号标识符类型"
+        }
+      }
+    },
+    "AssignedPatientLocation": {
+      "type": "object",
+      "properties": {
+        "PointOfCare": {
+          "type": "string",
+          "description": "医疗点(科室代码)"
+        },
+        "PointOfCareName": {
+          "type": "string",
+          "description": "医疗点(科室名称)"
+        },
+        "AreaCode": {
+          "type": "string",
+          "description": "病区代码"
+        },
+        "AreaName": {
+          "type": "string",
+          "description": "病区名称"
+        },
+        "Room": {
+          "type": "string",
+          "description": "病房"
+        },
+        "Bad": {
+          "type": "string",
+          "description": "床位"
+        },
+        "Building": {
+          "type": "string",
+          "description": "建筑(楼号)"
+        },
+        "Floor": {
+          "type": "string",
+          "description": "楼层"
+        }
+      }
+    },
+    "SourceType": {
+      "type": "string",
+      "enum": [
+        0,
+        1
+      ],
+      "description": "标识符来源类型\n* 0 - 刷卡\n* 1 - 手工\n"
+    },
+    "IdentifyType": {
+      "type": "string",
+      "enum": [
+        "JZH",
+        "JZH_O",
+        "JZH_I",
+        "JZH_P"
+      ],
+      "description": "就诊类型\n* JZH - HIS就诊号\n* JZH_O - HIS门诊挂号序号\n* JZH_I - HIS住院首页序号\n* JZH_P - HIS体检号\n"
+    },
+    "Sex": {
+      "type": "string",
+      "enum": [
+        "F",
+        "M",
+        "U"
+      ],
+      "description": "性别:\n* F - 女性\n* M - 男性\n* U - 未知\n"
+    },
+    "MaritalStatus": {
+      "type": "string",
+      "enum": [
+        "B",
+        "M",
+        "S",
+        "D",
+        "W",
+        "U"
+      ],
+      "description": "婚姻状况\n* B - 未婚\n* M - 已婚\n* S - 单身\n* D - 离婚\n* W - 丧偶\n* U - 未知\n"
+    },
+    "PatientClass": {
+      "type": "string",
+      "enum": [
+        "I",
+        "O",
+        "E",
+        "P"
+      ],
+      "description": "就诊类型\n* I - 住院\n* O - 门诊\n* E - 急诊\n* P - 体检\n"
+    },
+    "AddressType": {
+      "type": "string",
+      "enum": [
+        "H",
+        "B",
+        "C",
+        "P",
+        "N",
+        "M",
+        "U"
+      ],
+      "description": "地址类型\n* H - 家庭\n* B - 公司\n* C - 当前（临时）\n* P - 户籍\n* N - 出生\n* M - 联系人\n* U - 未知\n"
+    },
+    "EquipmentType": {
+      "type": "string",
+      "enum": [
+        "PH",
+        "FX",
+        "CP",
+        "U"
+      ],
+      "description": "电话类型\n* PH - 电话\n* FX - 传真\n* CP - 手机\n* U - 未知\n"
+    },
+    "DomainCode": {
+      "type": "string",
+      "enum": [
+        "SN",
+        "SBKH",
+        "YBKH",
+        "YNKH",
+        "HZH",
+        "JGZH",
+        "ZZZH",
+        "LIS_RPT_ID",
+        "PATID",
+        "PATID_O",
+        "PATID_I",
+        "PATID_P",
+        "BLH",
+        "BLH_O",
+        "BLH_I",
+        "BLH_P",
+        "RIS_FS_RPT_ID",
+        "RIS_RHY_PT_ID",
+        "RIS_CS_RPT_ID",
+        "RIS_NJ_RPT_ID",
+        "RIS_BL_RPT_ID",
+        "RIS_JDT_RPT_ID",
+        "RIS_MY_RPT_ID",
+        "RIS_TL_RPT_ID",
+        "RIS_HJ_RPT_ID",
+        "RIS_XD_RPT_ID"
+      ],
+      "description": "患者基本标识符类型\n* SN - 身份证号\n* SBKH - 社保卡号\n* YBKH - 医保卡号\n* YNKH - 院内卡号\n* HZH - 护照号\n* JGZH - 军官证号\n* ZZZH - 暂住证号\n* LIS_RPT_ID - LIS报告单号\n* PATID - HIS患者ID\n* PATID_O - HIS门诊患者ID\n* PATID_I - HIS住院患者ID\n* PATID_P - HIS体检患者ID\n* BLH - HIS病历号\n* BLH_O - HIS门诊病历号\n* BLH_I - HIS住院病历号\n* BLH_P - HIS体检病历号\n* RIS_FS_RPT_ID - RIS中FS放射系统的报告单号\n* RIS_RHY_PT_ID - RIS中HY核医学系统的报告单号\n* RIS_CS_RPT_ID - RIS中CS超声系统的报告单号\n* RIS_NJ_RPT_ID - RIS中NJ内镜系统的报告单号\n* RIS_BL_RPT_ID - RIS中BL病理系统的报告单号\n* RIS_JDT_RPT_ID - RIS中JDT肌电系统的报告单号\n* RIS_MY_RPT_ID - RIS中MY免疫系统的报告单号\n* RIS_TL_RPT_ID - RIS中TL听力系统的报告单号\n* RIS_HJ_RPT_ID - RIS中HJ喉镜系统的报告单号\n* RIS_XD_RPT_ID - RIS中XD心电系统的报告单号\n"
+    },
+    "Field": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/FieldKey"
+        }
+      }
+    },
+    "FieldKey": {
+      "type": "string",
+      "enum": [
+        "PID01",
+        "PID02",
+        "PID03",
+        "PID04",
+        "PID05",
+        "PID06",
+        "PID07",
+        "PID08",
+        "PID09",
+        "PID10",
+        "PID11",
+        "PID12",
+        "PID13",
+        "PID14",
+        "PID15",
+        "PID16",
+        "PID17",
+        "PID18",
+        "PID19",
+        "PID20",
+        "PID21",
+        "PID22",
+        "PID23",
+        "PID24",
+        "PID25",
+        "PID26",
+        "PID27",
+        "PID28",
+        "PID29",
+        "PID30",
+        "PID31"
+      ],
+      "description": "字段代码\n* PID01 - 患者姓名\n* PID02 - 母亲姓名\n* PID03 - 出生日期\n* PID04 - 性别\n* PID05 - 婚姻状况\n* PID06 - 民族\n* PID07 - 出生顺序\n* PID08 - 多胞胎标志\n* PID09 - 国籍\n* PID10 - 公司地址\n* PID11 - 家庭地址\n* PID12 - 户籍地址\n* PID13 - 出生地址\n* PID14 - 家庭电话\n* PID15 - 移动电话\n* PID16 - 邮箱\n* PID17 - 身份证\n* PID18 - 社保卡\n* PID19 - 医保卡\n* PID20 - 院内卡\n* PID21 - 护照号\n* PID22 - 军官证号\n* PID23 - 暂住证号\n* PID24 - 死亡标识\n* PID25 - 死亡时间\n* PID26 - 联系人地址\n* PID27 - 当前临时住址\n* PID28 - 公司电话\n* PID29 - 户籍电话\n* PID30 - 联系人电话\n* PID31 - 当前临时住址电话\n"
+    }
+  },
+  "externalDocs": {
+    "description": "了解更多关于卫宁EMPI",
+    "url": "http://empi.winning.com"
+  }
+}
