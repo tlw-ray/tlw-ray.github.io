@@ -3,25 +3,24 @@
   "info": {
     "description": "# 患者主索引（Enterprise Master Patient Index，简称EMPI）\n## 概述\n患者主索引是指应用特定的算法实现医疗机构内患者标识信息的创建、维护，可以协助医疗人员对患者有效地进行检索。EMPI能够根据各种不同的业务系统所提供的患者标识信息重新进行组织并生成同一患者的唯一标识编码，根据此编码能找到分布在各业务系统中患者的所有医疗信息，同时消除重复的数据。\n## 集成\n开发EMPI接口的目的主要是为了更好地为患者和医生提供服务，并与相关软件进行无缝整合。本接口主要提供两种方式：Web Service和URL界面集成。接口设计的原则是不影响各自系统的运行，即保持相对独立，在使用时，目标系统只需要调用远端的Web Service或URL界面，即可实现与EMPI的集成。\n## 实现技术\nEMPI接口是采用Java语言开发的。\n",
     "version": "1.0.0",
-    "title": "卫宁健康EMPI接口",
+    "title": "健康EMPI接口",
     "contact": {
       "name": "联系开发者",
-      "email": "xuehao@winning.com.cn"
+      "email": "xuehao@health.com.cn"
     },
     "license": {
-      "name": "卫宁健康科技-软件开发许可协议 v1.0",
-      "url": "http://www.winning.com/licenses/LICENSE-1.0.html"
+      "name": "健康科技-软件开发许可协议 v1.0",
+      "url": "http://www.health.com/licenses/LICENSE-1.0.html"
     }
   },
-  "host": "192.168.11.202:9012",
-  "basePath": "/winempi/HandlePatientHttpSoap11Endpoint?wsdl",
+  "basePath": "/WSProxy",
   "tags": [
     {
       "name": "EMPI-API",
       "description": "EMPI访问接口",
       "externalDocs": {
         "description": "更多信息",
-        "url": "http://empi.winning.com/v1"
+        "url": "http://empi.health.com/v1"
       }
     }
   ],
@@ -296,7 +295,7 @@
         }
       }
     },
-    "/queryIdentifierByID": {
+    "/QueryIdentifierByID": {
       "post": {
         "tags": [
           "标识符"
@@ -314,7 +313,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/QueryIdentifierByIDRequest"
+              "$ref": "#/definitions/QueryIdentifierByID"
             }
           }
         ],
@@ -735,7 +734,7 @@
         }
       }
     },
-    "QueryIdentifierByIDRequest": {
+    "QueryIdentifierByID": {
       "type": "object",
       "properties": {
         "ConfigHeader": {
@@ -1578,7 +1577,7 @@
     }
   },
   "externalDocs": {
-    "description": "了解更多关于卫宁EMPI",
-    "url": "http://empi.winning.com"
+    "description": "了解更多关于EMPI",
+    "url": "http://empi.health.com"
   }
 }
