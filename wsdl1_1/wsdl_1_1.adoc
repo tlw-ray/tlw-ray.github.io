@@ -1,0 +1,2063 @@
+= Web服务定义语言 (WSDL) 1.1
+
+当前版本: http://www.w3.org/TR/2001/NOTE-wsdl-20010315
+最后版本: http://www.w3.org/TR/wsdl
+作者(按字母排序):
+* Erik Christensen, 微软
+* Francisco Curbera, IBM
+* Greg Meredith, 微软
+* Sanjiva Weerawarana, IBM
+
+版权: 2001 Ariba, International Business Machines Corporation, Microsoft
+
+== 摘要
+
+WSDL是一种XML格式，用于将网络服务描述为对包含面向文档(document-oriented)或面向过程(procedure-oriented)的信息的消息进行操作的一组端点(endpoints)。 操作和消息被抽象地描述，然后绑定到具体的网络协议和消息格式来定义端点。 相关的具体端点被组合成抽象端点（服务）。 WSDL是可扩展的，以允许描述端点及其消息，而不管使用什么消息格式或网络协议进行通信，但是本文档中只描述了如何将WSDL与SOAP 1.1，HTTP GET/POST和 MIME联合使用。
+
+== 状态
+
+本文件是向link:http://www.w3.org/[万维网联盟]提交的一个提交（参见link:https://www.w3.org/Submission/2001/07/[提交请求]，link:https://www.w3.org/Submission/2001/07/Comment[W3C员工评论]）作为link:http://www.w3.org/2000/xp/[W3CXML协议在XML]服务的一种建议。 有关所有确认提交的完整列表，请参阅向W3C提交的确认提交。
+
+该草案代表了目前在Ariba，IBM和Microsoft中对服务描述的思考。 它整合了NASSL，SCL和SDL（此空间中的早期提案）中的概念。
+
+本文档是由W3C提供的仅供讨论的注释。 W3C发布本说明书不表示W3C或W3C团队或任何W3C成员的认可。 W3C对本说明的编写没有编辑控制权。 本文件是一项正在进行的工作，可能随时更新，替换或陈述其他文件。
+
+当前W3C技术文档的列表可以在“https://www.w3.org/TR/[技术报告]”页面找到。
+
+== 目录
+
+[TOC]
+
+== 1. 引言
+
+随着通信协议和消息格式在网络社区中被标准化，能够以某种结构化的方式描述通信变得越来越可能和重要。 WSDL通过定义用于将网络服务描述为能够交换消息的通信端点的集合的XML语法来解决这个需要。 WSDL服务定义提供分布式系统的文档，并作为自动化应用程序通信涉及的细节的配方。
+
+WSDL文档将**服务**定义为网络端点(endpoint)或**端口**(port)的集合。在WSDL中，端点(endpoints)和消息(message)的抽象定义与其具体的网络部署或数据格式绑定分离。这允许重用抽象定义：*消息*，这是正在交换的数据的抽象描述，以及作为抽象操作集合的端口类型。特定端口类型的具体协议和数据格式规范构成可重用**绑定**。通过将网络地址与可重用绑定相关联，并且端口集合定义服务来定义端口。因此，WSDL文档在网络服务定义中使用以下元素：
+
+类型(Types):: 使用某种类型系统（如XSD）的数据类型定义的容器。
+消息(Message):: 正在传达的数据的抽象的类型定义。
+操作(Operation):: 服务支持的操作的抽象描述。
+端口类型(Port Type):: 由一个或多个端点支持的一组抽象操作。
+绑定(Binding):: 特定端口类型的具体协议和数据格式规范。
+端口(Port):: 定义为绑定和网络地址组合的单个端点。
+服务(Service):: 相关端点的集合。
+
+这些元素在第2节中有详细描述。重要的是要注意WSDL不会引入新的类型定义语言。 WSDL认识到需要用于描述消息格式的丰富类型系统，并支持XML模式规范（XSD）[11]作为其规范类型系统。然而，由于期望单一类型系统语法用于描述现在和将来的所有消息格式是不合理的，所以WSDL允许通过可扩展性使用其他类型定义语言。
+
+另外，WSDL定义了一个常见的**绑定**机制。这用于将特定协议或数据格式或结构附加到抽象消息，操作或端点。它允许重用抽象定义。
+
+除了核心服务定义框架外，本规范还介绍了以下协议和消息格式的特定**绑定扩展**：
+
+* SOAP 1.1（参见第3节）
+* HTTP GET / POST（参见第4节）
+* MIME（参见第5节）
+
+虽然在本文档中定义，上述语言扩展分层在核心link:https://www.w3.org/TR/wsdl#_3.__[服务定义框架]之上。没有什么可以妨碍使用WSDL的其他绑定扩展。
+
+=== 1.1 WSDL文档示例
+
+以下示例显示了提供股票报价的简单服务的WSDL定义。 该服务支持称为GetLastTradePrice的单个操作，它通过HTTP部署使用SOAP 1.1协议。 该请求采用类型为字符串的代码符号，并将其作为浮点数返回。 本定义中使用的元素的详细描述可以在第2节（核心语言）和第3节（SOAP绑定）中找到。
+
+此示例使用固定的XML格式而不是SOAP编码（对于使用SOAP编码的示例，请参阅示例4）。
+
+.示例1 SOAP 1.1 Request/Response 通过 HTTP
+[source, XML]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+
+targetNamespace="http://example.com/stockquote.wsdl"
+          xmlns:tns="http://example.com/stockquote.wsdl"
+          xmlns:xsd1="http://example.com/stockquote.xsd"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+       <schema targetNamespace="http://example.com/stockquote.xsd"
+              xmlns="http://www.w3.org/2000/10/XMLSchema">
+           <element name="TradePriceRequest">
+              <complexType>
+                  <all>
+                      <element name="tickerSymbol" type="string"/>
+                  </all>
+              </complexType>
+           </element>
+           <element name="TradePrice">
+              <complexType>
+                  <all>
+                      <element name="price" type="float"/>
+                  </all>
+              </complexType>
+           </element>
+       </schema>
+    </types>
+
+    <message name="GetLastTradePriceInput">
+        <part name="body" element="xsd1:TradePriceRequest"/>
+    </message>
+
+    <message name="GetLastTradePriceOutput">
+        <part name="body" element="xsd1:TradePrice"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="GetLastTradePrice">
+           <input message="tns:GetLastTradePriceInput"/>
+           <output message="tns:GetLastTradePriceOutput"/>
+        </operation>
+    </portType>
+
+    <binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetLastTradePrice">
+           <soap:operation soapAction="http://example.com/GetLastTradePrice"/>
+           <input>
+               <soap:body use="literal"/>
+           </input>
+           <output>
+               <soap:body use="literal"/>
+           </output>
+        </operation>
+    </binding>
+
+    <service name="StockQuoteService">
+        <documentation>My first service</documentation>
+        <port name="StockQuotePort" binding="tns:StockQuoteBinding">
+           <soap:address location="http://example.com/stockquote"/>
+        </port>
+    </service>
+
+</definitions>
+----
+
+=== 1.2 约定符号
+
+. 本文档中的“必须”，“不得”，“必须”，“应该”，“不应该”，“应该”，“不应该”，“推荐”，“可以”和“可选”将被解释为RFC-2119 link:https://www.w3.org/TR/wsdl#_9.__[2]中所述。
+
+. 本文档中使用以下命名空间前缀：
++
+|===
+|前缀|名称空间URI|定义
+
+|wsdl
+|http://schemas.xmlsoap.org/wsdl/
+|WSDL框架的WSDL命名空间。
+
+|soap
+|http://schemas.xmlsoap.org/wsdl/soap/
+|WSDL命名空间用于WSDL SOAP绑定。
+
+|http
+|http://schemas.xmlsoap.org/wsdl/http/
+|WSDL HTTP GET＆POST绑定的WSDL命名空间。
+
+|mime
+|http://schemas.xmlsoap.org/wsdl/mime/
+|WSDL MIME绑定的WSDL命名空间。
+
+|soapenc
+|http://schemas.xmlsoap.org/soap/encoding/
+|按照SOAP 1.1 [link:https://www.w3.org/TR/wsdl#_9.__[8]]定义的编码命名空间。
+
+|soapenv
+|http://schemas.xmlsoap.org/soap/envelope/
+|由SOAP 1.1 [link:https://www.w3.org/TR/wsdl#_9.__[8]]定义的Envelope命名空间。
+
+|xsi
+|http://www.w3.org/2000/10/XMLSchema-instance
+|由XSD [link:https://www.w3.org/TR/wsdl#_9.__[10]]定义的实例命名空间。
+
+|xsd
+|http://www.w3.org/2000/10/XMLSchema
+|由XSD [link:https://www.w3.org/TR/wsdl#_9.__[10]]定义的模式命名空间。
+
+|tns
+|（各种）
+|“this namespace”（tns）前缀用作引用当前文档的约定。
+
+|（other）
+|（各种）
+|所有其他命名空间前缀仅为样本。特别地，以“http://example.com”开头的URI表示一些依赖于应用程序的或与上下文相关的URI [link:https://www.w3.org/TR/wsdl#_9.__[4]]。
+|===
+
+. 本规范使用**非正式语法**来描述WSDL文档的XML语法：
+
+* 语法显示为XML实例，但值表示数据类型而不是值。
+* 字符附加到元素和属性如下：“?” （0或1），“*”（0或更多），“+”（1或更多）。
+* 以“...”结尾的元素名称（例如<element ... />或<element ...>）表示与上下文无关的元素/属性被省略。
+* 粗体字语法尚未在文档中较早的介绍，或者在一个例子中特别感兴趣。
+* < - 可伸展性元素 - >是来自某些“其他”命名空间（如XSD中的其他##）的元素的占位符。
+* XML命名空间前缀（上面定义）用于指示要定义的元素的命名空间。
+* 以<?xml开头的示例包含足够的信息以符合本规范;其他示例是片段，并需要指定额外的信息才能符合。
+
+提供了XSD模式作为WSDL语法的正式定义（见link:https://www.w3.org/TR/wsdl#A4[第A4节]）。
+
+== 2. 服务定义
+
+本节介绍了WSDL语言的核心元素。 SOAP，HTTP和MIME的绑定扩展包含在第3,4和5节中。
+
+=== 2.1 WSDL文档结构
+
+WSDL文档只是一组定义。 根目录有一个定义元素，里面有定义元素。 语法如下：
+
+[source, XML]
+----
+<wsdl:definitions name="nmtoken"? targetNamespace="uri"?>
+
+    <import namespace="uri" location="uri"/>*
+
+    <wsdl:documentation .... /> ?
+
+    <wsdl:types> ?
+        <wsdl:documentation .... />?
+        <xsd:schema .... />*
+        <-- extensibility element --> *
+    </wsdl:types>
+
+    <wsdl:message name="nmtoken"> *
+        <wsdl:documentation .... />?
+        <part name="nmtoken" element="qname"? type="qname"?/> *
+    </wsdl:message>
+
+    <wsdl:portType name="nmtoken">*
+        <wsdl:documentation .... />?
+        <wsdl:operation name="nmtoken">*
+           <wsdl:documentation .... /> ?
+           <wsdl:input name="nmtoken"? message="qname">?
+               <wsdl:documentation .... /> ?
+           </wsdl:input>
+           <wsdl:output name="nmtoken"? message="qname">?
+               <wsdl:documentation .... /> ?
+           </wsdl:output>
+           <wsdl:fault name="nmtoken" message="qname"> *
+               <wsdl:documentation .... /> ?
+           </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="nmtoken" type="qname">*
+        <wsdl:documentation .... />?
+        <-- extensibility element --> *
+        <wsdl:operation name="nmtoken">*
+           <wsdl:documentation .... /> ?
+           <-- extensibility element --> *
+           <wsdl:input> ?
+               <wsdl:documentation .... /> ?
+               <-- extensibility element -->
+           </wsdl:input>
+           <wsdl:output> ?
+               <wsdl:documentation .... /> ?
+               <-- extensibility element --> *
+           </wsdl:output>
+           <wsdl:fault name="nmtoken"> *
+               <wsdl:documentation .... /> ?
+               <-- extensibility element --> *
+           </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="nmtoken"> *
+        <wsdl:documentation .... />?
+        <wsdl:port name="nmtoken" binding="qname"> *
+           <wsdl:documentation .... /> ?
+           <-- extensibility element -->
+        </wsdl:port>
+        <-- extensibility element -->
+    </wsdl:service>
+
+    <-- extensibility element --> *
+
+</wsdl:definitions>
+----
+服务使用六大要素定义：
+
+类型(types):: 它提供用于描述交换的消息的数据类型定义。
+消息(message):: 其表示正在传输的数据的抽象定义。消息由逻辑部分组成，每个逻辑部分与某些类型系统中的定义相关联。
+端口类型(portType):: 它是一组抽象操作。每个操作都是指输入消息和输出消息。
+绑定(binding):: 它为特定portType定义的操作和消息指定了具体的协议和数据格式规范。
+端口(port):: 其指定绑定的地址，从而定义单个通信端点。
+服务(service):: 用于聚合一组相关端口。
+
+这些要素将在2.2至2.7节中详细描述。在本节的其余部分，我们将描述WSDL为命名文档引用的规则，引用文档定义，使用语言扩展和添加上下文文档。
+
+==== 2.1.1文件命名和链接
+
+可以为WSDL文档分配一个类型为NCNAME的可选**name**属性，作为轻量级文档。可选地，可以指定类型为URI的**targetNamespace**属性。 URI不能是相对URI。
+
+WSDL允许使用**import**语句将**命名空间**(namespace)与文档**位置**(location)相关联：
+
+[source, XML]
+----
+<definitions .... >
+    <import namespace="uri" location="uri"/> *
+</definitions>
+----
+
+使用QName引用WSDL定义。可以引用WSDL文档中包含的以下类型的定义：
+
+* WSDL定义：service，port，message，bindings和portType
+* 其他定义：如果通过可扩展性添加其他定义，则应使用link:http://www.w3.org/TR/xmlschema-2/#QName[QName]链接。
+
+上面列出的每个WSDL定义类型都有自己的名称范围（即端口名称和消息名称从不冲突）。名称范围内的名称在WSDL文档中必须是唯一的。
+
+WSDL中QNames的解析与XML Schema规范[link:https://www.w3.org/TR/wsdl#_9.__[11]]描述的QNames的解析相似。
+
+==== 2.1.2创作风格
+
+使用**import**元素可以将服务定义的不同元素分离成独立的文档，然后可以根据需要导入。这种技术有助于编写更清晰的服务定义，通过根据抽象级别分隔定义。它还最大限度地重用各种服务定义的重用能力。因此，以这种方式构建的WSDL文档更易于使用和维护。下面的示例2显示了如何使用此创作风格来定义示例1中提供的服务。这里我们将定义分为三个文档：数据类型定义，抽象定义和特定服务绑定。这种机制的使用当然不限于示例中明确呈现的定义，其仅使用本说明书中定义的语言元素。基于附加语言扩展的其他类型的定义可以以类似的方式进行编码和重用。
+
+.示例2.示例1中的服务的替代创作风格。
+.http://example.com/stockquote/stockquote.xsd
+[source, XML]
+----
+<?xml version="1.0"?>
+<schema targetNamespace="http://example.com/stockquote/schemas"
+       xmlns="http://www.w3.org/2000/10/XMLSchema">
+
+    <element name="TradePriceRequest">
+        <complexType>
+            <all>
+                <element name="tickerSymbol" type="string"/>
+            </all>
+        </complexType>
+    </element>
+    <element name="TradePrice">
+        <complexType>
+            <all>
+                <element name="price" type="float"/>
+            </all>
+        </complexType>
+    </element>
+</schema>
+----
+.http://example.com/stockquote/stockquote.wsdl
+[source, XML]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+
+targetNamespace="http://example.com/stockquote/definitions"
+          xmlns:tns="http://example.com/stockquote/definitions"
+          xmlns:xsd1="http://example.com/stockquote/schemas"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+   <import namespace="http://example.com/stockquote/schemas"
+           location="http://example.com/stockquote/stockquote.xsd"/>
+
+    <message name="GetLastTradePriceInput">
+        <part name="body" element="xsd1:TradePriceRequest"/>
+    </message>
+
+    <message name="GetLastTradePriceOutput">
+        <part name="body" element="xsd1:TradePrice"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="GetLastTradePrice">
+           <input message="tns:GetLastTradePriceInput"/>
+           <output message="tns:GetLastTradePriceOutput"/>
+        </operation>
+    </portType>
+</definitions>
+----
+.http://example.com/stockquote/stockquoteservice.wsdl
+[source, XML]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+
+targetNamespace="http://example.com/stockquote/service"
+          xmlns:tns="http://example.com/stockquote/service"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns:defs="http://example.com/stockquote/definitions"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+   <import namespace="http://example.com/stockquote/definitions"
+           location="http://example.com/stockquote/stockquote.wsdl"/>
+
+    <binding name="StockQuoteSoapBinding" type="defs:StockQuotePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetLastTradePrice">
+           <soap:operation soapAction="http://example.com/GetLastTradePrice"/>
+           <input>
+               <soap:body use="literal"/>
+           </input>
+           <output>
+               <soap:body use="literal"/>
+           </output>
+        </operation>
+    </binding>
+
+    <service name="StockQuoteService">
+        <documentation>My first service</documentation>
+        <port name="StockQuotePort" binding="tns:StockQuoteBinding">
+           <soap:address location="http://example.com/stockquote"/>
+        </port>
+    </service>
+</definitions>
+----
+
+==== 2.1.3 语言可扩展性和绑定
+
+在WSDL中，术语绑定是指将协议或数据格式信息与抽象实体（如消息，操作或portType）相关联的过程。 WSDL允许在WSDL定义的各种元素下表示特定技术的元素（以下称为**可扩展元素**）。这些扩展点通常用于指定特定协议或消息格式的绑定信息，但不限于此。可扩展性元素必须使用与WSDL不同的XML命名空间。第link:https://www.w3.org/TR/wsdl#A3[A3节]将详细介绍可扩展元素可以出现的文档中的具体位置。
+
+可扩展性元素通常用于指定一些技术特定的绑定。为了区分技术特定绑定的语义是否需要通信或可选，可扩展性元素可以在元素上放置一个类型为boolean的**wsdl:required**属性。 required的默认值为false。必需属性在命名空间“http://schemas.xmlsoap.org/wsdl/”中定义。
+
+可扩展性元素允许网络和消息协议领域的创新，而无需修改基本的WSDL规范。 WSDL建议定义此类协议的规范还定义了用于描述这些协议或格式的任何必要的WSDL扩展。
+
+有关作为基本WSDL规范的一部分定义的可扩展性元素的示例，请参见第3,4和5节。
+
+==== 2.1.4 文档(Documentation)
+
+WSDL使用可选的**wsdl:document**元素作为可读取文档的容器。元素的内容是任意文本和元素（XSD中的“混合”）。任何WSDL语言元素都允许使用documentation元素。
+
+=== 2.2类型(Types)
+
+**types**元素包含与交换的消息相关的数据类型定义。为了实现最大的互操作性和平台中立性，WSDL倾向于使用XSD作为规范型系统，并将其视为内在类型系统。
+
+[source, xml]
+----
+<definitions .... >
+    <types>
+        <xsd:schema .... />*
+    </types>
+</definitions>
+----
+
+XSD类型系统可用于定义消息中的类型，而不管生成的是否实际为XML，或者生成的XSD模式能否验证特定的格式。非常有趣的是，如果同一消息将有多个绑定，或者只有一个绑定，但该绑定类型尚未具有广泛使用的类型系统。在这些情况下，使用XSD编码抽象类型的推荐方法如下：
+
+* 使用元素Element形式（非属性attribute。
+* 不包括指定编码特有的属性或元素（例如与消息的抽象内容无关）。一些例子诸如: soap:root，soap:encodingStyle，xmi:id，xmi:name。
+* 数组类型应扩展在SOAP v1.1编码模式（link:http://schemas.xmlsoap.org/soap/encoding/[http://schemas.xmlsoap.org/soap/encoding/]）中定义的数组类型（无论生成的表单是否实际使用SOAP的第5节中指定的编码v1.1文件）。对于数组类型使用名称ArrayOfXXX（其中XXX是数组中项目的类型）。通过使用soapenc：arrayType属性的默认值来指定数组中的项目类型和数组维度。在撰写本文时，XSD规范没有指定包含QName值的属性的默认值的机制。为了克服这个限制，WSDL引入了具有提供默认值的语义的**arrayType**属性（来自命名空间http://schemas.xmlsoap.org/wsdl/）。如果XSD被修改为支持这个功能，修改后的机制应该被用于WSDL定义的arrayType属性。
+* 使用xsd：anyType类型来表示可以有任何类型的字段/参数。
+
+然而，由于期望单一类型系统语法可用于描述现有和未来的所有抽象类型是不合理的，所以WSDL允许通过可扩展性元素添加类型系统。可扩展性元素可能会出现在**types**元素下，以识别正在使用的类型定义系统，并为类型定义提供XML容器元素。该元素的作用可以与XML模式语言的**架构**元素的作用进行比较。
+[source, XML]
+----
+<definitions .... >
+    <types>
+        <-- type-system extensibility element --> *
+    </types>
+</definitions>
+----
+=== 2.3 消息
+
+消息由一个或多个逻辑部分组成。 每个部分都使用message-type属性与某些类型系统的类型相关联。 消息类型属性的集合是可扩展的。 WSDL定义了几种与XSD一起使用的消息类型属性：
+
+元素:: 指使用QName的XSD元素。
+类型:: 指使用QName的XSD simpleType或complexType。
+
+可以定义其他消息类型属性，只要它们使用与WSDL不同的命名空间即可。 绑定可扩展性元素也可以使用message-type属性。
+
+定义消息的语法如下。 消息打字属性（可能会根据所使用的系统类型而有所不同）以**粗体**显示。
+
+[source, XML]
+----
+<definitions .... >
+    <message name="nmtoken"> *
+        <part name="nmtoken" element="qname"? type="qname"?/> *
+    </message>
+</definitions>
+----
+
+消息**名称**属性在封闭的WSDL文档中定义的所有消息中提供唯一的名称。
+
+部件(part)**名称**属性在封闭消息的所有部分中提供唯一的名称。
+
+==== 2.3.1 消息部件Message Parts
+
+部件(Parts)是用于描述消息的逻辑抽象内容的灵活机制。 绑定可以引用部件的名称，以指定关于部件的绑定特定信息。 例如，如果定义与RPC一起使用的消息，则部件可以表示消息中的参数。 但是，必须检查绑定以确定该部分的实际含义。
+
+如果消息具有多个逻辑单元，则使用多个部件元素。 例如，以下消息由采购订单和发票组成。
+
+[source, XML]
+----
+<definitions .... >
+    <types>
+        <schema .... >
+           <element name="PO" type="tns:POType"/>
+           <complexType name="POType">
+               <all>
+                   <element name="id" type="string/>
+                   <element name="name" type="string"/>
+                   <element name="items">
+                       <complexType>
+                           <all>
+                               <element name="item" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
+                           </all>
+                       </complexType>
+                   </element>
+              </all>
+           </complexType>
+
+           <complexType name="Item">
+               <all>
+                   <element name="quantity" type="int"/>
+                   <element name="product" type="string"/>
+               </all>
+           </complexType>
+           <element name="Invoice" type="tns:InvoiceType"/>
+           <complexType name="InvoiceType">
+               <all>
+                   <element name="id" type="string"/>
+               </all>
+           </complexType>
+        </schema>
+    </types>
+
+    <message name="PO">
+        <part name="po" element="tns:PO"/>
+        <part name="invoice" element="tns:Invoice"/>
+    </message>
+</definitions>
+----
+
+然而，如果消息内容足够复杂，则可以使用替代语法来直接使用类型系统来指定消息的复合结构。 在这种用法中，只能指定一部分。 在以下示例中，正文是采购订单或一组发票。
+
+[source, XML]
+----
+<definitions .... >
+    <types>
+        <schema .... >
+           <complexType name="POType">
+               <all>
+                   <element name="id" type="string/>
+                   <element name="name" type="string"/>
+                   <element name="items">
+                       <complexType>
+                           <all>
+                               <element name="item" type="tns:Item" minOccurs="0" maxOccurs="unbounded"/>
+                           </all>
+                       </complexType>
+                   </element>
+               </all>
+           </complexType>
+
+           <complexType name="Item">
+               <all>
+                   <element name="quantity" type="int"/>
+                   <element name="product" type="string"/>
+               </all>
+           </complexType>
+           <complexType name="InvoiceType">
+               <all>
+                   <element name="id" type="string"/>
+               </all>
+           </complexType>
+
+           <complexType name="Composite">
+               <choice>
+                   <element name="PO" minOccurs="1" maxOccurs="1" type="tns:POType"/>
+                   <element name="Invoice" minOccurs="0" maxOccurs="unbounded" type="tns:InvoiceType"/>
+               </choice>
+           </complexType>
+        </schema>
+    </types>
+
+    <message name="PO">
+        <part name="composite" type="tns:Composite"/>
+    </message>
+</definitions>
+----
+
+==== 2.3.2 抽象与具体消息
+
+消息定义总是被认为是消息内容的抽象定义。 消息绑定描述了抽象内容如何映射到具体的格式。 然而，在某些情况下，抽象定义可能与一个或多个绑定非常接近或完全匹配具体表示，因此这些绑定将提供很少或没有映射信息。 然而，相同消息定义的另一个绑定可能需要广泛的映射信息。 因此，直到绑定被检查，才能确定消息真正是“抽象的”。
+
+=== 2.4 端口类型
+
+端口类型是一组命名的抽象操作，涉及抽象消息。
+
+[source, XML]
+----
+<wsdl:definitions .... >
+    <wsdl:portType name="nmtoken">
+        <wsdl:operation name="nmtoken" .... /> *
+    </wsdl:portType>
+</wsdl:definitions>
+----
+
+端口类型**名称**属性在封装的WSDL文档中定义的所有端口类型中提供唯一的名称。
+
+一个操作通过**name**属性命名。
+
+WSDL具有端点可以支持的四个传输原语：
+
+单程(One-way):: 端点接收消息。
+请求-响应(Request-reponse):: 端点接收消息，并发送相关消息。
+要求-响应(Solicit-response):: 端点发送消息，并接收相关消息。
+通知(Notification):: 端点发送消息。
+
+WSDL将这些原语称为**操作**。虽然可以使用两个单向消息抽象地建立“请求/响应”或“要求/响应”，但是将它们建模为原始操作类型是有用的，因为：
+
+* 他们很常见
+* 该序列可以相关，而不必引入更复杂的流信息。
+* 如果某些端点是同步请求响应的结果，则只能接收消息。
+* 在需要流定义的时刻，可以从这些原语中算出一个简单的流程。
+
+虽然WSDL文档中的请求/响应或要求/响应在逻辑上相关，但给定的绑定描述了具体的相关信息。例如，请求和响应消息可以作为一个或两个实际网络通信的一部分来交换。
+
+尽管基本WSDL结构支持这四个传输原语的绑定，但WSDL仅定义单向和请求响应原语的绑定。预期定义Solicit-response或Notification的协议的规范也将包括允许使用这些原语的WSDL绑定扩展。
+
+操作是指使用QName类型的message属性所涉及到的消息。此属性遵循WSDL为链接定义的规则（link:https://www.w3.org/TR/wsdl#_document-n[见第2.1.2节]）。
+
+==== 2.4.1单程操作 One-way
+
+单向操作的语法是：
+[source, XML]
+----
+<wsdl:definitions .... > <wsdl:portType .... > *
+        <wsdl:operation name="nmtoken">
+           <wsdl:input name="nmtoken"? message="qname"/>
+        </wsdl:operation>
+    </wsdl:portType >
+</wsdl:definitions>
+----
+**input**元素指定单向操作的抽象消息格式。
+
+==== 2.4.2 请求响应操作 Request-response
+
+请求 - 响应操作的语法是：
+
+[source, XML]
+----
+<wsdl:definitions .... >
+    <wsdl:portType .... > *
+        <wsdl:operation name="nmtoken" parameterOrder="nmtokens">
+           <wsdl:input name="nmtoken"? message="qname"/>
+           <wsdl:output name="nmtoken"? message="qname"/>
+           <wsdl:fault name="nmtoken" message="qname"/>*
+        </wsdl:operation>
+    </wsdl:portType >
+</wsdl:definitions>
+----
+
+输入和输出元素分别指定请求和响应的抽象消息格式。 可选的故障元素指定可能作为操作结果输出的任何错误消息的抽象消息格式（超出协议特定的错误消息）。
+
+请注意，请求响应操作是一个抽象概念; 必须查阅特定的绑定以确定消息实际发送的方式：在单个通信（例如HTTP请求/响应）内，或作为两个独立通信（例如两个HTTP请求）。
+
+==== 2.4.3 要求-响应操作 Solicit-response
+
+请求响应操作的语法是：
+[source, XML]
+----
+<wsdl:definitions .... >
+    <wsdl:portType .... > *
+        <wsdl:operation name="nmtoken" parameterOrder="nmtokens">
+           <wsdl:output name="nmtoken"? message="qname"/>
+           <wsdl:input name="nmtoken"? message="qname"/>
+           <wsdl:fault name="nmtoken" message="qname"/>*
+        </wsdl:operation>
+    </wsdl:portType >
+</wsdl:definitions>
+----
+输出和输入元素分别指定请求和响应的抽象消息格式。 可选的故障元素指定可能作为操作结果输出的任何错误消息的抽象消息格式（超出协议特定的错误消息）。
+
+请注意，请求响应操作是一个抽象概念; 必须查阅特定的绑定以确定消息实际发送的方式：在单个通信（例如HTTP请求/响应）内，或作为两个独立通信（例如两个HTTP请求）。
+
+==== 2.4.4 通知操作 Notification
+
+通知操作的语法是：
+
+[source, XML]
+----
+<wsdl:definitions .... >
+    <wsdl:portType .... > *
+        <wsdl:operation name="nmtoken">
+           <wsdl:output name="nmtoken"? message="qname"/>
+        </wsdl:operation>
+    </wsdl:portType >
+</wsdl:definitions>
+----
+**输出**元素指定通知操作的抽象消息格式。
+
+==== 2.4.5操作中元素的名称
+
+输入和输出元素的**name**属性在封闭端口类型中的所有输入和输出元素之间提供唯一的名称。
+
+为了避免在操作中命名每个输入和输出元素，WSDL根据操作名称提供一些默认值。如果在单向或通知消息中未指定name属性，则默认为操作名称。如果在"请求 - 响应"或"要求 - 响应"操作的输入或输出消息上未指定name属性，则名称将默认为附加了“Request/Solicit”或“Response”的操作名称。
+
+必须命名每个故障元素以允许绑定指定故障消息的具体格式。故障元素的名称在为操作定义的故障集中是唯一的。
+
+==== 2.4.6 操作中的参数顺序
+
+操作不指定是否与面向过程的绑定一起使用。但是，当使用具有面向过程绑定的操作时，能够捕获原始的面向过程函数签名是有用的。因此，请求响应或请求响应操作可以通过**parameterOrder**属性（类型为nmtokens）指定参数名称列表。属性的值是由单个空格分隔的消息部分名称的列表。 parameterOrder属性的值必须遵循以下规则：
+
+* 部件名称顺序反映了RPC签名中参数的顺序
+* 列表中不存在**返回**值部分
+* 如果输入和输出消息中出现部件名称，则它是一个**输入/输出**参数
+* 如果零件名称仅显示在输入消息中，则它是一个**in**参数
+* 如果零件名只出现在输出消息中，则它是一个**out**参数
+
+请注意，这些信息作为“暗示”，并且可能会被不关心RPC签名的人忽略。此外，即使操作与类似RPC绑定一起使用也不需要存在。
+
+=== 2.5 绑定
+
+绑定定义了由特定portType定义的操作和消息的消息格式和协议细节。给定portType可能有任何数量的绑定。绑定的语法如下：
+
+[source, XML]
+----
+<wsdl:definitions .... >
+    <wsdl:binding name="nmtoken" type="qname"> *
+        <-- extensibility element (1) --> *
+        <wsdl:operation name="nmtoken"> *
+           <-- extensibility element (2) --> *
+           <wsdl:input name="nmtoken"? > ?
+               <-- extensibility element (3) -->
+           </wsdl:input>
+           <wsdl:output name="nmtoken"? > ?
+               <-- extensibility element (4) --> *
+           </wsdl:output>
+           <wsdl:fault name="nmtoken"> *
+               <-- extensibility element (5) --> *
+           </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+</wsdl:definitions>
+----
+
+**name**属性在封装的WSDL文档中定义的所有绑定中提供唯一的名称。
+
+绑定使用**type**属性引用它绑定的portType。此QName值遵循由WSDL定义的链接规则（见第2.1.2节）。
+
+绑定可扩展元素用于指定输入（3），输出（4）和故障消息（5）的具体语法。每个操作绑定信息（2）以及每个绑定信息（1）也可以被指定。
+
+绑定中的操作元素在绑定的portType中指定具有相同名称的操作的绑定信息。由于操作名称不是唯一的（例如，在方法名称过载的情况下），操作绑定元素中的**name**属性可能不足以唯一标识操作。在这种情况下，应通过提供相应的wsdl：input和wsdl：output元素的名称属性来识别正确的操作。
+
+绑定必须指定一个协议。
+
+绑定不得指定地址信息。
+
+=== 2.6端口
+
+端口通过为绑定指定单个地址来定义单个端点。
+
+[source, xml]
+----
+<wsdl:definitions .... >
+    <wsdl:service .... > *
+        <wsdl:port name="nmtoken" binding="qname"> *
+           <-- extensibility element (1) -->
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
+----
+
+**name**属性在封闭的WSDL文档中定义的所有端口中提供唯一的名称。
+
+**binding**属性（类型QName）是指使用WSDL定义的链接规则的绑定（请参见第2.1.2节）。
+
+绑定扩展元素（1）用于指定端口的地址信息。
+
+端口不能指定多个地址。
+
+端口不得指定除地址信息以外的任何绑定信息。
+
+=== 2.7服务
+
+服务将一组相关端口组合在一起：
+
+[source, xml]
+----
+<wsdl:definitions .... >
+    <wsdl:service name="nmtoken"> *
+        <wsdl:port .... />*
+    </wsdl:service>
+</wsdl:definitions>
+----
+
+**name**属性在封装的WSDL文档中定义的所有服务中提供一个唯一的名称。
+
+服务中的端口具有以下关系：
+
+* 没有一个端口彼此通信（例如，一个端口的输出不是另一端口的输入）。
+* 如果服务具有共享端口类型的多个端口，但使用不同的绑定或地址，则端口是备选方案。每个端口提供语义上等同的行为（在每个绑定所施加的传输和消息格式限制内）。这允许WSDL文档的消费者基于某些标准（协议，距离等）来选择特定端口进行通信。
+* 通过检查端口，我们可以确定服务的端口类型。这允许WSDL文档的消费者根据是否支持多种端口类型来确定是否希望与特定服务进行通信。如果端口类型的操作之间存在一些隐含的关系，并且必须存在整个端口类型集才能完成特定的任务，这是有用的。
+
+== 3. SOAP绑定
+
+WSDL包含SOAP 1.1端点的绑定，它支持以下协议特定信息的规范：
+
+* 绑定binding到SOAP 1.1协议的指示
+* 指定SOAP端点的地址的方法。
+* SOAP的HTTP绑定的SOAPAction HTTP头的URI
+* 作为SOAP信封一部分传输的标题的定义列表
+
+这种绑定语法不是详尽的规范，因为SOAP绑定的集合正在发展。没有什么可以排除从语法部分导出的其他SOAP绑定。例如：
+
+* 不使用URI寻址方案的SOAP绑定可以通过替换第3.8节中定义的soap：address元素替代另一个寻址方案。
+* 不需要SOAPAction的SOAP绑定将省略3.4节中定义的soapAction属性。
+
+== 3.1 SOAP示例
+
+在以下示例中，通过SMTP绑定将SubscribeToQuotes SOAP 1.1单向消息发送到StockQuote服务。该请求采用字符串类型的代码符号，并且包括定义订阅URI的标题。
+
+.示例3.使用SOAP头对SMTP进行单向操作的SOAP绑定
+
+[source, xml]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+          targetNamespace="http://example.com/stockquote.wsdl"
+          xmlns:tns="http://example.com/stockquote.wsdl"
+          xmlns:xsd1="http://example.com/stockquote.xsd"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <message name="SubscribeToQuotes">
+        <part name="body" element="xsd1:SubscribeToQuotes"/>
+        <part name="subscribeheader" element="xsd1:SubscriptionHeader"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="SubscribeToQuotes">
+           <input message="tns:SubscribeToQuotes"/>
+        </operation>
+    </portType>
+
+    <binding name="StockQuoteSoap" type="tns:StockQuotePortType">
+        <soap:binding style="document" transport="http://example.com/smtp"/>
+        <operation name="SubscribeToQuotes">
+           <input message="tns:SubscribeToQuotes">
+               <soap:body parts="body" use="literal"/>
+               <soap:header message="tns:SubscribeToQuotes" part="subscribeheader" use="literal"/>
+           </input>
+        </operation>
+    </binding>
+
+    <service name="StockQuoteService">
+        <port name="StockQuotePort" binding="tns:StockQuoteSoap">
+           <soap:address location="mailto:subscribe@example.com"/>
+        </port>
+    </service>
+
+    <types>
+        <schema targetNamespace="http://example.com/stockquote.xsd"
+               xmlns="http://www.w3.org/2000/10/XMLSchema">
+           <element name="SubscribeToQuotes">
+               <complexType>
+                   <all>
+                       <element name="tickerSymbol" type="string"/>
+                   </all>
+               </complexType>
+           </element>
+           <element name="SubscriptionHeader" type="uriReference"/>
+        </schema>
+    </types>
+</definitions>
+----
+
+此示例描述了可以通过SOAP 1.1 HTTP绑定将GetTradePrice SOAP 1.1请求发送到StockQuote服务。 该请求采用类型为string的代码符号，时间类型为timeInstant，并在SOAP响应中作为浮点数返回价格。
+
+.示例4. SOAP通过HTTP绑定请求 - 响应RPC操作
+
+[source, xml]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+          targetNamespace="http://example.com/stockquote.wsdl"
+          xmlns:tns="http://example.com/stockquote.wsdl"
+          xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
+          xmlns:xsd1="http://example.com/stockquote.xsd"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <message name="GetTradePriceInput">
+        <part name="tickerSymbol" element="xsd:string"/>
+        <part name="time" element="xsd:timeInstant"/>
+    </message>
+
+    <message name="GetTradePriceOutput">
+        <part name="result" type="xsd:float"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="GetTradePrice">
+           <input message="tns:GetTradePriceInput"/>
+           <output message="tns:GetTradePriceOutput"/>
+        </operation>
+    </portType>
+
+    <binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetTradePrice">
+           <soap:operation soapAction="http://example.com/GetTradePrice"/>
+           <input>
+               <soap:body use="encoded" namespace="http://example.com/stockquote"
+                          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+           </input>
+           <output>
+               <soap:body use="encoded" namespace="http://example.com/stockquote"
+                          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+           </output>
+        </operation>>
+    </binding>
+
+    <service name="StockQuoteService">
+        <documentation>My first service</documentation>
+        <port name="StockQuotePort" binding="tns:StockQuoteBinding">
+           <soap:address location="http://example.com/stockquote"/>
+        </port>
+    </service>
+</definitions>
+----
+
+此示例描述了可以通过SOAP 1.1 HTTP绑定将GetTradePrices SOAP 1.1请求发送到StockQuote服务。 该请求采用股票报价符号字符串，应用程序定义的TimePeriod结构包含开始和结束时间，并返回在该时间段内由服务记录的股票价格数组，以及将其记录为SOAP的频率 响应。 对应于此服务的RPC签名具有参数tickerSymbol和timePeriod，后跟输出参数频率，并返回浮点数组。
+
+.示例5. SOAP通过HTTP绑定请求 - 响应RPC操作
+
+[source, xml]
+----
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+
+targetNamespace="http://example.com/stockquote.wsdl"
+          xmlns:tns="http://example.com/stockquote.wsdl"
+          xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
+          xmlns:xsd1="http://example.com/stockquote/schema"
+          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+          xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+          xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+       <schema targetNamespace="http://example.com/stockquote/schema"
+              xmlns="http://www.w3.org/2000/10/XMLSchema">
+           <complexType name="TimePeriod">
+              <all>
+                  <element name="startTime" type="xsd:timeInstant"/>
+                  <element name="endTime" type="xsd:timeInstant"/>
+              </all>
+           </complexType>
+           <complexType name="ArrayOfFloat">
+              <complexContent>
+                  <restriction base="soapenc:Array">
+                      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:float[]"/>
+                  </restriction>
+              </complexContent>
+           </complexType>
+       </schema>
+    </types>
+
+    <message name="GetTradePricesInput">
+        <part name="tickerSymbol" element="xsd:string"/>
+        <part name="timePeriod" element="xsd1:TimePeriod"/>
+    </message>
+
+    <message name="GetTradePricesOutput">
+        <part name="result" type="xsd1:ArrayOfFloat"/>
+        <part name="frequency" type="xsd:float"/>
+    </message>
+
+    <portType name="StockQuotePortType">
+        <operation name="GetLastTradePrice" parameterOrder="tickerSymbol timePeriod frequency">
+           <input message="tns:GetTradePricesInput"/>
+           <output message="tns:GetTradePricesOutput"/>
+        </operation>
+    </portType>
+
+    <binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetTradePrices">
+           <soap:operation soapAction="http://example.com/GetTradePrices"/>
+           <input>
+               <soap:body use="encoded" namespace="http://example.com/stockquote"
+                          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+           </input>
+           <output>
+               <soap:body use="encoded" namespace="http://example.com/stockquote"
+                          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+           </output>
+        </operation>>
+    </binding>
+
+    <service name="StockQuoteService">
+        <documentation>My first service</documentation>
+        <port name="StockQuotePort" binding="tns:StockQuoteBinding">
+           <soap:address location="http://example.com/stockquote"/>
+        </port>
+    </service>
+</definitions>
+----
+
+=== 3.2 SOAP绑定如何扩展WSDL
+
+SOAP绑定使用以下扩展元素扩展WSDL：
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <soap:binding style="rpc|document" transport="uri">
+        <operation .... >
+           <soap:operation soapAction="uri"? style="rpc|document"?>?
+           <input>
+               <soap:body parts="nmtokens"? use="literal|encoded"
+                          encodingStyle="uri-list"? namespace="uri"?>
+               <soap:header message="qname" part="nmtoken" use="literal|encoded"
+                            encodingStyle="uri-list"? namespace="uri"?>*
+                 <soap:headerfault message="qname" part="nmtoken" use="literal|encoded"
+                                   encodingStyle="uri-list"? namespace="uri"?/>*
+               <soap:header>
+           </input>
+           <output>
+               <soap:body parts="nmtokens"? use="literal|encoded"
+                          encodingStyle="uri-list"? namespace="uri"?>
+               <soap:header message="qname" part="nmtoken" use="literal|encoded"
+                            encodingStyle="uri-list"? namespace="uri"?>*
+                 <soap:headerfault message="qname" part="nmtoken" use="literal|encoded"
+                                   encodingStyle="uri-list"? namespace="uri"?/>*
+               <soap:header>
+           </output>
+           <fault>*
+               <soap:fault name="nmtoken" use="literal|encoded"
+                           encodingStyle="uri-list"? namespace="uri"?>
+            </fault>
+        </operation>
+    </binding>
+
+    <port .... >
+        <soap:address location="uri"/>
+    </port>
+</definitions>
+----
+
+SOAP绑定的每个扩展元素将在后续部分中介绍。
+
+=== 3.3 SOAP:binding
+
+SOAP绑定元素的目的是表示绑定绑定到SOAP协议格式：信封，标题和正文。 该元素不对消息的编码或格式进行声明（例如，它必须遵循SOAP 1.1规范的第5部分）。
+
+使用SOAP绑定时，soap：binding元素必须存在。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <soap:binding transport="uri"? style="rpc|document"?>
+    </binding>
+</definitions>
+----
+
+**style**属性的值是每个包含的操作的style属性的默认值。 如果省略style属性，则假定为“document”。 有关风格语义的更多信息，请参见第3.4节。
+
+所需**传输**属性的值指示SOAP绑定对应的SOAP的传输。 URI值**http://schemas.xmlsoap.org/soap/http**对应于SOAP规范中的HTTP绑定。 其他URI可以用于指示其他传输（如SMTP，FTP等）。
+
+=== 3.4 soap:operation
+
+soap:operation元素为整个操作提供信息。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <soap:operation soapAction="uri"? style="rpc|document"?>?
+        </operation>
+    </binding>
+</definitions>
+----
+
+**style**属性指示操作是否面向RPC（包含参数和返回值的消息）或面向文档（包含文档的消息）。该信息可用于选择适当的编程模型。该属性的值也会影响SOAP消息体的构造方式，如下面第3.5节所述。如果未指定属性，则默认为soap:binding元素中指定的值。如果soap:binding元素没有指定样式，则假定它是“document”。
+
+**soapAction**属性指定此操作的SOAPAction头的值。该URI值应直接用作SOAPAction头的值;在进行请求时，不要使相对URI值为绝对值。对于HTTP的HTTP协议绑定，这是必需的值（它没有默认值）。对于其他SOAP协议绑定，它不能被指定，并且可以省略soap:operation元素。
+
+=== 3.5 soap:body
+
+soap:body元素指定消息部分如何显示在SOAP Body元素内。
+
+消息的部分可以是抽象类型定义，也可以是具体的模式定义。如果抽象定义，类型根据编码样式定义的一些规则进行序列化。使用URI列表来标识每种编码风格，如SOAP规范中那样。由于某些编码风格诸如SOAP Encoding（http://schemas.xmlsoap.org/soap/encoding/）允许给定抽象类型集合的消息格式发生变化，因此消息的读者可以理解所有的格式变化：“读者做正确”。为了避免必须支持所有的变体，可以具体地定义一个消息，然后将其表示为原始编码风格（如果有的话）作为提示。在这种情况下，消息的写入者必须完全符合指定的模式：“writer make right”。
+
+soap:body 绑定元素提供了有关如何在SOAP消息的Body元素内部组合不同消息部分的信息。 soap:body元素用于面向RPC和面向文档的消息中，但封闭操作的样式对Body部分的结构有重要的影响：
+
+* 如果操作样式是rpc，则每个部分都是参数或返回值，并显示在主体内的包装器元素内（在SOAP规范的第7.1节之后）。包装器元素与操作名称相同，命名空间是命名空间属性的值。每个消息部分（参数）出现在包装器下，由与调用的相应参数相同地命名的访问器表示。部件按照与呼叫参数相同的顺序排列。
+* 如果操作样式是文档，则不存在其他包装器，并且消息部分直接显示在SOAP Body元素下。
+
+使用相同的机制来定义Body和参数访问器元素的内容。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <input>
+               <soap:body parts="nmtokens"? use="literal|encoded"?
+                          encodingStyle="uri-list"? namespace="uri"?>
+           </input>
+           <output>
+               <soap:body parts="nmtokens"? use="literal|encoded"?
+                          encodingStyle="uri-list"? namespace="uri"?>
+           </output>
+        </operation>
+    </binding>
+</definitions>
+----
+
+类型为nmtokens的可选**部分**属性指出哪些部分出现在消息的SOAP主体部分的某处（消息的其他部分可能出现在消息的其他部分中，例如当SOAP与多部分/相关MIME绑定一起使用时） 。如果省略parts属性，则假定由消息定义的所有部分都包含在SOAP Body部分中。
+
+所需的**use**属性指示消息部分是否使用某些编码规则进行编码，或者该部分是否定义消息的具体模式。
+
+如果使用**encoded**，则每个消息部分使用**type**属性引用抽象类型。这些抽象类型用于通过应用**encodingStyle**属性指定的编码来产生具体的消息。命名空间属性的部件名称，类型和值都是编码的输入，尽管命名空间属性仅适用于抽象类型未明确定义的内容。如果引用的编码风格允许其格式的变体（例如SOAP编码），则必须支持所有变体（“阅读器正确”）。
+
+如果use是**literal**的，那么每个部分都使用**element**或**type**属性引用具体的模式定义。在第一种情况下，该部分引用的元素将直接出现在Body元素（用于文档样式绑定）下方或在消息部分（以rpc样式）命名的访问器元素下。在第二个部分中，该部分引用的类型成为封装元素的模式类型（用于rpc样式的文档样式或部件访问元素的主体）。有关使用类型定义复合体的内容的示例，请参见第2.3.1节。当使用文字表示使用特定编码（例如SOAP编码）导出具体格式时，可以使用**encodingStyle**属性的值，但只支持指定的变体（“写入正确”）。
+
+**encodingStyle**属性的值是URI的列表，每个URI由单个空格分隔。 URI表示消息中使用的编码，从大多数限制到最不严格（就像SOAP规范中定义的encodingStyle属性一样）。
+
+=== 3.6 soap:faut
+
+soap:fault元素指定SOAP Fault Details元素内容的内容。它是在soap:body元素之后进行模式化（见第3.5节）。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <fault>*
+               <soap:fault name="nmtoken" use="literal|encoded"
+                                 encodingStyle="uri-list"? namespace="uri"?>
+           </fault>
+        </operation>
+    </binding>
+</definitions>
+----
+
+**name**属性将soap:fault与为操作定义的wsdl:fault相关联。
+
+故障信息必须有一个独立的部分。 *use*，**encodingStyle**和**namespace**属性的使用方式与soap:body（参见第3.5节）相同，只有style =“document”，因为fault不包含参数。
+
+=== 3.7 soap:header和soap:headerfault
+
+soap:header和soap:headerfault元素允许定义在SOAP Envelope的Header元素内传输的头。 它是在soap:body元素之后进行模式化（见第3.5节）。
+
+没有必要使用soap:header全面列出出现在SOAP Envelope中的所有头文件。 例如，扩展（见2.1.3）到WSDL可能意味着特定的头文件应该被添加到实际的有效载荷中，并且不需要在这里列出这些头文件。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <input>
+             <soap:header message="qname" part="nmtoken" use="literal|encoded"
+                          encodingStyle="uri-list"? namespace="uri"?>*
+               <soap:headerfault message="qname" part="nmtoken" use="literal|encoded"
+                                 encodingStyle="uri-list"? namespace="uri"?/>*
+             <soap:header>
+           </input>
+           <output>
+               <soap:header message="qname" part="nmtoken" use="literal|encoded"
+                            encodingStyle="uri-list"? namespace="uri"?>*
+                 <soap:headerfault message="qname" part="nmtoken" use="literal|encoded"
+                                   encodingStyle="uri-list"? namespace="uri"?/>*
+               <soap:header>
+           </output>
+        </operation>
+    </binding>
+</definitions>
+----
+
+*use*，**encodingStyle**和**namespace**属性都以与soap:body（参见第3.5节）相同的方式使用，因为head部分不包含参数，因此仅使用style =“document”。
+
+**message**属性（类型QName）和**part**属性（类型nmtoken）引用定义头类型的消息部分。该部分引用的模式可能包括soap:actor和soap的定义：如果use =“literal”，则为mustUnderstand属性，但是如果use =“encoded”则必须不允许。引用的消息不必与定义SOAP主体的消息相同。
+
+显示在soap:header中并具有与soap:header相同的语法的可选**headerfault**元素允许指定用于传输与soap:header所定义的头相关的错误信息的头类型。 SOAP规范规定必须在头文件中返回与头文件有关的错误，这种机制允许指定这种头文件的格式。
+
+=== 3.8 soap:address
+
+SOAP地址绑定用于给端口一个地址（URI）。使用SOAP绑定的端口必须仅指定一个地址。为地址指定的URI方案必须对应于soap:binding指定的传输。
+
+[source, xml]
+----
+<definitions .... >
+    <port .... >
+        <binding .... >
+           <soap:address location="uri"/>
+        </binding>
+    </port>
+</definitions>
+----
+
+== 4. HTTP GET＆POST绑定
+
+WSDL包含HTTP 1.1的GET和POST等动词的绑定，为了描述Web浏览器和网站之间的交互。 这允许Web浏览器之外的应用程序与站点进行交互。 可以指定以下协议的具体信息：
+
+* 指示绑定使用HTTP GET或POST
+* 端口的地址
+* 每个操作的相对地址（相对于端口定义的基地址）
+
+=== 4.1 HTTP GET/POST示例
+
+以下示例显示了针对给定端口类型绑定的三个端口。
+
+如果正在传递的值为part1 = 1，part2 = 2，part3 = 3，则每个端口的请求格式如下：
+
+[source, url]
+----
+port1：GET，URL =“http://example.com/o1/A1B2/3”
+port2：GET，URL =“http://example.com/o1?p1=1&p2=2&p3=3
+port3：POST，URL =“http://example.com/o1”，PAYLOAD =“p1 = 1＆p2 = 2＆p3 = 3”
+----
+
+对于每个端口，响应是GIF或JPEG图像。
+
+.示例6. GET和FORM POST返回GIF或JPG
+<definitions .... >
+    <message name="m1">
+        <part name="part1" type="xsd:string"/>
+        <part name="part2" type="xsd:int"/>
+        <part name="part3" type="xsd:string"/>
+    </message>
+
+    <message name="m2">
+        <part name="image" type="xsd:binary"/>
+    </message>
+
+    <portType name="pt1">
+        <operation name="o1">
+           <input message="tns:m1"/>
+           <output message="tns:m2"/>
+        </operation>
+    </portType>
+
+    <service name="service1">
+        <port name="port1" binding="tns:b1">
+           <http:address location="http://example.com/"/>
+        </port>
+        <port name="port2" binding="tns:b2">
+           <http:address location="http://example.com/"/>
+        </port>
+        <port name="port3" binding="tns:b3">
+             <http:address location="http://example.com/"/>
+        </port>
+    </service>
+
+    <binding name="b1" type="pt1">
+        <http:binding verb="GET"/>
+        <operation name="o1">
+           <http:operation location="o1/A(part1)B(part2)/(part3)"/>
+           <input>
+               <http:urlReplacement/>
+           </input>
+           <output>
+               <mime:content type="image/gif"/>
+               <mime:content type="image/jpeg"/>
+           </output>
+        </operation>
+    </binding>
+
+    <binding name="b2" type="pt1">
+        <http:binding verb="GET"/>
+        <operation name="o1">
+           <http:operation location="o1"/>
+           <input>
+               <http:urlEncoded/>
+           </input>
+           <output>
+               <mime:content type="image/gif"/>
+               <mime:content type="image/jpeg"/>
+           </output>
+        </operation>
+    </binding>
+
+    <binding name="b3" type="pt1">
+        <http:binding verb="POST"/>
+        <operation name="o1">
+           <http:operation location="o1"/>
+           <input>
+               <mime:content type="application/x-www-form-urlencoded"/>
+           </input>
+           <output>
+               <mime:content type="image/gif"/>
+               <mime:content type="image/jpeg"/>
+           </output>
+        </operation>
+    </binding>
+</definitions>
+
+=== 4.2 HTTP GET / POST绑定如何扩展WSDL
+
+HTTP GET / POST Binding使用以下扩展元素扩展WSDL：
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <http:binding verb="nmtoken"/>
+        <operation .... >
+           <http:operation location="uri"/>
+           <input .... >
+               <-- mime elements -->
+           </input>
+           <output .... >
+               <-- mime elements -->
+           </output>
+        </operation>
+    </binding>
+
+    <port .... >
+        <http:address location="uri"/>
+    </port>
+</definitions>
+----
+
+以下部分将介绍这些要素。
+
+=== 4.3 http:address
+
+**location**属性指定端口的基本URI。 属性的值与http:operation binding元素的location属性的值组合。 有关详细信息，请参阅第4.5节。
+
+=== 4.4 http:binding
+
+**http：binding**元素表示此绑定使用HTTP协议。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <http:binding verb="nmtoken"/>
+    </binding>
+</definitions>
+----
+
+所需**verb**属性的值表示HTTP动词。 常见的值是GET或POST，但可以使用其他值。 请注意，HTTP动词区分大小写。
+
+=== 4.5 http:operation
+
+**location**属性指定操作的相对URI。 该URI与http：address元素中指定的URI组合以形成HTTP请求的完整URI。 URI值必须是相对URI。
+
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <http:operation location="uri"/>
+        </operation>
+    </binding>
+</definitions>
+----
+
+=== 4.6 http：urlEncoded
+
+urlEncoded元素表示所有消息部分都使用标准URI编码规则（name1 = value＆name2 = value ...）编码到HTTP请求URI中。 参数的名称对应于消息部分的名称。 由该部分贡献的每个值使用name = value对进行编码。 这可以与GET一起使用来指定URL编码，或者使用POST来指定FORM-POST。 对于GET，“？” 根据需要自动附加字符。
+
+[source, xml]
+----
+<http:urlEncoded/>
+----
+
+有关URI编码参数规则的更多信息，请参见[5]，[6]和[7]。
+
+=== 4.7 http：urlReplacement
+
+**http:urlReplacement**元素指示使用替换算法将所有消息部分编码到HTTP请求URI中：
+
+* 搜索http:operation的相对URI值，以搜索一组搜索模式。
+* 搜索发生在http:operation的值与来自http:address的location属性的值组合之前。
+* 每个消息部分都有一个搜索模式。 搜索模式字符串是用圆括号“（”和“）”包围的消息部分的名称。
+* 对于每个匹配，相应消息部分的值代替匹配位置处的匹配。
+* 在替换任何值之前执行匹配（替换值不会触发其他匹配）。
+
+消息部分必须不具有重复值。
+
+[source, xml]
+----
+<http:urlReplacement/>
+----
+
+== 5. MIME绑定
+
+WSDL包括一种将抽象类型绑定到某些MIME格式的具体消息的方法。定义以下MIME类型的绑定：
+
+* multipart/related
+* text/xml
+* application/x-www-form-urlencoded（用于在HTML中提交表单的格式）
+* Others（通过指定MIME类型字符串）
+
+定义的MIME类型集合既大又不断发展，所以WSDL不是为每种MIME类型全面定义XML语法的目标。根据需要，无法排除额外的语法来添加其他MIME类型。如果MIME类型的字符串足以描述内容，则可以使用下面定义的mime元素。
+
+=== 5.11 MIME绑定示例
+
+.示例7.使用multipart/related关联SOAP
+
+此示例描述了可以通过SOAP 1.1 HTTP绑定将GetCompanyInfo SOAP 1.1请求发送到StockQuote服务。该请求采用字符串类型的代码符号。响应包含以MIME格式multipart/related编码的多个部分：包含当前股价作为浮动，零个或多个HTML格式的营销文献文档的SOAP信封，以及GIF或JPEG格式的可选公司徽标。
+
+[source, xml]
+----
+<definitions .... >
+
+    <types>
+        <schema .... >
+           <element name="GetCompanyInfo">
+               <complexType>
+                   <all>
+                       <element name="tickerSymbol " type="string"/>
+                   </all>
+               </complexType>
+           </element>
+           <element name="GetCompanyInfoResult">
+               <complexType>
+                   <all>
+                       <element name="result" type="float"/>
+                   </all>
+               </complexType>
+           </element>
+           <complexType name="ArrayOfBinary">
+               <complexContent>
+                   <restriction base="soapenc:Array">
+                      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:binary[]"/>
+                   </restriction>
+               <complexContent>
+           </complexType>
+        </schema>
+    </types>
+
+    <message name="m1">
+        <part name="body" element="tns:GetCompanyInfo"/>
+    </message>
+
+    <message name="m2">
+        <part name="body" element="tns:GetCompanyInfoResult"/>
+        <part name="docs" type="xsd:string"/>
+        <part name="logo" type="tns:ArrayOfBinary"/>
+    </message>
+
+    <portType name="pt1">
+        <operation name="GetCompanyInfo">
+           <input message="m1"/>
+           <output message="m2"/>
+        </operation>
+    </portType>
+
+    <binding name="b1" type="tns:pt1">
+        <operation name="GetCompanyInfo">
+           <soap:operation soapAction="http://example.com/GetCompanyInfo"/>
+           <input>
+               <soap:body use="literal"/>
+           </input>
+           <output>
+               <mime:multipartRelated>
+                   <mime:part>
+                       <soap:body parts="body" use="literal"/>
+                   </mime:part>
+                   <mime:part>
+                       <mime:content part="docs" type="text/html"/>
+                   </mime:part>
+                   <mime:part>
+                       <mime:content part="logo" type="image/gif"/>
+                       <mime:content part="logo" type="image/jpeg"/>
+                   </mime:part>
+               </mime:multipartRelated>
+           </output>
+        </operation>
+    </binding>
+
+    <service name="CompanyInfoService">
+        <port name="CompanyInfoPort"binding="tns:b1">
+           <soap:address location="http://example.com/companyinfo"/>
+        </port>
+    </service>
+</definitions>
+----
+
+=== 5.2 MIME绑定如何扩展WSDL
+
+MIME Binding使用以下扩展元素扩展WSDL：
+
+[source, xml]
+----
+<mime:content part="nmtoken"? type="string"?/>
+
+<mime:multipartRelated>
+    <mime:part> *
+        <-- mime element -->
+    </mime:part>
+</mime:multipartRelated>
+
+<mime:mimeXml part="nmtoken"?/>
+----
+
+它们在WSDL中的以下位置使用：
+[source, xml]
+----
+<definitions .... >
+    <binding .... >
+        <operation .... >
+           <input .... >
+               <-- mime elements -->
+           </input>
+           <output .... >
+               <-- mime elements -->
+           </output>
+        </operation>
+    </binding>
+</definitions>
+----
+
+MIME元素显示在输入和输出下，以指定MIME格式。 如果多次出现，它们被认为是替代品。
+
+=== 5.3 mime:content
+
+为了避免为每个MIME格式定义一个新元素，如果没有附加信息来传达与MIME类型字符串不同的格式，则可以使用**mime：content**元素。
+
+[source, xml]
+----
+<mime:content part="nmtoken"? type="string"?/>
+----
+
+**part**属性用于指定消息部分的名称。 如果消息有单个部分，则part属性是可选的。 **type**属性包含MIME类型的字符串。 类型值有两个部分，用斜杠（/）分隔，其中任一个可以是通配符（*）。 不指定type属性表示所有MIME类型都可以接受。
+
+如果返回格式是XML，但是模式未提前知道，则可以使用通用的mime元素来指示text / xml：
+
+[source, xml]
+----
+<mime:content type="text/xml"/>
+----
+
+通配符（*）可用于指定一系列mime类型，例如所有文本类型。
+
+[source, xml]
+----
+<mime:content type="text/*"/>
+----
+
+以下两个示例都指定所有MIME类型：
+
+[source, xml]
+----
+<mime:content type="*/*"/>
+<mime:content/>
+----
+
+=== 5.4 mime:multipartRelated
+
+多部分/相关的MIME类型使用MIME类型“multipart / related”将任意MIME格式的部分集合到一个消息中。 **mime：multipartRelated**元素描述了这样一个消息的具体格式：
+
+[source, xml]
+----
+<mime:multipartRelated>
+    <mime:part> *
+        <-- mime element -->
+    </mime:part>
+</mime:multipartRelated>
+----
+
+mime：part元素描述多部分/相关消息的每个部分。 MIME元素出现在mime：part中，以指定该部分的具体MIME类型。 如果一个MIME元素出现在一个mime：part中，它们就是替代的。
+
+=== 5.5 soap:body
+
+当使用MIME绑定与SOAP请求时，使用soap:body元素作为MIME元素是合法的。 它表示内容类型是“text/xml”，并且有一个封闭的SOAP Envelope。
+
+=== 5.6 mime:mimeXml
+
+要指定不符合SOAP标准的XML有效负载（没有SOAP信封），但确实具有特定的模式，可以使用**mime：mimeXml**元素来指定具体的模式。 **part**属性是指定义根XML元素的具体模式的消息部分。 如果消息只有一个部分，则可以省略部分属性。 该部分使用简单零件的**element**属性或复合零件的**type**属性来引用具体的模式（参见2.3.1节）。
+
+[source, xml]
+----
+<mime:mimeXml part="nmtoken"?/>
+----
+
+== 6. 参考文献
+
+[2] S. Bradner，“关键词在RFC中用于指示需求水平”，RFC 2119，哈佛大学，1997年3月
+
+[4] T. Berners-Lee，R. Fielding，L. Masinter，“Uniform Resource Identifiers（URI）：Generic Syntax”，RFC 2396，MIT / LCS，U.C。 Irvine，施乐公司，1998年8月。
+
+[5] http://www.w3.org/TR/html401/interact/forms.html - 提交格式
+
+[6] http://www.w3.org/TR/html401/appendix/notes.html - 和号
+
+[7] http://www.w3.org/TR/html401/interact/forms.html - h-17.13.4
+
+[8]简单对象访问协议（SOAP）1.1“http://www.w3.org/TR/2000/NOTE-SOAP-20000508/”
+
+[10] W3C工作草案“XML Schema Part 1：Structures”。这是正在进行中。
+
+[11] W3C工作草案“XML模式第2部分：数据类型”。这是正在进行中。
+
+=== A 1.关于URI的注释
+
+本节不直接对规范作出贡献，但提供了在实现规范时可能有用的背景知识。
+
+==== A 1.1 XML命名空间和模式位置
+
+将XML模式的targetNamespace或XML实例中的xmlns属性的值与对应模式的位置相等是一个常见的误解。由于命名空间实际上是URI，URI可能是位置，并且您可能能够从该位置检索模式，但这并不意味着该唯一与该命名空间相关联的模式。可以存在与特定命名空间相关联的多个模式，并且由XML处理器确定在特定处理上下文中使用哪个模式。 WSDL规范通过<import>机制提供处理上下文，该机制基于类似概念的XML模式语法。
+
+==== A 1.2相对的URI
+
+在本文档中，您将看到在WSDL和XSD文档中使用的完全限定的URI。使用完全限定的URI仅仅是为了说明引用的概念。使用相对URI是完全允许的，在许多情况下是有必要的。有关处理相对URI的信息，请参见http://www.normos.org/ietf/rfc/rfc2396.txt。
+
+==== A 1.3生成的URI
+
+当使用WSDL时，有时候需要为实体组成一个URI，但是不能使URI在所有时间内都是全局唯一的，并且具有“意味着”该实体的版本（模式，WSDL文档等）。有一个特定的URI基础保留用于这种类型的行为。基本URI“http://tempuri.org/”可用于构造一个URI，而不对实体进行任何唯一的关联。例如，两个人或程序可以选择同时使用URI“http://tempuri.org/myschema”两个完全不同的模式，只要使用URI的范围不相交，那么它们是认为独一无二。这具有进一步的好处，即URI可以被实体版本化，而不必生成新的URI，只要它在处理环境中是有意义的。不建议将“http://tempuri.org/”作为稳定，固定实体的基础。
+
+=== A 2. 用于WSDL示例的线格式
+
+==== A 2.1. 示例1
+
+.SOAP消息嵌入在HTTP请求中
+
+[source, http]
+----
+POST /StockQuote HTTP/1.1
+Host: www.stockquoteserver.com
+Content-Type: text/xml; charset="utf-8"
+Content-Length: nnnn
+SOAPAction: "Some-URI"
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <m:GetLastTradePrice xmlns:m="Some-URI">
+            <m:tickerSymbol>DIS</m:tickerSymbol>
+        </m:GetLastTradePrice>
+    </soapenv:Body>
+</soapenv:Envelope>
+----
+
+. SOAP消息嵌入在HTTP响应中
+[source, xml]
+----
+HTTP/1.1 200 OK
+Content-Type: text/xml; charset="utf-8"
+Content-Length: nnnn
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <m:GetLastTradePriceResponse xmlns:m="Some-URI">
+            <m:price>34.5</m:price>
+        </m:GetLastTradePriceResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
+----
+
+=== A 3. 可扩展性元素的位置
+
+可扩展性元素可以显示在WSDL文档中的以下位置：
+
+|===
+|位置|含义|可能的用法
+
+|definitions
+|可扩展性元素作为一个整体应用于WSDL文档。
+|向WSDL文档整体介绍其他信息或定义。
+
+|definitions/types
+|可扩展性元素是一个类型系统。
+|在XSD以外的类型系统中指定消息的格式。
+
+|definitions / service
+|可扩展性元素适用于该服务。
+|介绍服务的其他信息或定义。
+
+|definitions / service / port
+|可扩展性元素适用于端口。
+|指定端口的地址。
+
+|definitions / binding
+|可扩展性元素适用于绑定作为一个整体。
+|提供适用于绑定的端口类型中的所有操作的协议特定信息。
+
+|definitions/binding/operation
+|可扩展性元素适用于整个操作。
+|提供适用于输入消息和输出消息的协议特定信息。
+
+|definitions / binding / operation / input
+|可扩展性元素适用于操作的输入消息。
+|提供关于抽象消息部分如何映射到绑定的具体协议和数据格式的详细信息。为输入消息提供附加的协议特定信息。
+
+|definitions / binding / operation / output
+|可扩展性元素适用于操作的输出消息。
+|提供关于抽象消息部分如何映射到绑定的具体协议和数据格式的详细信息。为输出消息提供附加的协议特定信息。
+
+|definitions / binding / operation / fault
+|可扩展性元素适用于操作的故障消息。
+|提供关于抽象消息部分如何映射到绑定的具体协议和数据格式的详细信息。为故障消息提供附加的协议特定信息。
+|===
+
+=== A 4. Schemas
+==== A 4.1 WSDL Schema
+
+[source, xml]
+----
+<schema xmlns="http://www.w3.org/2000/10/XMLSchema"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        targetNamespace="http://schemas.xmlsoap.org/wsdl/"
+        elementFormDefault="qualified">
+   <element name="documentation">
+      <complexType mixed="true">
+         <choice minOccurs="0" maxOccurs="unbounded">
+            <any minOccurs="0" maxOccurs="unbounded"/>
+         </choice>
+         <anyAttribute/>
+      </complexType>
+   </element>
+   <complexType name="documented" abstract="true">
+      <sequence>
+         <element ref="wsdl:documentation" minOccurs="0"/>
+      </sequence>
+   </complexType>
+   <complexType name="openAtts" abstract="true">
+      <annotation>
+         <documentation>
+         This type is extended by  component types
+         to allow attributes from other namespaces to be added.
+         </documentation>
+      </annotation>
+      <sequence>
+         <element ref="wsdl:documentation" minOccurs="0"/>
+      </sequence>
+      <anyAttribute namespace="##other"/>
+   </complexType>
+   <element name="definitions" type="wsdl:definitionsType">
+      <key name="message">
+         <selector xpath="message"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="portType">
+         <selector xpath="portType"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="binding">
+         <selector xpath="binding"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="service">
+         <selector xpath="service"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="import">
+            <selector xpath="import"/>
+            <field xpath="@namespace"/>
+         </key>
+      <key name="port">
+         <selector xpath="service/port"/>
+         <field xpath="@name"/>
+      </key>
+   </element>
+   <complexType name="definitionsType">
+      <complexContent>
+         <extension base="wsdl:documented">
+            <sequence>
+               <element ref="wsdl:import" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:types" minOccurs="0"/>
+               <element ref="wsdl:message" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:portType" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:binding" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:service" minOccurs="0" maxOccurs="unbounded"/>
+               <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+                  <annotation>
+                     <documentation>to support extensibility elements </documentation>
+                  </annotation>
+               </any>
+            </sequence>
+            <attribute name="targetNamespace" type="uriReference" use="optional"/>
+            <attribute name="name" type="NMTOKEN" use="optional"/>
+         </extension>
+      </complexContent>
+  </complexType>
+   <element name="import" type="wsdl:importType"/>
+   <complexType name="importType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="namespace" type="uriReference" use="required"/>
+      <attribute name="location" type="uriReference" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="types" type="wsdl:typesType"/>
+   <complexType name="typesType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="message" type="wsdl:messageType">
+      <unique name="part">
+         <selector xpath="part"/>
+         <field xpath="@name"/>
+      </unique>
+   </element>
+   <complexType name="messageType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:part" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="part" type="wsdl:partType"/>
+   <complexType name="partType">
+      <complexContent>
+   <extension base="wsdl:openAtts">
+   <attribute name="name" type="NMTOKEN" use="optional"/>
+      <attribute name="type" type="QName" use="optional"/>
+      <attribute name="element" type="QName" use="optional"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="portType" type="wsdl:portTypeType"/>
+   <complexType name="portTypeType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:operation" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="operation" type="wsdl:operationType"/>
+   <complexType name="operationType">
+      <complexContent>
+   <extension base="wsdl:documented">
+      <choice>
+         <group ref="wsdl:one-way-operation"/>
+         <group ref="wsdl:request-response-operation"/>
+         <group ref="wsdl:solicit-response-operation"/>
+         <group ref="wsdl:notification-operation"/>
+      </choice>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <group name="one-way-operation">
+      <sequence>
+         <element ref="wsdl:input"/>
+      </sequence>
+   </group>
+   <group name="request-response-operation">
+      <sequence>
+         <element ref="wsdl:input"/>
+         <element ref="wsdl:output"/>
+         <element ref="wsdl:fault" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+   </group>
+   <group name="solicit-response-operation">
+      <sequence>
+         <element ref="wsdl:output"/>
+         <element ref="wsdl:input"/>
+         <element ref="wsdl:fault" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+   </group>
+   <group name="notification-operation">
+      <sequence>
+         <element ref="wsdl:output"/>
+      </sequence>
+   </group>
+   <element name="input" type="wsdl:paramType"/>
+   <element name="output" type="wsdl:paramType"/>
+   <element name="fault" type="wsdl:faultType"/>
+   <complexType name="paramType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="name" type="NMTOKEN" use="optional"/>
+      <attribute name="message" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="faultType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="name" type="NMTOKEN" use="required"/>
+      <attribute name="message" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="startWithExtensionsType" abstract="true">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="binding" type="wsdl:bindingType"/>
+   <complexType name="bindingType">
+      <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <sequence>
+   <element name="operation" type="wsdl:binding_operationType" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+      <attribute name="type" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="binding_operationType">
+      <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <sequence>
+   <element name="input" type="wsdl:startWithExtensionsType" minOccurs="0"/>
+      <element name="output" type="wsdl:startWithExtensionsType" minOccurs="0"/>
+      <element name="fault" minOccurs="0" maxOccurs="unbounded">
+         <complexType>
+            <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <attribute name="name" type="NMTOKEN" use="required"/>
+         </extension>
+  </complexContent>
+  </complexType>
+      </element>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="service" type="wsdl:serviceType"/>
+   <complexType name="serviceType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:port" minOccurs="0" maxOccurs="unbounded"/>
+      <any namespace="##other" minOccurs="0"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="port" type="wsdl:portType"/>
+   <complexType name="portType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+      <attribute name="binding" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+  <attribute name="arrayType" type="string"/>
+</schema>
+----
+
+==== A 4.2 SOAP Binding Schema
+
+[source, xml]
+----
+<schema xmlns="http://www.w3.org/2000/10/XMLSchema"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        targetNamespace="http://schemas.xmlsoap.org/wsdl/soap/">
+   <element name="binding" type="soap:bindingType"/>
+   <complexType name="bindingType">
+      <attribute name="transport" type="uriReference" use="optional"/>
+      <attribute name="style" type="soap:styleChoice" use="optional"/>
+   </complexType>
+   <simpleType name="styleChoice">
+      <restriction base="string">
+   <enumeration value="rpc"/>
+      <enumeration value="document"/>
+  </restriction>
+   </simpleType>
+   <element name="operation" type="soap:operationType"/>
+   <complexType name="operationType">
+      <attribute name="soapAction" type="uriReference" use="optional"/>
+      <attribute name="style" type="soap:styleChoice" use="optional"/>
+   </complexType>
+   <element name="body" type="soap:bodyType"/>
+   <complexType name="bodyType">
+      <attribute name="encodingStyle" type="uriReference" use="optional"/>
+      <attribute name="parts" type="NMTOKENS" use="optional"/>
+      <attribute name="use" type="soap:useChoice" use="optional"/>
+      <attribute name="namespace" type="uriReference" use="optional"/>
+   </complexType>
+   <simpleType name="useChoice">
+      <restriction base="string">
+   <enumeration value="literal"/>
+      <enumeration value="encoded"/>
+  </restriction>
+   </simpleType>
+   <element name="fault" type="soap:faultType"/>
+   <complexType name="faultType">
+      <complexContent>
+   <restriction base="soap:bodyType">
+   <attribute name="parts" type="NMTOKENS" use="prohibited"/>
+   </restriction>
+  </complexContent>
+  </complexType>
+   <element name="header" type="soap:headerType"/>
+   <complexType name="headerType">
+      <all>
+          <element ref="soap:headerfault">
+      </all>
+      <attribute name="message" type="QName" use="required"/>
+      <attribute name="parts" type="NMTOKENS" use="required"/>
+      <attribute name="use" type="soap:useChoice" use="required"/>
+      <attribute name="encodingStyle" type="uriReference" use="optional"/>
+      <attribute name="namespace" type="uriReference" use="optional"/>
+   </complexType>
+   <element name="headerfault" type="soap:headerfaultType"/>
+   <complexType name="headerfaultType">
+      <attribute name="message" type="QName" use="required"/>
+      <attribute name="parts" type="NMTOKENS" use="required"/>
+      <attribute name="use" type="soap:useChoice" use="required"/>
+      <attribute name="encodingStyle" type="uriReference" use="optional"/>
+      <attribute name="namespace" type="uriReference" use="optional"/>
+   </complexType>
+   <element name="address" type="soap:addressType"/>
+   <complexType name="addressType">
+      <attribute name="location" type="uriReference" use="required"/>
+   </complexType>
+</schema>
+----
+
+==== A 4.3 HTTP Binding Schema
+[source, xml]
+----
+<schema xmlns="http://www.w3.org/2000/10/XMLSchema"
+        xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+        targetNamespace="http://schemas.xmlsoap.org/wsdl/http/">
+   <element name="address" type="http:addressType"/>
+   <complexType name="addressType">
+      <attribute name="location" type="uriReference" use="required"/>
+   </complexType>
+   <element name="binding" type="http:bindingType"/>
+   <complexType name="bindingType">
+      <attribute name="verb" type="NMTOKEN" use="required"/>
+   </complexType>
+   <element name="operation" type="http:operationType"/>
+   <complexType name="operationType">
+      <attribute name="location" type="uriReference" use="required"/>
+   </complexType>
+   <element name="urlEncoded">
+      <complexType>
+  </complexType>
+   </element>
+   <element name="urlReplacement">
+      <complexType>
+  </complexType>
+   </element>
+</schema>
+----
+
+==== A 4.4 MIME Binding Schema
+
+[source, xml]
+----
+<schema  targetNamespace="http://schemas.xmlsoap.org/wsdl/mime/"
+         xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+         xmlns="http://www.w3.org/2000/10/XMLSchema">
+   <element name="content" type="mime:contentType"/>
+   <complexType name="contentType" content="empty">
+      <attribute name="type" type="string" use="optional"/>
+      <attribute name="part" type="NMTOKEN" use="optional"/>
+   </complexType>
+   <element name="multipartRelated" type="mime:multipartRelatedType"/>
+   <complexType name="multipartRelatedType" content="elementOnly">
+      <element ref="mime:part" minOccurs="0" maxOccurs="unbounded"/>
+   </complexType>
+   <element name="part" type="mime:partType"/>
+   <complexType name="partType" content="elementOnly">
+      <any namespace="targetNamespace" minOccurs="0" maxOccurs="unbounded"/>
+      <attribute name="name" type="NMTOKEN" use="required"/>
+   </complexType>
+   <element name="mimeXml" type="mime:mimeXmlType"/>
+   <complexType name="mimeXmlType" content="empty">
+      <attribute name="part" type="NMTOKEN" use="optional"/>
+   </complexType>
+</schema>
+----
