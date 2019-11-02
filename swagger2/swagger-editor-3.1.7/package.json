@@ -57,7 +57,7 @@
     "react-transition-group": "^1.1.1",
     "redux": "^3.x.x",
     "swagger-client": "3.1.0",
-    "swagger-ui": "3.2.0",
+    "swagger-ui": "3.24.0",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
